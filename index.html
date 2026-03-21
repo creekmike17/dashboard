@@ -721,6 +721,56 @@ document.getElementById('modalBackdrop').addEventListener('click', function(e) {
 const noteEl = document.getElementById('focusNote');
 noteEl.value = localStorage.getItem('dash_note') || '';
 function saveNote() { localStorage.setItem('dash_note', noteEl.value); }
+// ── FILES ──────────────────────────────────────────────
+let files = JSON.parse(localStorage.getItem('dash_files') || '[]');
+function saveFiles() { localStorage.setItem('dash_files', JSON.stringify(files)); }
+
+function renderFiles() {
+  const grid = document.getElementById('filesGrid');
+  grid.innerHTML = '';
+  files.forEach((f, i) => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'app-wrapper';
+    const el = document.createElement('a');
+    el.className = 'app-btn';
+    el.href = f.url;
+    el.innerHTML = `<span class="app-icon">${f.icon}</span>${f.name}`;
+    const controls = document.createElement('div');
+    controls.className = 'app-controls';
+    controls.innerHTML = `
+      <button class="app-ctrl-btn" onclick="openEditFile(${i}, event)">✎</button>
+      <button class="app-ctrl-btn del" onclick="deleteFile(${i}, event)">✕</button>
+    `;
+    wrapper.appendChild(el); wrapper.appendChild(controls);
+    grid.appendChild(wrapper);
+  });
+}
+renderFiles();
+
+let editingFileIndex = -1;
+
+function openAddFile() {
+  editingFileIndex = -1;
+  document.getElementById('modalTitle').textContent = 'Add File';
+  ['appName','appUrl','appEmoji'].forEach(id => document.getElementById(id).value = '');
+  document.getElementById('modalBackdrop').classList.add('open');
+}
+
+function openEditFile(i, e) {
+  e.preventDefault(); e.stopPropagation();
+  editingFileIndex = i;
+  document.getElementById('modalTitle').textContent = 'Edit File';
+  document.getElementById('appName').value = files[i].name;
+  document.getElementById('appUrl').value = files[i].url;
+  document.getElementById('appEmoji').value = files[i].icon;
+  document.getElementById('modalBackdrop').classList.add('open');
+}
+
+function deleteFile(i, e) {
+  e.preventDefault(); e.stopPropagation();
+  files.splice(i, 1);
+  saveFiles(); renderFiles();
+}
 </script>
 </body>
 </html>
