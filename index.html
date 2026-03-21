@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mike's Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0c0c0f;
+    --surface: #13131a;
+    --border: #1e1e2e;
+    --accent: #e8ff47;
+    --accent2: #47c8ff;
+    --text: #e0e0e0;
+    --muted: #555570;
+    --danger: #ff4757;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 16px;
+  }
+
+  .greeting {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    letter-spacing: 2px;
+    line-height: 1;
+  }
+
+  .greeting span { color: var(--accent); }
+
+  .live-time {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-align: right;
+    line-height: 1.7;
+  }
+
+  .live-time #clock {
+    font-size: 1.4rem;
+    color: var(--accent2);
+    display: block;
+  }
+
+  .row {
+    display: grid;
+    gap: 16px;
+  }
+
+  .row-top    { grid-template-columns: 1fr 1fr 1fr; }
+  .row-bottom { grid-template-columns: 1fr 1fr; }
+
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    animation: fadeUp 0.4s ease both;
+  }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(12px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  .card-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--muted);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .card-label::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+
+  /* CALENDAR */
+  .cal-nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+  }
+
+  .cal-nav button {
+    background: none;
+    border: 1px solid var(--border);
+    color: var(--muted);
+    cursor: pointer;
+    width: 26px;
+    height: 26px;
+    border-radius: 4px;
+    transition: all 0.15s;
+  }
+
+  .cal-nav button:hover { border-color: var(--accent); color: var(--accent); }
+  .cal-month { color: var(--text); font-size: 0.9rem; }
+
+  .cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    text-align: center;
+  }
+
+  .cal-grid .day-name {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    color: var(--muted);
+    padding: 4px 0;
+    letter-spacing: 1px;
+  }
+
+  .cal-grid .day {
+    font-size: 0.75rem;
+    padding: 6px 2px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s;
+    color: var(--muted);
+  }
+
+  .cal-grid .day:hover { background: var(--border); color: var(--text); }
+  .cal-grid .day.current-month { color: var(--text); }
+  .cal-grid .day.today {
+    background: var(--accent);
+    color: #000;
+    font-weight: 600;
+  }
+
+  /* TASKS */
+  .task-input-row { display: flex; gap: 8px; }
+
+  .task-input-row input {
+    flex: 1;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 8px 12px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    outline: none;
+    transition: border-color 0.15s;
+  }
+
+  .task-input-row input:focus { border-color: var(--accent2); }
+  .task-input-row input::placeholder { color: var(--muted); }
+
+  .task-input-row button {
+    background: var(--accent);
+    border: none;
+    border-radius: 4px;
+    color: #000;
+    font-weight: 600;
+    font-size: 1.1rem;
+    width: 34px;
+    cursor: pointer;
+    transition: opacity 0.15s;
+  }
+
+  .task-input-row button:hover { opacity: 0.8; }
+
+  .task-list {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    max-height: 200px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--border) transparent;
+  }
+
+  .task-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 10px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    font-size: 0.85rem;
+    transition: border-color 0.15s;
+    cursor: pointer;
+    flex-shrink: 0;
+  }
+
+  .task-item:hover { border-color: var(--muted); }
+
+  .task-check {
+    width: 16px;
+    height: 16px;
+    border: 1.5px solid var(--muted);
+    border-radius: 3px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+
+  .task-item.done .task-check { background: var(--accent); border-color: var(--accent); }
+  .task-item.done .task-check::after { content: '✓'; font-size: 10px; color: #000; font-weight: 700; }
+  .task-item.done .task-text { text-decoration: line-through; color: var(--muted); }
+
+  .task-delete {
+    margin-left: auto;
+    color: var(--muted);
+    font-size: 0.7rem;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+
+  .task-item:hover .task-delete { opacity: 1; color: var(--danger); }
+
+  .progress-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--muted);
+  }
+
+  .progress-bar { flex: 1; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
+  .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.4s ease; }
+
+  /* APPS & FILES */
+  .items-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+
+  .app-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    padding: 14px 8px;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--text);
+    font-size: 0.7rem;
+    transition: all 0.15s;
+    cursor: pointer;
+    text-align: center;
+  }
+
+  .app-btn:hover { border-color: var(--accent); transform: translateY(-2px); }
+  .app-btn .app-icon { font-size: 1.4rem; }
+
+  .app-wrapper { position: relative; }
+
+  .app-controls {
+    display: none;
+    position: absolute;
+    top: 4px;
+    right: 4px;
+    gap: 3px;
+    z-index: 2;
+  }
+
+  .app-wrapper:hover .app-controls { display: flex; }
+
+  .app-ctrl-btn {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    color: var(--muted);
+    font-size: 0.6rem;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.15s;
+  }
+
+  .app-ctrl-btn:hover { color: var(--text); border-color: var(--muted); }
+  .app-ctrl-btn.del:hover { color: var(--danger); border-color: var(--danger); }
+
+  .add-link {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 2px;
+    color: var(--muted);
+    cursor: pointer;
+    text-transform: uppercase;
+    align-self: flex-start;
+  }
+
+  .add-link:hover { color: var(--accent); }
+
+  /* MODAL */
+  .modal-backdrop {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.7);
+    z-index: 100;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .modal-backdrop.open { display: flex; }
+
+  .modal {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px;
+    width: 340px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+
+  .modal h3 {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.8rem;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+  }
+
+  .modal input {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 8px 12px;
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem;
+    outline: none;
+    width: 100%;
+  }
+
+  .modal input:focus { border-color: var(--accent2); }
+  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
+
+  .modal-actions button {
+    padding: 7px 18px;
+    border-radius: 4px;
+    border: none;
+    font-size: 0.8rem;
+    cursor: pointer;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .btn-cancel { background: var(--border); color: var(--muted); }
+  .btn-save { background: var(--accent); color: #000; font-weight: 600; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="greeting">Good <span id="timeOfDay">morning</span>, Mike.</div>
+  <div class="live-time">
+    <span id="clock">--:--</span>
+    <span id="dateStr">--</span>
+  </div>
+</header>
+
+<!-- TOP ROW -->
+<div class="row row-top">
+
+  <div class="card">
+    <div class="card-label">Calendar</div>
+    <div class="cal-nav">
+      <button onclick="shiftMonth(-1)">‹</button>
+      <span class="cal-month" id="calMonth"></span>
+      <button onclick="shiftMonth(1)">›</button>
+    </div>
+    <div class="cal-grid" id="calGrid"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Tasks</div>
+    <div class="task-input-row">
+      <input type="text" id="taskInput" placeholder="Add a task..." onkeydown="if(event.key==='Enter') addTask()">
+      <button onclick="addTask()">+</button>
+    </div>
+    <div class="progress-row">
+      <span id="taskProgress">0 / 0</span>
+      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
+    </div>
+    <div class="task-list" id="taskList"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Focus Note</div>
+    <textarea
+      id="focusNote"
+      placeholder="What's the ONE thing today?"
+      style="background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.85rem;resize:none;flex:1;min-height:160px;outline:none;line-height:1.6;"
+      oninput="saveNote()"
+    ></textarea>
+  </div>
+
+</div>
+
+<!-- BOTTOM ROW -->
+<div class="row row-bottom">
+
+  <div class="card">
+    <div class="card-label">Apps <span class="add-link" style="margin-left:auto;" onclick="openAddApp()">+ add</span></div>
+    <div class="items-grid" id="appsGrid"></div>
+  </div>
+
+  <div class="card">
+    <div class="card-label">Files <span class="add-link" style="margin-left:auto;" onclick="openAddFile()">+ add</span></div>
+    <div class="items-grid" id="filesGrid"></div>
+  </div>
+
+</div>
+
+<!-- Modal -->
+<div class="modal-backdrop" id="modalBackdrop">
+  <div class="modal">
+    <h3 id="modalTitle">Add App</h3>
+    <input id="itemName" placeholder="Name (e.g. Notion)">
+    <input id="itemUrl" placeholder="URL (e.g. https://notion.so)">
+    <input id="itemEmoji" placeholder="Emoji icon (e.g. 📝)">
+    <div class="modal-actions">
+      <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+      <button class="btn-save" onclick="saveItem()">Save</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ── CLOCK ──────────────────────────────────────────────
+function updateClock() {
+  const now = new Date();
+  const h = now.getHours(), m = now.getMinutes();
+  document.getElementById('clock').textContent =
+    `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
+  document.getElementById('dateStr').textContent =
+    now.toLocaleDateString('en-US', {weekday:'long', month:'long', day:'numeric'});
+  document.getElementById('timeOfDay').textContent =
+    h < 12 ? 'morning' : h < 17 ? 'afternoon' : 'evening';
+}
+updateClock(); setInterval(updateClock, 10000);
+
+// ── CALENDAR ──────────────────────────────────────────
+let calDate = new Date();
+
+function renderCal() {
+  const today = new Date();
+  const y = calDate.getFullYear(), mo = calDate.getMonth();
+  document.getElementById('calMonth').textContent =
+    calDate.toLocaleDateString('en-US', {month:'long', year:'numeric'});
+  const grid = document.getElementById('calGrid');
+  grid.innerHTML = '';
+  ['SU','MO','TU','WE','TH','FR','SA'].forEach(d => {
+    const el = document.createElement('div');
+    el.className = 'day-name'; el.textContent = d; grid.appendChild(el);
+  });
+  const first = new Date(y, mo, 1).getDay();
+  const daysInMonth = new Date(y, mo+1, 0).getDate();
+  const prevDays = new Date(y, mo, 0).getDate();
+  for (let i = 0; i < first; i++) {
+    const el = document.createElement('div');
+    el.className = 'day'; el.textContent = prevDays - first + 1 + i; grid.appendChild(el);
+  }
+  for (let d = 1; d <= daysInMonth; d++) {
+    const el = document.createElement('div');
+    el.className = 'day current-month';
+    if (d === today.getDate() && mo === today.getMonth() && y === today.getFullYear())
+      el.classList.add('today');
+    el.textContent = d; grid.appendChild(el);
+  }
+}
+
+function shiftMonth(dir) { calDate.setMonth(calDate.getMonth() + dir); renderCal(); }
+renderCal();
+
+// ── TASKS ──────────────────────────────────────────────
+let tasks = JSON.parse(localStorage.getItem('dash_tasks') || '[]');
+function saveTasks() { localStorage.setItem('dash_tasks', JSON.stringify(tasks)); }
+
+function renderTasks() {
+  const list = document.getElementById('taskList');
+  list.innerHTML = '';
+  const done = tasks.filter(t => t.done).length;
+  const pct = tasks.length ? Math.round(done/tasks.length*100) : 0;
+  document.getElementById('taskProgress').textContent = `${done} / ${tasks.length}`;
+  document.getElementById('progressFill').style.width = pct + '%';
+  tasks.forEach((t, i) => {
+    const el = document.createElement('div');
+    el.className = 'task-item' + (t.done ? ' done' : '');
+    el.innerHTML = `
+      <div class="task-check"></div>
+      <span class="task-text">${t.text}</span>
+      <span class="task-delete" onclick="deleteTask(${i}, event)">✕</span>
+    `;
+    el.addEventListener('click', () => toggleTask(i));
+    list.appendChild(el);
+  });
+}
+
+function addTask() {
+  const inp = document.getElementById('taskInput');
+  const text = inp.value.trim();
+  if (!text) return;
+  tasks.unshift({ text, done: false });
+  inp.value = '';
+  saveTasks(); renderTasks();
+}
+
+function toggleTask(i) { tasks[i].done = !tasks[i].done; saveTasks(); renderTasks(); }
+
+function deleteTask(i, e) {
+  e.stopPropagation();
+  tasks.splice(i, 1);
+  saveTasks(); renderTasks();
+}
+
+renderTasks();
+
+// ── MODAL STATE ────────────────────────────────────────
+let modalMode = 'app';
+let editingIndex = -1;
+
+function openModal(mode, title) {
+  modalMode = mode;
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalBackdrop').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modalBackdrop').classList.remove('open');
+  ['itemName','itemUrl','itemEmoji'].forEach(id => document.getElementById(id).value = '');
+  editingIndex = -1;
+}
+
+document.getElementById('modalBackdrop').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+// ── APPS ──────────────────────────────────────────────
+const defaultApps = [
+  { name: 'Notion', url: 'https://notion.so', icon: '📝' },
+  { name: 'Drive', url: 'https://drive.google.com', icon: '📁' },
+  { name: 'Calendar', url: 'https://calendar.google.com', icon: '📅' },
+  { name: 'ChatGPT', url: 'https://chat.openai.com', icon: '🤖' },
+  { name: 'GitHub', url: 'https://github.com', icon: '🐙' },
+  { name: 'Outlook', url: 'https://outlook.live.com', icon: '📨' },
+];
+
+let apps = JSON.parse(localStorage.getItem('dash_apps') || JSON.stringify(defaultApps));
+function saveApps() { localStorage.setItem('dash_apps', JSON.stringify(apps)); }
+
+function openAddApp() { editingIndex = -1; openModal('app', 'Add App'); }
+
+function openEditApp(i, e) {
+  e.preventDefault(); e.stopPropagation();
+  editingIndex = i;
+  document.getElementById('itemName').value = apps[i].name;
+  document.getElementById('itemUrl').value = apps[i].url;
+  document.getElementById('itemEmoji').value = apps[i].icon;
+  openModal('app', 'Edit App');
+}
+
+function deleteApp(i, e) {
+  e.preventDefault(); e.stopPropagation();
+  apps.splice(i, 1); saveApps(); renderApps();
+}
+
+// ── FILES ──────────────────────────────────────────────
+let files = JSON.parse(localStorage.getItem('dash_files') || '[]');
+function saveFiles() { localStorage.setItem('dash_files', JSON.stringify(files)); }
+
+function openAddFile() { editingIndex = -1; openModal('file', 'Add File'); }
+
+function openEditFile(i, e) {
+  e.preventDefault(); e.stopPropagation();
+  editingIndex = i;
+  document.getElementById('itemName').value = files[i].name;
+  document.getElementById('itemUrl').value = files[i].url;
+  document.getElementById('itemEmoji').value = files[i].icon;
+  openModal('file', 'Edit File');
+}
+
+function deleteFile(i, e) {
+  e.preventDefault(); e.stopPropagation();
+  files.splice(i, 1); saveFiles(); renderFiles();
+}
+
+// ── SHARED RENDERER ────────────────────────────────────
+function renderItemGrid(gridId, items, mode) {
+  const grid = document.getElementById(gridId);
+  grid.innerHTML = '';
+  const editFn = mode === 'app' ? 'openEditApp' : 'openEditFile';
+  const delFn  = mode === 'app' ? 'deleteApp'   : 'deleteFile';
+  items.forEach((item, i) => {
+    const wrapper = document.createElement('div');
+    wrapper.className = 'app-wrapper';
+    const el = document.createElement('a');
+    el.className = 'app-btn';
+    el.href = item.url;
+    el.target = '_blank';
+    el.innerHTML = `<span class="app-icon">${item.icon}</span>${item.name}`;
+    const controls = document.createElement('div');
+    controls.className = 'app-controls';
+    controls.innerHTML = `
+      <button class="app-ctrl-btn" onclick="${editFn}(${i}, event)">✎</button>
+      <button class="app-ctrl-btn del" onclick="${delFn}(${i}, event)">✕</button>
+    `;
+    wrapper.appendChild(el);
+    wrapper.appendChild(controls);
+    grid.appendChild(wrapper);
+  });
+}
+
+function renderApps() { renderItemGrid('appsGrid', apps, 'app'); }
+function renderFiles() { renderItemGrid('filesGrid', files, 'file'); }
+
+renderApps();
+renderFiles();
+
+// ── SAVE ──────────────────────────────────────────────
+function saveItem() {
+  const name = document.getElementById('itemName').value.trim();
+  const url  = document.getElementById('itemUrl').value.trim();
+  const icon = document.getElementById('itemEmoji').value.trim() || '🔗';
+  if (!name || !url) return;
+  const item = { name, url, icon };
+  if (modalMode === 'file') {
+    if (editingIndex >= 0) files[editingIndex] = item; else files.push(item);
+    saveFiles(); renderFiles();
+  } else {
+    if (editingIndex >= 0) apps[editingIndex] = item; else apps.push(item);
+    saveApps(); renderApps();
+  }
+  closeModal();
+}
+
+// ── FOCUS NOTE ────────────────────────────────────────
+const noteEl = document.getElementById('focusNote');
+noteEl.value = localStorage.getItem('dash_note') || '';
+function saveNote() { localStorage.setItem('dash_note', noteEl.value); }
+</script>
+</body>
+</html>
