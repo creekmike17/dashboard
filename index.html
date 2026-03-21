@@ -480,7 +480,8 @@
       <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
     </div>
    <div class="task-list" id="taskList"></div>
-    <div class="card-label" style="margin-top:4px;">Files</div>
+    <div style="height:1px;background:var(--border);margin:4px 0;"></div>
+    <div class="card-label">Files</div>
     <div class="apps-grid" id="filesGrid"></div>
     <div class="card-label" style="cursor:pointer;font-size:0.65rem;color:var(--muted)" onclick="openAddFile()">+ add file</div>
   </div>
@@ -671,6 +672,7 @@ function renderApps() {
 renderApps();
 
 let editingAppIndex = -1;
+  let modalMode = 'app';
 
 function openAddApp() {
   editingAppIndex = -1;
