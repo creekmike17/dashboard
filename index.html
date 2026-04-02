@@ -207,7 +207,7 @@
 
 </div>
 
-<div class="row row-middle">
+<div class="row row-middle" style="grid-template-columns: 1fr 1fr;">
   <div class="card">
     <div class="card-label">
       Today's Schedule
@@ -220,6 +220,17 @@
     </div>
     <div class="cal-events" id="calEvents"></div>
   </div>
+</div>
+
+  <div class="card">
+    <div class="card-label">
+      This Week
+      <span class="cal-action" id="weekRefreshBtn" onclick="fetchWeekEvents()" style="display:none;">&#8635; refresh</span>
+    </div>
+    <div id="weekConnectMsg"><span class="cal-empty">Connect Google Calendar to see this week.</span></div>
+    <div class="cal-events" id="weekEvents"></div>
+  </div>
+
 </div>
 
 <div class="row row-bottom">
@@ -384,6 +395,8 @@ function connectGoogleCalendar() {
 
 function activateCalendar() {
   document.getElementById('calConnectSection').style.display = 'none';
+  document.getElementById('weekConnectMsg').style.display = 'none';
+  document.getElementById('weekRefreshBtn').style.display = 'inline';
   document.getElementById('calStatus').classList.add('active');
   document.getElementById('calStatusText').textContent = 'Connected';
   document.getElementById('calRefreshBtn').style.display = 'inline';
@@ -442,7 +455,9 @@ function getCalendarContext() {
   return '\n\nToday\'s calendar:\n' + lines.join('\n');
 }
 
-if (calAccessToken && Date.now() < calTokenExpiry) { activateCalendar(); fetchCalendarEvents(); }
+if (calAccessToken && Date.now() < calTokenExpiry) { activateCalendar();
+      fetchCalendarEvents();
+      fetchWeekEvents(); }
 
 // AI ASSISTANT
 let apiKey = localStorage.getItem('dash_apikey') || '';
@@ -542,7 +557,50 @@ async function sendMessage() {
   } catch (err) { addAssistantMessage('Connection error. Check your API key and try again.'); chatHistory.pop(); }
   input.disabled = false; document.getElementById('chatSend').disabled = false; input.focus();
 }
+// WEEK EVENTS
+let weekEventsData = [];
 
+async function fetchWeekEvents() {
+  if (!calAccessToken || Date.now() > calTokenExpiry) return;
+  const weekEl = document.getElementById('weekEvents');
+  weekEl.innerHTML = '<span class="cal-empty">Loading...</span>';
+  const now = new Date();
+  const start = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
+  const end = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 7, 23, 59, 59).toISOString();
+  try {
+    const res = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=' + start + '&timeMax=' + end + '&singleEvents=true&orderBy=startTime&maxResults=50', { headers: { Authorization: 'Bearer ' + calAccessToken } });
+    const data = await res.json();
+    if (data.error) { weekEl.innerHTML = '<span class="cal-empty">Error: ' + data.error.message + '</span>'; return; }
+    weekEventsData = data.items || [];
+    renderWeekEvents();
+  } catch (err) { weekEl.innerHTML = '<span class="cal-empty">Failed to load.</span>'; }
+}
+
+function renderWeekEvents() {
+  const weekEl = document.getElementById('weekEvents');
+  weekEl.innerHTML = '';
+  if (weekEventsData.length === 0) { weekEl.innerHTML = '<span class="cal-empty">No events this week.</span>'; return; }
+  const days = {};
+  weekEventsData.forEach(event => {
+    const dateKey = (event.start.dateTime || event.start.date).substring(0, 10);
+    if (!days[dateKey]) days[dateKey] = [];
+    days[dateKey].push(event);
+  });
+  Object.keys(days).sort().forEach(dateKey => {
+    const dayLabel = document.createElement('div');
+    dayLabel.style.cssText = 'font-family:"DM Mono",monospace;font-size:0.65rem;letter-spacing:2px;color:var(--accent);text-transform:uppercase;padding:4px 0 2px;';
+    dayLabel.textContent = new Date(dateKey + 'T12:00:00').toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' });
+    weekEl.appendChild(dayLabel);
+    days[dateKey].forEach(event => {
+      const isAllDay = !event.start.dateTime;
+      const timeStr = isAllDay ? 'All day' : new Date(event.start.dateTime).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+      const el = document.createElement('div');
+      el.className = 'cal-event';
+      el.innerHTML = '<span class="cal-event-time">' + timeStr + '</span><span class="cal-event-title">' + (event.summary || 'Untitled') + '</span>';
+      weekEl.appendChild(el);
+    });
+  });
+}
 if (apiKey) { activateChat(); addAssistantMessage("Hey Mike — I'm ready. I can see your tasks, calendar, and focus note. What are we working on?"); }
 else { deactivateChat(); }
 </script>
