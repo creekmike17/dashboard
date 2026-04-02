@@ -55,17 +55,9 @@
     line-height: 1.7;
   }
 
-  .live-time #clock {
-    font-size: 1.4rem;
-    color: var(--accent2);
-    display: block;
-  }
+  .live-time #clock { font-size: 1.4rem; color: var(--accent2); display: block; }
 
-  .row {
-    display: grid;
-    gap: 16px;
-  }
-
+  .row { display: grid; gap: 16px; }
   .row-top    { grid-template-columns: 1fr 1fr 1fr; }
   .row-bottom { grid-template-columns: 1fr 1fr; }
 
@@ -94,83 +86,18 @@
     display: flex;
     align-items: center;
     gap: 8px;
+    flex-shrink: 0;
   }
 
-  .card-label::after {
-    content: '';
-    flex: 1;
-    height: 1px;
-    background: var(--border);
-  }
-
-  /* CALENDAR */
-  .cal-nav {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.8rem;
-  }
-
-  .cal-nav button {
-    background: none;
-    border: 1px solid var(--border);
-    color: var(--muted);
-    cursor: pointer;
-    width: 26px;
-    height: 26px;
-    border-radius: 4px;
-    transition: all 0.15s;
-  }
-
-  .cal-nav button:hover { border-color: var(--accent); color: var(--accent); }
-  .cal-month { color: var(--text); font-size: 0.9rem; }
-
-  .cal-grid {
-    display: grid;
-    grid-template-columns: repeat(7, 1fr);
-    gap: 2px;
-    text-align: center;
-  }
-
-  .cal-grid .day-name {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.6rem;
-    color: var(--muted);
-    padding: 4px 0;
-    letter-spacing: 1px;
-  }
-
-  .cal-grid .day {
-    font-size: 0.75rem;
-    padding: 6px 2px;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.15s;
-    color: var(--muted);
-  }
-
-  .cal-grid .day:hover { background: var(--border); color: var(--text); }
-  .cal-grid .day.current-month { color: var(--text); }
-  .cal-grid .day.today {
-    background: var(--accent);
-    color: #000;
-    font-weight: 600;
-  }
+  .card-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
   /* TASKS */
   .task-input-row { display: flex; gap: 8px; }
 
   .task-input-row input {
-    flex: 1;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 8px 12px;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.85rem;
-    outline: none;
+    flex: 1; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 4px; padding: 8px 12px; color: var(--text);
+    font-family: 'DM Sans', sans-serif; font-size: 0.85rem; outline: none;
     transition: border-color 0.15s;
   }
 
@@ -178,212 +105,193 @@
   .task-input-row input::placeholder { color: var(--muted); }
 
   .task-input-row button {
-    background: var(--accent);
-    border: none;
-    border-radius: 4px;
-    color: #000;
-    font-weight: 600;
-    font-size: 1.1rem;
-    width: 34px;
-    cursor: pointer;
-    transition: opacity 0.15s;
+    background: var(--accent); border: none; border-radius: 4px;
+    color: #000; font-weight: 600; font-size: 1.1rem; width: 34px;
+    cursor: pointer; transition: opacity 0.15s;
   }
 
   .task-input-row button:hover { opacity: 0.8; }
 
   .task-list {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-    max-height: 200px;
-    overflow-y: auto;
-    scrollbar-width: thin;
-    scrollbar-color: var(--border) transparent;
+    display: flex; flex-direction: column; gap: 6px;
+    max-height: 200px; overflow-y: auto;
+    scrollbar-width: thin; scrollbar-color: var(--border) transparent;
   }
 
   .task-item {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 8px 10px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    font-size: 0.85rem;
-    transition: border-color 0.15s;
-    cursor: pointer;
-    flex-shrink: 0;
+    display: flex; align-items: center; gap: 10px; padding: 8px 10px;
+    background: var(--bg); border: 1px solid var(--border); border-radius: 4px;
+    font-size: 0.85rem; transition: border-color 0.15s; cursor: pointer; flex-shrink: 0;
   }
 
   .task-item:hover { border-color: var(--muted); }
 
   .task-check {
-    width: 16px;
-    height: 16px;
-    border: 1.5px solid var(--muted);
-    border-radius: 3px;
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    width: 16px; height: 16px; border: 1.5px solid var(--muted); border-radius: 3px;
+    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
     transition: all 0.15s;
   }
 
   .task-item.done .task-check { background: var(--accent); border-color: var(--accent); }
   .task-item.done .task-check::after { content: '✓'; font-size: 10px; color: #000; font-weight: 700; }
   .task-item.done .task-text { text-decoration: line-through; color: var(--muted); }
-
-  .task-delete {
-    margin-left: auto;
-    color: var(--muted);
-    font-size: 0.7rem;
-    opacity: 0;
-    transition: opacity 0.15s;
-  }
-
+  .task-delete { margin-left: auto; color: var(--muted); font-size: 0.7rem; opacity: 0; transition: opacity 0.15s; }
   .task-item:hover .task-delete { opacity: 1; color: var(--danger); }
 
   .progress-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.7rem;
-    color: var(--muted);
+    display: flex; align-items: center; gap: 10px;
+    font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted);
   }
 
   .progress-bar { flex: 1; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
   .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.4s ease; }
 
   /* APPS & FILES */
-  .items-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 8px;
-  }
+  .items-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
 
   .app-btn {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 14px 8px;
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 6px;
-    text-decoration: none;
-    color: var(--text);
-    font-size: 0.7rem;
-    transition: all 0.15s;
-    cursor: pointer;
-    text-align: center;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    gap: 6px; padding: 14px 8px; background: var(--bg); border: 1px solid var(--border);
+    border-radius: 6px; text-decoration: none; color: var(--text); font-size: 0.7rem;
+    transition: all 0.15s; cursor: pointer; text-align: center;
   }
 
   .app-btn:hover { border-color: var(--accent); transform: translateY(-2px); }
   .app-btn .app-icon { font-size: 1.4rem; }
-
   .app-wrapper { position: relative; }
 
-  .app-controls {
-    display: none;
-    position: absolute;
-    top: 4px;
-    right: 4px;
-    gap: 3px;
-    z-index: 2;
-  }
-
+  .app-controls { display: none; position: absolute; top: 4px; right: 4px; gap: 3px; z-index: 2; }
   .app-wrapper:hover .app-controls { display: flex; }
 
   .app-ctrl-btn {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 3px;
-    color: var(--muted);
-    font-size: 0.6rem;
-    width: 18px;
-    height: 18px;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: all 0.15s;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 3px;
+    color: var(--muted); font-size: 0.6rem; width: 18px; height: 18px; cursor: pointer;
+    display: flex; align-items: center; justify-content: center; transition: all 0.15s;
   }
 
   .app-ctrl-btn:hover { color: var(--text); border-color: var(--muted); }
   .app-ctrl-btn.del:hover { color: var(--danger); border-color: var(--danger); }
 
   .add-link {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 2px;
-    color: var(--muted);
-    cursor: pointer;
-    text-transform: uppercase;
-    align-self: flex-start;
+    font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 2px;
+    color: var(--muted); cursor: pointer; text-transform: uppercase; align-self: flex-start;
   }
 
   .add-link:hover { color: var(--accent); }
 
   /* MODAL */
   .modal-backdrop {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0,0,0,0.7);
-    z-index: 100;
-    align-items: center;
-    justify-content: center;
+    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7);
+    z-index: 100; align-items: center; justify-content: center;
   }
 
   .modal-backdrop.open { display: flex; }
 
   .modal {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 10px;
-    padding: 28px;
-    width: 340px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 28px; width: 340px; display: flex; flex-direction: column; gap: 14px;
   }
 
   .modal h3 {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.8rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    color: var(--accent);
+    font-family: 'DM Mono', monospace; font-size: 0.8rem;
+    letter-spacing: 2px; text-transform: uppercase; color: var(--accent);
   }
 
   .modal input {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 4px;
-    padding: 8px 12px;
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.85rem;
-    outline: none;
-    width: 100%;
+    background: var(--bg); border: 1px solid var(--border); border-radius: 4px;
+    padding: 8px 12px; color: var(--text); font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem; outline: none; width: 100%;
   }
 
   .modal input:focus { border-color: var(--accent2); }
   .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
 
   .modal-actions button {
-    padding: 7px 18px;
-    border-radius: 4px;
-    border: none;
-    font-size: 0.8rem;
-    cursor: pointer;
-    font-family: 'DM Sans', sans-serif;
+    padding: 7px 18px; border-radius: 4px; border: none;
+    font-size: 0.8rem; cursor: pointer; font-family: 'DM Sans', sans-serif;
   }
 
   .btn-cancel { background: var(--border); color: var(--muted); }
   .btn-save { background: var(--accent); color: #000; font-weight: 600; }
+
+  /* AI ASSISTANT */
+  .key-status {
+    font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted);
+    display: flex; align-items: center; gap: 5px;
+  }
+
+  .key-status .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
+  .key-status.active { color: var(--accent); }
+  .key-status.active .dot { background: var(--accent); }
+
+  .clear-key { margin-left: 6px; cursor: pointer; color: var(--muted); font-size: 0.65rem; font-family: 'DM Mono', monospace; }
+  .clear-key:hover { color: var(--danger); }
+
+  .api-key-row { display: flex; gap: 8px; flex-shrink: 0; }
+
+  .api-key-row input {
+    flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 4px;
+    padding: 8px 12px; color: var(--text); font-family: 'DM Mono', monospace;
+    font-size: 0.75rem; outline: none; transition: border-color 0.15s;
+  }
+
+  .api-key-row input:focus { border-color: var(--accent2); }
+  .api-key-row input::placeholder { color: var(--muted); }
+
+  .api-key-row button {
+    background: var(--accent); border: none; border-radius: 4px;
+    color: #000; font-weight: 600; font-size: 0.75rem;
+    padding: 0 14px; cursor: pointer; white-space: nowrap;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .chat-messages {
+    flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;
+    min-height: 160px; max-height: 220px;
+    scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+  }
+
+  .chat-msg { display: flex; flex-direction: column; max-width: 92%; }
+  .chat-msg.user { align-self: flex-end; align-items: flex-end; }
+  .chat-msg.assistant { align-self: flex-start; align-items: flex-start; }
+
+  .chat-bubble { padding: 8px 12px; border-radius: 8px; font-size: 0.82rem; line-height: 1.5; }
+  .chat-msg.user .chat-bubble { background: var(--accent); color: #000; border-radius: 8px 8px 2px 8px; }
+  .chat-msg.assistant .chat-bubble { background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 8px 8px 8px 2px; }
+
+  .chat-input-row { display: flex; gap: 8px; flex-shrink: 0; }
+
+  .chat-input-row input {
+    flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 4px;
+    padding: 8px 12px; color: var(--text); font-family: 'DM Sans', sans-serif;
+    font-size: 0.85rem; outline: none; transition: border-color 0.15s;
+  }
+
+  .chat-input-row input:focus { border-color: var(--accent2); }
+  .chat-input-row input::placeholder { color: var(--muted); }
+  .chat-input-row input:disabled { opacity: 0.4; }
+
+  .chat-send {
+    background: var(--accent); border: none; border-radius: 4px;
+    color: #000; font-weight: 700; font-size: 1rem; width: 34px;
+    cursor: pointer; transition: opacity 0.15s; flex-shrink: 0;
+  }
+
+  .chat-send:hover { opacity: 0.8; }
+  .chat-send:disabled { opacity: 0.3; cursor: default; }
+
+  .typing-indicator { display: flex; gap: 4px; align-items: center; padding: 8px 12px; }
+  .typing-indicator span {
+    width: 6px; height: 6px; border-radius: 50%; background: var(--muted);
+    animation: bounce 1.2s infinite;
+  }
+  .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
+  .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+
+  @keyframes bounce {
+    0%, 60%, 100% { transform: translateY(0); }
+    30% { transform: translateY(-5px); }
+  }
 </style>
 </head>
 <body>
@@ -399,16 +307,30 @@
 <!-- TOP ROW -->
 <div class="row row-top">
 
+  <!-- AI ASSISTANT -->
   <div class="card">
-    <div class="card-label">Calendar</div>
-    <div class="cal-nav">
-      <button onclick="shiftMonth(-1)">‹</button>
-      <span class="cal-month" id="calMonth"></span>
-      <button onclick="shiftMonth(1)">›</button>
+    <div class="card-label">
+      AI Assistant
+      <span class="key-status" id="keyStatus"><span class="dot"></span><span id="keyStatusText">No key</span></span>
+      <span class="clear-key" id="clearKeyBtn" onclick="clearApiKey()" style="display:none;">clear</span>
     </div>
-    <div class="cal-grid" id="calGrid"></div>
+
+    <div id="keySetup">
+      <div class="api-key-row">
+        <input type="password" id="apiKeyInput" placeholder="Paste Anthropic API key..." onkeydown="if(event.key==='Enter') saveApiKey()">
+        <button onclick="saveApiKey()">Save</button>
+      </div>
+    </div>
+
+    <div class="chat-messages" id="chatMessages"></div>
+
+    <div class="chat-input-row">
+      <input type="text" id="chatInput" placeholder="Ask me anything..." onkeydown="if(event.key==='Enter') sendMessage()" disabled>
+      <button class="chat-send" id="chatSend" onclick="sendMessage()" disabled>↑</button>
+    </div>
   </div>
 
+  <!-- TASKS -->
   <div class="card">
     <div class="card-label">Tasks</div>
     <div class="task-input-row">
@@ -422,6 +344,7 @@
     <div class="task-list" id="taskList"></div>
   </div>
 
+  <!-- FOCUS NOTE -->
   <div class="card">
     <div class="card-label">Focus Note</div>
     <textarea
@@ -477,39 +400,6 @@ function updateClock() {
 }
 updateClock(); setInterval(updateClock, 10000);
 
-// ── CALENDAR ──────────────────────────────────────────
-let calDate = new Date();
-
-function renderCal() {
-  const today = new Date();
-  const y = calDate.getFullYear(), mo = calDate.getMonth();
-  document.getElementById('calMonth').textContent =
-    calDate.toLocaleDateString('en-US', {month:'long', year:'numeric'});
-  const grid = document.getElementById('calGrid');
-  grid.innerHTML = '';
-  ['SU','MO','TU','WE','TH','FR','SA'].forEach(d => {
-    const el = document.createElement('div');
-    el.className = 'day-name'; el.textContent = d; grid.appendChild(el);
-  });
-  const first = new Date(y, mo, 1).getDay();
-  const daysInMonth = new Date(y, mo+1, 0).getDate();
-  const prevDays = new Date(y, mo, 0).getDate();
-  for (let i = 0; i < first; i++) {
-    const el = document.createElement('div');
-    el.className = 'day'; el.textContent = prevDays - first + 1 + i; grid.appendChild(el);
-  }
-  for (let d = 1; d <= daysInMonth; d++) {
-    const el = document.createElement('div');
-    el.className = 'day current-month';
-    if (d === today.getDate() && mo === today.getMonth() && y === today.getFullYear())
-      el.classList.add('today');
-    el.textContent = d; grid.appendChild(el);
-  }
-}
-
-function shiftMonth(dir) { calDate.setMonth(calDate.getMonth() + dir); renderCal(); }
-renderCal();
-
 // ── TASKS ──────────────────────────────────────────────
 let tasks = JSON.parse(localStorage.getItem('dash_tasks') || '[]');
 function saveTasks() { localStorage.setItem('dash_tasks', JSON.stringify(tasks)); }
@@ -553,7 +443,12 @@ function deleteTask(i, e) {
 
 renderTasks();
 
-// ── MODAL STATE ────────────────────────────────────────
+// ── FOCUS NOTE ────────────────────────────────────────
+const noteEl = document.getElementById('focusNote');
+noteEl.value = localStorage.getItem('dash_note') || '';
+function saveNote() { localStorage.setItem('dash_note', noteEl.value); }
+
+// ── MODAL ──────────────────────────────────────────────
 let modalMode = 'app';
 let editingIndex = -1;
 
@@ -654,7 +549,7 @@ function renderFiles() { renderItemGrid('filesGrid', files, 'file'); }
 renderApps();
 renderFiles();
 
-// ── SAVE ──────────────────────────────────────────────
+// ── SAVE ITEM ──────────────────────────────────────────
 function saveItem() {
   const name = document.getElementById('itemName').value.trim();
   const url  = document.getElementById('itemUrl').value.trim();
@@ -671,10 +566,155 @@ function saveItem() {
   closeModal();
 }
 
-// ── FOCUS NOTE ────────────────────────────────────────
-const noteEl = document.getElementById('focusNote');
-noteEl.value = localStorage.getItem('dash_note') || '';
-function saveNote() { localStorage.setItem('dash_note', noteEl.value); }
+// ── AI ASSISTANT ───────────────────────────────────────
+let apiKey = localStorage.getItem('dash_apikey') || '';
+let chatHistory = [];
+
+function saveApiKey() {
+  const val = document.getElementById('apiKeyInput').value.trim();
+  if (!val.startsWith('sk-')) {
+    alert("That doesn't look like a valid Anthropic key. It should start with sk-");
+    return;
+  }
+  apiKey = val;
+  localStorage.setItem('dash_apikey', apiKey);
+  document.getElementById('apiKeyInput').value = '';
+  activateChat();
+  addAssistantMessage("Key saved. I'm your productivity assistant — I can see your tasks and help you prioritize, stay focused, and think through your day. What are we working on?");
+}
+
+function clearApiKey() {
+  apiKey = '';
+  localStorage.removeItem('dash_apikey');
+  chatHistory = [];
+  document.getElementById('chatMessages').innerHTML = '';
+  deactivateChat();
+}
+
+function activateChat() {
+  document.getElementById('keySetup').style.display = 'none';
+  document.getElementById('chatInput').disabled = false;
+  document.getElementById('chatSend').disabled = false;
+  document.getElementById('chatInput').focus();
+  document.getElementById('keyStatus').classList.add('active');
+  document.getElementById('keyStatusText').textContent = 'Active';
+  document.getElementById('clearKeyBtn').style.display = 'inline';
+}
+
+function deactivateChat() {
+  document.getElementById('keySetup').style.display = 'block';
+  document.getElementById('chatInput').disabled = true;
+  document.getElementById('chatSend').disabled = true;
+  document.getElementById('keyStatus').classList.remove('active');
+  document.getElementById('keyStatusText').textContent = 'No key';
+  document.getElementById('clearKeyBtn').style.display = 'none';
+}
+
+function getTaskContext() {
+  const open = tasks.filter(t => !t.done).map(t => '- ' + t.text).join('\n');
+  const done = tasks.filter(t => t.done).map(t => '- ' + t.text).join('\n');
+  const note = noteEl.value.trim();
+  let ctx = `Today is ${new Date().toLocaleDateString('en-US', {weekday:'long', month:'long', day:'numeric'})}.`;
+  if (open) ctx += `\n\nOpen tasks:\n${open}`;
+  if (done) ctx += `\n\nCompleted tasks:\n${done}`;
+  if (note) ctx += `\n\nFocus note: ${note}`;
+  return ctx;
+}
+
+function addUserMessage(text) {
+  const msgs = document.getElementById('chatMessages');
+  const el = document.createElement('div');
+  el.className = 'chat-msg user';
+  el.innerHTML = `<div class="chat-bubble">${text}</div>`;
+  msgs.appendChild(el);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function addAssistantMessage(text) {
+  const typing = document.getElementById('typingIndicator');
+  if (typing) typing.remove();
+  const msgs = document.getElementById('chatMessages');
+  const el = document.createElement('div');
+  el.className = 'chat-msg assistant';
+  el.innerHTML = `<div class="chat-bubble">${text.replace(/\n/g, '<br>')}</div>`;
+  msgs.appendChild(el);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+function showTyping() {
+  const msgs = document.getElementById('chatMessages');
+  const el = document.createElement('div');
+  el.className = 'chat-msg assistant';
+  el.id = 'typingIndicator';
+  el.innerHTML = `<div class="chat-bubble typing-indicator"><span></span><span></span><span></span></div>`;
+  msgs.appendChild(el);
+  msgs.scrollTop = msgs.scrollHeight;
+}
+
+async function sendMessage() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text || !apiKey) return;
+
+  input.value = '';
+  input.disabled = true;
+  document.getElementById('chatSend').disabled = true;
+
+  addUserMessage(text);
+  chatHistory.push({ role: 'user', content: text });
+  showTyping();
+
+  const systemPrompt = `You are Mike's personal productivity assistant embedded in his dashboard. Be direct, concise, and focused on keeping him on task and accountable.
+
+Current context:
+${getTaskContext()}
+
+Keep responses short and actionable. If he's going off track, call it out. Never pad responses. Help him prioritize, break through blockers, and make fast decisions.`;
+
+  try {
+    const response = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
+      body: JSON.stringify({
+        model: 'claude-haiku-4-5-20251001',
+        max_tokens: 1000,
+        system: systemPrompt,
+        messages: chatHistory
+      })
+    });
+
+    const data = await response.json();
+
+    if (data.error) {
+      addAssistantMessage(`Error: ${data.error.message}`);
+      chatHistory.pop();
+    } else {
+      const reply = data.content[0].text;
+      chatHistory.push({ role: 'assistant', content: reply });
+      addAssistantMessage(reply);
+    }
+  } catch (err) {
+    addAssistantMessage('Connection error. Check your API key and try again.');
+    chatHistory.pop();
+  }
+
+  input.disabled = false;
+  document.getElementById('chatSend').disabled = false;
+  input.focus();
+}
+
+// Init
+if (apiKey) {
+  activateChat();
+  addAssistantMessage("Hey Mike — I'm ready. Tell me what's on your plate today and I'll help you prioritize.");
+} else {
+  deactivateChat();
+}
 </script>
 </body>
 </html>
