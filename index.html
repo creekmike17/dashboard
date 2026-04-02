@@ -38,260 +38,122 @@
     padding-bottom: 16px;
   }
 
-  .greeting {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    letter-spacing: 2px;
-    line-height: 1;
-  }
-
+  .greeting { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 5vw, 3.5rem); letter-spacing: 2px; line-height: 1; }
   .greeting span { color: var(--accent); }
-
-  .live-time {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.85rem;
-    color: var(--muted);
-    text-align: right;
-    line-height: 1.7;
-  }
-
+  .live-time { font-family: 'DM Mono', monospace; font-size: 0.85rem; color: var(--muted); text-align: right; line-height: 1.7; }
   .live-time #clock { font-size: 1.4rem; color: var(--accent2); display: block; }
 
   .row { display: grid; gap: 16px; }
   .row-top    { grid-template-columns: 1fr 1fr 1fr; }
+  .row-middle { grid-template-columns: 1fr; }
   .row-bottom { grid-template-columns: 1fr 1fr; }
 
   .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 14px;
+    background: var(--surface); border: 1px solid var(--border); border-radius: 8px;
+    padding: 20px; display: flex; flex-direction: column; gap: 14px;
     animation: fadeUp 0.4s ease both;
   }
 
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(12px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
 
   .card-label {
-    font-family: 'DM Mono', monospace;
-    font-size: 0.65rem;
-    letter-spacing: 3px;
-    text-transform: uppercase;
-    color: var(--muted);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-shrink: 0;
+    font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 3px;
+    text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 8px; flex-shrink: 0;
   }
-
   .card-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-  /* TASKS */
   .task-input-row { display: flex; gap: 8px; }
-
-  .task-input-row input {
-    flex: 1; background: var(--bg); border: 1px solid var(--border);
-    border-radius: 4px; padding: 8px 12px; color: var(--text);
-    font-family: 'DM Sans', sans-serif; font-size: 0.85rem; outline: none;
-    transition: border-color 0.15s;
-  }
-
+  .task-input-row input { flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 8px 12px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.85rem; outline: none; transition: border-color 0.15s; }
   .task-input-row input:focus { border-color: var(--accent2); }
   .task-input-row input::placeholder { color: var(--muted); }
-
-  .task-input-row button {
-    background: var(--accent); border: none; border-radius: 4px;
-    color: #000; font-weight: 600; font-size: 1.1rem; width: 34px;
-    cursor: pointer; transition: opacity 0.15s;
-  }
-
+  .task-input-row button { background: var(--accent); border: none; border-radius: 4px; color: #000; font-weight: 600; font-size: 1.1rem; width: 34px; cursor: pointer; transition: opacity 0.15s; }
   .task-input-row button:hover { opacity: 0.8; }
 
-  .task-list {
-    display: flex; flex-direction: column; gap: 6px;
-    max-height: 200px; overflow-y: auto;
-    scrollbar-width: thin; scrollbar-color: var(--border) transparent;
-  }
-
-  .task-item {
-    display: flex; align-items: center; gap: 10px; padding: 8px 10px;
-    background: var(--bg); border: 1px solid var(--border); border-radius: 4px;
-    font-size: 0.85rem; transition: border-color 0.15s; cursor: pointer; flex-shrink: 0;
-  }
-
+  .task-list { display: flex; flex-direction: column; gap: 6px; max-height: 200px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+  .task-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; font-size: 0.85rem; transition: border-color 0.15s; cursor: pointer; flex-shrink: 0; }
   .task-item:hover { border-color: var(--muted); }
-
-  .task-check {
-    width: 16px; height: 16px; border: 1.5px solid var(--muted); border-radius: 3px;
-    flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-    transition: all 0.15s;
-  }
-
+  .task-check { width: 16px; height: 16px; border: 1.5px solid var(--muted); border-radius: 3px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
   .task-item.done .task-check { background: var(--accent); border-color: var(--accent); }
   .task-item.done .task-check::after { content: '✓'; font-size: 10px; color: #000; font-weight: 700; }
   .task-item.done .task-text { text-decoration: line-through; color: var(--muted); }
   .task-delete { margin-left: auto; color: var(--muted); font-size: 0.7rem; opacity: 0; transition: opacity 0.15s; }
   .task-item:hover .task-delete { opacity: 1; color: var(--danger); }
 
-  .progress-row {
-    display: flex; align-items: center; gap: 10px;
-    font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted);
-  }
-
+  .progress-row { display: flex; align-items: center; gap: 10px; font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); }
   .progress-bar { flex: 1; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
   .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.4s ease; }
 
-  /* APPS & FILES */
   .items-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-
-  .app-btn {
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    gap: 6px; padding: 14px 8px; background: var(--bg); border: 1px solid var(--border);
-    border-radius: 6px; text-decoration: none; color: var(--text); font-size: 0.7rem;
-    transition: all 0.15s; cursor: pointer; text-align: center;
-  }
-
+  .app-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 14px 8px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; text-decoration: none; color: var(--text); font-size: 0.7rem; transition: all 0.15s; cursor: pointer; text-align: center; }
   .app-btn:hover { border-color: var(--accent); transform: translateY(-2px); }
   .app-btn .app-icon { font-size: 1.4rem; }
   .app-wrapper { position: relative; }
-
   .app-controls { display: none; position: absolute; top: 4px; right: 4px; gap: 3px; z-index: 2; }
   .app-wrapper:hover .app-controls { display: flex; }
-
-  .app-ctrl-btn {
-    background: var(--surface); border: 1px solid var(--border); border-radius: 3px;
-    color: var(--muted); font-size: 0.6rem; width: 18px; height: 18px; cursor: pointer;
-    display: flex; align-items: center; justify-content: center; transition: all 0.15s;
-  }
-
+  .app-ctrl-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; color: var(--muted); font-size: 0.6rem; width: 18px; height: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
   .app-ctrl-btn:hover { color: var(--text); border-color: var(--muted); }
   .app-ctrl-btn.del:hover { color: var(--danger); border-color: var(--danger); }
 
-  .add-link {
-    font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 2px;
-    color: var(--muted); cursor: pointer; text-transform: uppercase; align-self: flex-start;
-  }
-
+  .add-link { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 2px; color: var(--muted); cursor: pointer; text-transform: uppercase; align-self: flex-start; }
   .add-link:hover { color: var(--accent); }
 
-  /* MODAL */
-  .modal-backdrop {
-    display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7);
-    z-index: 100; align-items: center; justify-content: center;
-  }
-
+  .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; align-items: center; justify-content: center; }
   .modal-backdrop.open { display: flex; }
-
-  .modal {
-    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
-    padding: 28px; width: 340px; display: flex; flex-direction: column; gap: 14px;
-  }
-
-  .modal h3 {
-    font-family: 'DM Mono', monospace; font-size: 0.8rem;
-    letter-spacing: 2px; text-transform: uppercase; color: var(--accent);
-  }
-
-  .modal input {
-    background: var(--bg); border: 1px solid var(--border); border-radius: 4px;
-    padding: 8px 12px; color: var(--text); font-family: 'DM Sans', sans-serif;
-    font-size: 0.85rem; outline: none; width: 100%;
-  }
-
+  .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 28px; width: 340px; display: flex; flex-direction: column; gap: 14px; }
+  .modal h3 { font-family: 'DM Mono', monospace; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); }
+  .modal input { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 8px 12px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.85rem; outline: none; width: 100%; }
   .modal input:focus { border-color: var(--accent2); }
   .modal-actions { display: flex; gap: 8px; justify-content: flex-end; }
-
-  .modal-actions button {
-    padding: 7px 18px; border-radius: 4px; border: none;
-    font-size: 0.8rem; cursor: pointer; font-family: 'DM Sans', sans-serif;
-  }
-
+  .modal-actions button { padding: 7px 18px; border-radius: 4px; border: none; font-size: 0.8rem; cursor: pointer; font-family: 'DM Sans', sans-serif; }
   .btn-cancel { background: var(--border); color: var(--muted); }
   .btn-save { background: var(--accent); color: #000; font-weight: 600; }
 
-  /* AI ASSISTANT */
-  .key-status {
-    font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted);
-    display: flex; align-items: center; gap: 5px;
-  }
-
+  /* AI */
+  .key-status { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted); display: flex; align-items: center; gap: 5px; }
   .key-status .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
   .key-status.active { color: var(--accent); }
   .key-status.active .dot { background: var(--accent); }
-
   .clear-key { margin-left: 6px; cursor: pointer; color: var(--muted); font-size: 0.65rem; font-family: 'DM Mono', monospace; }
   .clear-key:hover { color: var(--danger); }
-
   .api-key-row { display: flex; gap: 8px; flex-shrink: 0; }
-
-  .api-key-row input {
-    flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 4px;
-    padding: 8px 12px; color: var(--text); font-family: 'DM Mono', monospace;
-    font-size: 0.75rem; outline: none; transition: border-color 0.15s;
-  }
-
-  .api-key-row input:focus { border-color: var(--accent2); }
+  .api-key-row input { flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 8px 12px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 0.75rem; outline: none; }
   .api-key-row input::placeholder { color: var(--muted); }
-
-  .api-key-row button {
-    background: var(--accent); border: none; border-radius: 4px;
-    color: #000; font-weight: 600; font-size: 0.75rem;
-    padding: 0 14px; cursor: pointer; white-space: nowrap;
-    font-family: 'DM Sans', sans-serif;
-  }
-
-  .chat-messages {
-    flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px;
-    min-height: 160px; max-height: 220px;
-    scrollbar-width: thin; scrollbar-color: var(--border) transparent;
-  }
-
+  .api-key-row button { background: var(--accent); border: none; border-radius: 4px; color: #000; font-weight: 600; font-size: 0.75rem; padding: 0 14px; cursor: pointer; white-space: nowrap; font-family: 'DM Sans', sans-serif; }
+  .chat-messages { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; min-height: 160px; max-height: 220px; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
   .chat-msg { display: flex; flex-direction: column; max-width: 92%; }
   .chat-msg.user { align-self: flex-end; align-items: flex-end; }
   .chat-msg.assistant { align-self: flex-start; align-items: flex-start; }
-
   .chat-bubble { padding: 8px 12px; border-radius: 8px; font-size: 0.82rem; line-height: 1.5; }
   .chat-msg.user .chat-bubble { background: var(--accent); color: #000; border-radius: 8px 8px 2px 8px; }
   .chat-msg.assistant .chat-bubble { background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 8px 8px 8px 2px; }
-
   .chat-input-row { display: flex; gap: 8px; flex-shrink: 0; }
-
-  .chat-input-row input {
-    flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 4px;
-    padding: 8px 12px; color: var(--text); font-family: 'DM Sans', sans-serif;
-    font-size: 0.85rem; outline: none; transition: border-color 0.15s;
-  }
-
-  .chat-input-row input:focus { border-color: var(--accent2); }
+  .chat-input-row input { flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 8px 12px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.85rem; outline: none; }
   .chat-input-row input::placeholder { color: var(--muted); }
   .chat-input-row input:disabled { opacity: 0.4; }
-
-  .chat-send {
-    background: var(--accent); border: none; border-radius: 4px;
-    color: #000; font-weight: 700; font-size: 1rem; width: 34px;
-    cursor: pointer; transition: opacity 0.15s; flex-shrink: 0;
-  }
-
+  .chat-send { background: var(--accent); border: none; border-radius: 4px; color: #000; font-weight: 700; font-size: 1rem; width: 34px; cursor: pointer; transition: opacity 0.15s; flex-shrink: 0; }
   .chat-send:hover { opacity: 0.8; }
   .chat-send:disabled { opacity: 0.3; cursor: default; }
-
   .typing-indicator { display: flex; gap: 4px; align-items: center; padding: 8px 12px; }
-  .typing-indicator span {
-    width: 6px; height: 6px; border-radius: 50%; background: var(--muted);
-    animation: bounce 1.2s infinite;
-  }
+  .typing-indicator span { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); animation: bounce 1.2s infinite; }
   .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
   .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
+  @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-5px); } }
 
-  @keyframes bounce {
-    0%, 60%, 100% { transform: translateY(0); }
-    30% { transform: translateY(-5px); }
-  }
+  /* CALENDAR */
+  .cal-connect-btn { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 0.75rem; padding: 10px 14px; cursor: pointer; transition: all 0.15s; display: flex; align-items: center; gap: 8px; align-self: flex-start; }
+  .cal-connect-btn:hover { border-color: var(--accent2); color: var(--accent2); }
+  .cal-status { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted); display: flex; align-items: center; gap: 5px; }
+  .cal-status .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
+  .cal-status.active { color: var(--accent2); }
+  .cal-status.active .dot { background: var(--accent2); }
+  .cal-action { margin-left: 4px; cursor: pointer; color: var(--muted); font-size: 0.65rem; font-family: 'DM Mono', monospace; }
+  .cal-action:hover { color: var(--accent2); }
+  .cal-action.danger:hover { color: var(--danger); }
+  .cal-events { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
+  .cal-event { display: flex; gap: 10px; padding: 8px 12px; background: var(--bg); border: 1px solid var(--border); border-left: 3px solid var(--accent2); border-radius: 4px; font-size: 0.8rem; line-height: 1.4; align-items: flex-start; }
+  .cal-event-time { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--accent2); white-space: nowrap; flex-shrink: 0; padding-top: 1px; }
+  .cal-event-title { color: var(--text); }
+  .cal-empty { font-family: 'DM Mono', monospace; font-size: 0.75rem; color: var(--muted); }
 </style>
 </head>
 <body>
@@ -304,33 +166,27 @@
   </div>
 </header>
 
-<!-- TOP ROW -->
 <div class="row row-top">
 
-  <!-- AI ASSISTANT -->
   <div class="card">
     <div class="card-label">
       AI Assistant
       <span class="key-status" id="keyStatus"><span class="dot"></span><span id="keyStatusText">No key</span></span>
       <span class="clear-key" id="clearKeyBtn" onclick="clearApiKey()" style="display:none;">clear</span>
     </div>
-
     <div id="keySetup">
       <div class="api-key-row">
         <input type="password" id="apiKeyInput" placeholder="Paste Anthropic API key..." onkeydown="if(event.key==='Enter') saveApiKey()">
         <button onclick="saveApiKey()">Save</button>
       </div>
     </div>
-
     <div class="chat-messages" id="chatMessages"></div>
-
     <div class="chat-input-row">
       <input type="text" id="chatInput" placeholder="Ask me anything..." onkeydown="if(event.key==='Enter') sendMessage()" disabled>
-      <button class="chat-send" id="chatSend" onclick="sendMessage()" disabled>↑</button>
+      <button class="chat-send" id="chatSend" onclick="sendMessage()" disabled>&#8593;</button>
     </div>
   </div>
 
-  <!-- TASKS -->
   <div class="card">
     <div class="card-label">Tasks</div>
     <div class="task-input-row">
@@ -344,35 +200,39 @@
     <div class="task-list" id="taskList"></div>
   </div>
 
-  <!-- FOCUS NOTE -->
   <div class="card">
     <div class="card-label">Focus Note</div>
-    <textarea
-      id="focusNote"
-      placeholder="What's the ONE thing today?"
-      style="background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.85rem;resize:none;flex:1;min-height:160px;outline:none;line-height:1.6;"
-      oninput="saveNote()"
-    ></textarea>
+    <textarea id="focusNote" placeholder="What's the ONE thing today?" style="background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.85rem;resize:none;flex:1;min-height:160px;outline:none;line-height:1.6;" oninput="saveNote()"></textarea>
   </div>
 
 </div>
 
-<!-- BOTTOM ROW -->
-<div class="row row-bottom">
+<div class="row row-middle">
+  <div class="card">
+    <div class="card-label">
+      Today's Schedule
+      <span class="cal-status" id="calStatus"><span class="dot"></span><span id="calStatusText">Not connected</span></span>
+      <span class="cal-action" id="calRefreshBtn" onclick="fetchCalendarEvents()" style="display:none;">&#8635; refresh</span>
+      <span class="cal-action danger" id="calDisconnectBtn" onclick="disconnectCalendar()" style="display:none;">disconnect</span>
+    </div>
+    <div id="calConnectSection">
+      <button class="cal-connect-btn" onclick="connectGoogleCalendar()">&#128197; Connect Google Calendar</button>
+    </div>
+    <div class="cal-events" id="calEvents"></div>
+  </div>
+</div>
 
+<div class="row row-bottom">
   <div class="card">
     <div class="card-label">Apps <span class="add-link" style="margin-left:auto;" onclick="openAddApp()">+ add</span></div>
     <div class="items-grid" id="appsGrid"></div>
   </div>
-
   <div class="card">
     <div class="card-label">Files <span class="add-link" style="margin-left:auto;" onclick="openAddFile()">+ add</span></div>
     <div class="items-grid" id="filesGrid"></div>
   </div>
-
 </div>
 
-<!-- Modal -->
 <div class="modal-backdrop" id="modalBackdrop">
   <div class="modal">
     <h3 id="modalTitle">Add App</h3>
@@ -386,21 +246,22 @@
   </div>
 </div>
 
+<script src="https://accounts.google.com/gsi/client" async defer></script>
 <script>
-// ── CLOCK ──────────────────────────────────────────────
+const GOOGLE_CLIENT_ID = '267986361399-1ddpsiiebr34kp8abp68grjut5il7ph8.apps.googleusercontent.com';
+const CALENDAR_SCOPE = 'https://www.googleapis.com/auth/calendar.readonly';
+
+// CLOCK
 function updateClock() {
   const now = new Date();
   const h = now.getHours(), m = now.getMinutes();
-  document.getElementById('clock').textContent =
-    `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}`;
-  document.getElementById('dateStr').textContent =
-    now.toLocaleDateString('en-US', {weekday:'long', month:'long', day:'numeric'});
-  document.getElementById('timeOfDay').textContent =
-    h < 12 ? 'morning' : h < 17 ? 'afternoon' : 'evening';
+  document.getElementById('clock').textContent = String(h).padStart(2,'0') + ':' + String(m).padStart(2,'0');
+  document.getElementById('dateStr').textContent = now.toLocaleDateString('en-US', {weekday:'long', month:'long', day:'numeric'});
+  document.getElementById('timeOfDay').textContent = h < 12 ? 'morning' : h < 17 ? 'afternoon' : 'evening';
 }
 updateClock(); setInterval(updateClock, 10000);
 
-// ── TASKS ──────────────────────────────────────────────
+// TASKS
 let tasks = JSON.parse(localStorage.getItem('dash_tasks') || '[]');
 function saveTasks() { localStorage.setItem('dash_tasks', JSON.stringify(tasks)); }
 
@@ -409,16 +270,12 @@ function renderTasks() {
   list.innerHTML = '';
   const done = tasks.filter(t => t.done).length;
   const pct = tasks.length ? Math.round(done/tasks.length*100) : 0;
-  document.getElementById('taskProgress').textContent = `${done} / ${tasks.length}`;
+  document.getElementById('taskProgress').textContent = done + ' / ' + tasks.length;
   document.getElementById('progressFill').style.width = pct + '%';
   tasks.forEach((t, i) => {
     const el = document.createElement('div');
     el.className = 'task-item' + (t.done ? ' done' : '');
-    el.innerHTML = `
-      <div class="task-check"></div>
-      <span class="task-text">${t.text}</span>
-      <span class="task-delete" onclick="deleteTask(${i}, event)">✕</span>
-    `;
+    el.innerHTML = '<div class="task-check"></div><span class="task-text">' + t.text + '</span><span class="task-delete" onclick="deleteTask(' + i + ', event)">&#10005;</span>';
     el.addEventListener('click', () => toggleTask(i));
     list.appendChild(el);
   });
@@ -434,41 +291,21 @@ function addTask() {
 }
 
 function toggleTask(i) { tasks[i].done = !tasks[i].done; saveTasks(); renderTasks(); }
-
-function deleteTask(i, e) {
-  e.stopPropagation();
-  tasks.splice(i, 1);
-  saveTasks(); renderTasks();
-}
-
+function deleteTask(i, e) { e.stopPropagation(); tasks.splice(i, 1); saveTasks(); renderTasks(); }
 renderTasks();
 
-// ── FOCUS NOTE ────────────────────────────────────────
+// FOCUS NOTE
 const noteEl = document.getElementById('focusNote');
 noteEl.value = localStorage.getItem('dash_note') || '';
 function saveNote() { localStorage.setItem('dash_note', noteEl.value); }
 
-// ── MODAL ──────────────────────────────────────────────
-let modalMode = 'app';
-let editingIndex = -1;
+// MODAL
+let modalMode = 'app', editingIndex = -1;
+function openModal(mode, title) { modalMode = mode; document.getElementById('modalTitle').textContent = title; document.getElementById('modalBackdrop').classList.add('open'); }
+function closeModal() { document.getElementById('modalBackdrop').classList.remove('open'); ['itemName','itemUrl','itemEmoji'].forEach(id => document.getElementById(id).value = ''); editingIndex = -1; }
+document.getElementById('modalBackdrop').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
 
-function openModal(mode, title) {
-  modalMode = mode;
-  document.getElementById('modalTitle').textContent = title;
-  document.getElementById('modalBackdrop').classList.add('open');
-}
-
-function closeModal() {
-  document.getElementById('modalBackdrop').classList.remove('open');
-  ['itemName','itemUrl','itemEmoji'].forEach(id => document.getElementById(id).value = '');
-  editingIndex = -1;
-}
-
-document.getElementById('modalBackdrop').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
-});
-
-// ── APPS ──────────────────────────────────────────────
+// APPS
 const defaultApps = [
   { name: 'Notion', url: 'https://notion.so', icon: '📝' },
   { name: 'Drive', url: 'https://drive.google.com', icon: '📁' },
@@ -477,117 +314,153 @@ const defaultApps = [
   { name: 'GitHub', url: 'https://github.com', icon: '🐙' },
   { name: 'Outlook', url: 'https://outlook.live.com', icon: '📨' },
 ];
-
 let apps = JSON.parse(localStorage.getItem('dash_apps') || JSON.stringify(defaultApps));
 function saveApps() { localStorage.setItem('dash_apps', JSON.stringify(apps)); }
-
 function openAddApp() { editingIndex = -1; openModal('app', 'Add App'); }
+function openEditApp(i, e) { e.preventDefault(); e.stopPropagation(); editingIndex = i; document.getElementById('itemName').value = apps[i].name; document.getElementById('itemUrl').value = apps[i].url; document.getElementById('itemEmoji').value = apps[i].icon; openModal('app', 'Edit App'); }
+function deleteApp(i, e) { e.preventDefault(); e.stopPropagation(); apps.splice(i, 1); saveApps(); renderApps(); }
 
-function openEditApp(i, e) {
-  e.preventDefault(); e.stopPropagation();
-  editingIndex = i;
-  document.getElementById('itemName').value = apps[i].name;
-  document.getElementById('itemUrl').value = apps[i].url;
-  document.getElementById('itemEmoji').value = apps[i].icon;
-  openModal('app', 'Edit App');
-}
-
-function deleteApp(i, e) {
-  e.preventDefault(); e.stopPropagation();
-  apps.splice(i, 1); saveApps(); renderApps();
-}
-
-// ── FILES ──────────────────────────────────────────────
+// FILES
 let files = JSON.parse(localStorage.getItem('dash_files') || '[]');
 function saveFiles() { localStorage.setItem('dash_files', JSON.stringify(files)); }
-
 function openAddFile() { editingIndex = -1; openModal('file', 'Add File'); }
+function openEditFile(i, e) { e.preventDefault(); e.stopPropagation(); editingIndex = i; document.getElementById('itemName').value = files[i].name; document.getElementById('itemUrl').value = files[i].url; document.getElementById('itemEmoji').value = files[i].icon; openModal('file', 'Edit File'); }
+function deleteFile(i, e) { e.preventDefault(); e.stopPropagation(); files.splice(i, 1); saveFiles(); renderFiles(); }
 
-function openEditFile(i, e) {
-  e.preventDefault(); e.stopPropagation();
-  editingIndex = i;
-  document.getElementById('itemName').value = files[i].name;
-  document.getElementById('itemUrl').value = files[i].url;
-  document.getElementById('itemEmoji').value = files[i].icon;
-  openModal('file', 'Edit File');
-}
-
-function deleteFile(i, e) {
-  e.preventDefault(); e.stopPropagation();
-  files.splice(i, 1); saveFiles(); renderFiles();
-}
-
-// ── SHARED RENDERER ────────────────────────────────────
+// GRID RENDERER
 function renderItemGrid(gridId, items, mode) {
   const grid = document.getElementById(gridId);
   grid.innerHTML = '';
   const editFn = mode === 'app' ? 'openEditApp' : 'openEditFile';
-  const delFn  = mode === 'app' ? 'deleteApp'   : 'deleteFile';
+  const delFn  = mode === 'app' ? 'deleteApp' : 'deleteFile';
   items.forEach((item, i) => {
     const wrapper = document.createElement('div');
     wrapper.className = 'app-wrapper';
     const el = document.createElement('a');
-    el.className = 'app-btn';
-    el.href = item.url;
-    el.target = '_blank';
-    el.innerHTML = `<span class="app-icon">${item.icon}</span>${item.name}`;
+    el.className = 'app-btn'; el.href = item.url; el.target = '_blank';
+    el.innerHTML = '<span class="app-icon">' + item.icon + '</span>' + item.name;
     const controls = document.createElement('div');
     controls.className = 'app-controls';
-    controls.innerHTML = `
-      <button class="app-ctrl-btn" onclick="${editFn}(${i}, event)">✎</button>
-      <button class="app-ctrl-btn del" onclick="${delFn}(${i}, event)">✕</button>
-    `;
-    wrapper.appendChild(el);
-    wrapper.appendChild(controls);
-    grid.appendChild(wrapper);
+    controls.innerHTML = '<button class="app-ctrl-btn" onclick="' + editFn + '(' + i + ', event)">&#9998;</button><button class="app-ctrl-btn del" onclick="' + delFn + '(' + i + ', event)">&#10005;</button>';
+    wrapper.appendChild(el); wrapper.appendChild(controls); grid.appendChild(wrapper);
   });
 }
-
 function renderApps() { renderItemGrid('appsGrid', apps, 'app'); }
 function renderFiles() { renderItemGrid('filesGrid', files, 'file'); }
+renderApps(); renderFiles();
 
-renderApps();
-renderFiles();
-
-// ── SAVE ITEM ──────────────────────────────────────────
 function saveItem() {
   const name = document.getElementById('itemName').value.trim();
-  const url  = document.getElementById('itemUrl').value.trim();
+  const url = document.getElementById('itemUrl').value.trim();
   const icon = document.getElementById('itemEmoji').value.trim() || '🔗';
   if (!name || !url) return;
   const item = { name, url, icon };
-  if (modalMode === 'file') {
-    if (editingIndex >= 0) files[editingIndex] = item; else files.push(item);
-    saveFiles(); renderFiles();
-  } else {
-    if (editingIndex >= 0) apps[editingIndex] = item; else apps.push(item);
-    saveApps(); renderApps();
-  }
+  if (modalMode === 'file') { if (editingIndex >= 0) files[editingIndex] = item; else files.push(item); saveFiles(); renderFiles(); }
+  else { if (editingIndex >= 0) apps[editingIndex] = item; else apps.push(item); saveApps(); renderApps(); }
   closeModal();
 }
 
-// ── AI ASSISTANT ───────────────────────────────────────
+// GOOGLE CALENDAR
+let calAccessToken = localStorage.getItem('dash_cal_token') || '';
+let calTokenExpiry = parseInt(localStorage.getItem('dash_cal_expiry') || '0');
+let calEventsData = [];
+
+function connectGoogleCalendar() {
+  const client = google.accounts.oauth2.initTokenClient({
+    client_id: GOOGLE_CLIENT_ID,
+    scope: CALENDAR_SCOPE,
+    callback: (response) => {
+      if (response.error) { alert('Connection failed: ' + response.error); return; }
+      calAccessToken = response.access_token;
+      calTokenExpiry = Date.now() + (response.expires_in * 1000);
+      localStorage.setItem('dash_cal_token', calAccessToken);
+      localStorage.setItem('dash_cal_expiry', calTokenExpiry.toString());
+      activateCalendar();
+      fetchCalendarEvents();
+    }
+  });
+  client.requestAccessToken();
+}
+
+function activateCalendar() {
+  document.getElementById('calConnectSection').style.display = 'none';
+  document.getElementById('calStatus').classList.add('active');
+  document.getElementById('calStatusText').textContent = 'Connected';
+  document.getElementById('calRefreshBtn').style.display = 'inline';
+  document.getElementById('calDisconnectBtn').style.display = 'inline';
+}
+
+function disconnectCalendar() {
+  calAccessToken = ''; calTokenExpiry = 0; calEventsData = [];
+  localStorage.removeItem('dash_cal_token'); localStorage.removeItem('dash_cal_expiry');
+  document.getElementById('calConnectSection').style.display = 'block';
+  document.getElementById('calStatus').classList.remove('active');
+  document.getElementById('calStatusText').textContent = 'Not connected';
+  document.getElementById('calRefreshBtn').style.display = 'none';
+  document.getElementById('calDisconnectBtn').style.display = 'none';
+  document.getElementById('calEvents').innerHTML = '';
+}
+
+async function fetchCalendarEvents() {
+  if (!calAccessToken) return;
+  if (Date.now() > calTokenExpiry) { disconnectCalendar(); alert('Session expired. Please reconnect.'); return; }
+  const eventsEl = document.getElementById('calEvents');
+  eventsEl.innerHTML = '<span class="cal-empty">Loading...</span>';
+  const now = new Date();
+  const start = new Date(now.getFullYear(), now.getMonth(), now.getDate()).toISOString();
+  const end = new Date(now.getFullYear(), now.getMonth(), now.getDate(), 23, 59, 59).toISOString();
+  try {
+    const res = await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=' + start + '&timeMax=' + end + '&singleEvents=true&orderBy=startTime&maxResults=20', { headers: { Authorization: 'Bearer ' + calAccessToken } });
+    const data = await res.json();
+    if (data.error) { eventsEl.innerHTML = '<span class="cal-empty">Error: ' + data.error.message + '</span>'; return; }
+    calEventsData = data.items || [];
+    renderCalendarEvents();
+  } catch (err) { eventsEl.innerHTML = '<span class="cal-empty">Failed to load events.</span>'; }
+}
+
+function renderCalendarEvents() {
+  const eventsEl = document.getElementById('calEvents');
+  eventsEl.innerHTML = '';
+  if (calEventsData.length === 0) { eventsEl.innerHTML = '<span class="cal-empty">No events today.</span>'; return; }
+  calEventsData.forEach(event => {
+    const isAllDay = !event.start.dateTime;
+    const timeStr = isAllDay ? 'All day' : new Date(event.start.dateTime).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+    const el = document.createElement('div');
+    el.className = 'cal-event';
+    el.innerHTML = '<span class="cal-event-time">' + timeStr + '</span><span class="cal-event-title">' + (event.summary || 'Untitled') + '</span>';
+    eventsEl.appendChild(el);
+  });
+}
+
+function getCalendarContext() {
+  if (!calEventsData.length) return '';
+  const lines = calEventsData.map(e => {
+    const isAllDay = !e.start.dateTime;
+    const t = isAllDay ? 'All day' : new Date(e.start.dateTime).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit', hour12: true });
+    return '- ' + t + ': ' + (e.summary || 'Untitled');
+  });
+  return '\n\nToday\'s calendar:\n' + lines.join('\n');
+}
+
+if (calAccessToken && Date.now() < calTokenExpiry) { activateCalendar(); fetchCalendarEvents(); }
+
+// AI ASSISTANT
 let apiKey = localStorage.getItem('dash_apikey') || '';
 let chatHistory = [];
 
 function saveApiKey() {
   const val = document.getElementById('apiKeyInput').value.trim();
-  if (!val.startsWith('sk-')) {
-    alert("That doesn't look like a valid Anthropic key. It should start with sk-");
-    return;
-  }
+  if (!val.startsWith('sk-')) { alert("Doesn't look like a valid Anthropic key (should start with sk-)"); return; }
   apiKey = val;
   localStorage.setItem('dash_apikey', apiKey);
   document.getElementById('apiKeyInput').value = '';
   activateChat();
-  addAssistantMessage("Key saved. I'm your productivity assistant — I can see your tasks and help you prioritize, stay focused, and think through your day. What are we working on?");
+  addAssistantMessage("Key saved. I can see your tasks, calendar, and focus note. What are we working on?");
 }
 
 function clearApiKey() {
-  apiKey = '';
-  localStorage.removeItem('dash_apikey');
-  chatHistory = [];
-  document.getElementById('chatMessages').innerHTML = '';
+  apiKey = ''; localStorage.removeItem('dash_apikey');
+  chatHistory = []; document.getElementById('chatMessages').innerHTML = '';
   deactivateChat();
 }
 
@@ -614,10 +487,11 @@ function getTaskContext() {
   const open = tasks.filter(t => !t.done).map(t => '- ' + t.text).join('\n');
   const done = tasks.filter(t => t.done).map(t => '- ' + t.text).join('\n');
   const note = noteEl.value.trim();
-  let ctx = `Today is ${new Date().toLocaleDateString('en-US', {weekday:'long', month:'long', day:'numeric'})}.`;
-  if (open) ctx += `\n\nOpen tasks:\n${open}`;
-  if (done) ctx += `\n\nCompleted tasks:\n${done}`;
-  if (note) ctx += `\n\nFocus note: ${note}`;
+  let ctx = 'Today is ' + new Date().toLocaleDateString('en-US', {weekday:'long', month:'long', day:'numeric'}) + '.';
+  if (open) ctx += '\n\nOpen tasks:\n' + open;
+  if (done) ctx += '\n\nCompleted tasks:\n' + done;
+  if (note) ctx += '\n\nFocus note: ' + note;
+  ctx += getCalendarContext();
   return ctx;
 }
 
@@ -625,9 +499,8 @@ function addUserMessage(text) {
   const msgs = document.getElementById('chatMessages');
   const el = document.createElement('div');
   el.className = 'chat-msg user';
-  el.innerHTML = `<div class="chat-bubble">${text}</div>`;
-  msgs.appendChild(el);
-  msgs.scrollTop = msgs.scrollHeight;
+  el.innerHTML = '<div class="chat-bubble">' + text + '</div>';
+  msgs.appendChild(el); msgs.scrollTop = msgs.scrollHeight;
 }
 
 function addAssistantMessage(text) {
@@ -636,85 +509,42 @@ function addAssistantMessage(text) {
   const msgs = document.getElementById('chatMessages');
   const el = document.createElement('div');
   el.className = 'chat-msg assistant';
-  el.innerHTML = `<div class="chat-bubble">${text.replace(/\n/g, '<br>')}</div>`;
-  msgs.appendChild(el);
-  msgs.scrollTop = msgs.scrollHeight;
+  el.innerHTML = '<div class="chat-bubble">' + text.replace(/\n/g, '<br>') + '</div>';
+  msgs.appendChild(el); msgs.scrollTop = msgs.scrollHeight;
 }
 
 function showTyping() {
   const msgs = document.getElementById('chatMessages');
   const el = document.createElement('div');
-  el.className = 'chat-msg assistant';
-  el.id = 'typingIndicator';
-  el.innerHTML = `<div class="chat-bubble typing-indicator"><span></span><span></span><span></span></div>`;
-  msgs.appendChild(el);
-  msgs.scrollTop = msgs.scrollHeight;
+  el.className = 'chat-msg assistant'; el.id = 'typingIndicator';
+  el.innerHTML = '<div class="chat-bubble typing-indicator"><span></span><span></span><span></span></div>';
+  msgs.appendChild(el); msgs.scrollTop = msgs.scrollHeight;
 }
 
 async function sendMessage() {
   const input = document.getElementById('chatInput');
   const text = input.value.trim();
   if (!text || !apiKey) return;
-
-  input.value = '';
-  input.disabled = true;
-  document.getElementById('chatSend').disabled = true;
-
+  input.value = ''; input.disabled = true; document.getElementById('chatSend').disabled = true;
   addUserMessage(text);
   chatHistory.push({ role: 'user', content: text });
   showTyping();
-
-  const systemPrompt = `You are Mike's personal productivity assistant embedded in his dashboard. Be direct, concise, and focused on keeping him on task and accountable.
-
-Current context:
-${getTaskContext()}
-
-Keep responses short and actionable. If he's going off track, call it out. Never pad responses. Help him prioritize, break through blockers, and make fast decisions.`;
-
+  const systemPrompt = 'You are Mike\'s personal productivity assistant embedded in his dashboard. Be direct, concise, and focused on keeping him on task and accountable.\n\nCurrent context:\n' + getTaskContext() + '\n\nKeep responses short and actionable. If he\'s going off track, call it out. Never pad responses.';
   try {
     const response = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-api-key': apiKey,
-        'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
-      },
-      body: JSON.stringify({
-        model: 'claude-haiku-4-5-20251001',
-        max_tokens: 1000,
-        system: systemPrompt,
-        messages: chatHistory
-      })
+      headers: { 'Content-Type': 'application/json', 'x-api-key': apiKey, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true' },
+      body: JSON.stringify({ model: 'claude-haiku-4-5-20251001', max_tokens: 1000, system: systemPrompt, messages: chatHistory })
     });
-
     const data = await response.json();
-
-    if (data.error) {
-      addAssistantMessage(`Error: ${data.error.message}`);
-      chatHistory.pop();
-    } else {
-      const reply = data.content[0].text;
-      chatHistory.push({ role: 'assistant', content: reply });
-      addAssistantMessage(reply);
-    }
-  } catch (err) {
-    addAssistantMessage('Connection error. Check your API key and try again.');
-    chatHistory.pop();
-  }
-
-  input.disabled = false;
-  document.getElementById('chatSend').disabled = false;
-  input.focus();
+    if (data.error) { addAssistantMessage('Error: ' + data.error.message); chatHistory.pop(); }
+    else { const reply = data.content[0].text; chatHistory.push({ role: 'assistant', content: reply }); addAssistantMessage(reply); }
+  } catch (err) { addAssistantMessage('Connection error. Check your API key and try again.'); chatHistory.pop(); }
+  input.disabled = false; document.getElementById('chatSend').disabled = false; input.focus();
 }
 
-// Init
-if (apiKey) {
-  activateChat();
-  addAssistantMessage("Hey Mike — I'm ready. Tell me what's on your plate today and I'll help you prioritize.");
-} else {
-  deactivateChat();
-}
+if (apiKey) { activateChat(); addAssistantMessage("Hey Mike — I'm ready. I can see your tasks, calendar, and focus note. What are we working on?"); }
+else { deactivateChat(); }
 </script>
 </body>
 </html>
