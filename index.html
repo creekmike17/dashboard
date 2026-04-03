@@ -468,9 +468,27 @@ async function fetchWeekEvents(){
 }
 function renderWeekEvents(){const el=document.getElementById('weekEvents');el.innerHTML='';if(!weekEventsData.length){el.innerHTML='<span class="cal-empty">No events this week.</span>';return;}const days={};weekEventsData.forEach(ev=>{const k=(ev.start.dateTime||ev.start.date).substring(0,10);if(!days[k])days[k]=[];days[k].push(ev);});Object.keys(days).sort().forEach(k=>{const lbl=document.createElement('div');lbl.style.cssText='font-family:"DM Mono",monospace;font-size:0.65rem;letter-spacing:2px;color:var(--accent);text-transform:uppercase;padding:4px 0 2px;';lbl.textContent=new Date(k+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});el.appendChild(lbl);days[k].forEach(ev=>{const allDay=!ev.start.dateTime,t=allDay?'All day':new Date(ev.start.dateTime).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true});const d=document.createElement('div');d.className='cal-event';d.innerHTML='<span class="cal-event-time">'+t+'</span><span class="cal-event-title">'+(ev.summary||'Untitled')+'</span>';el.appendChild(d);});});}
 
-function getCalContext(){if(!calEventsData.length)return'';return'\n\nToday\'s calendar:\n'+calEventsData.map(e=>{const allDay=!e.start.dateTime,t=allDay?'All day':new Date(e.start.dateTime).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true});return'- '+t+': '+(e.summary||'Untitled');}).join('\n');}
-if(calAccessToken&&Date.now()<calTokenExpiry){activateCal();fetchCalendarEvents();fetchWeekEvents();}
-
+function getCalContext(){
+  let ctx='';
+  if(calEventsData.length){
+    ctx+='\n\nToday\'s calendar:\n'+calEventsData.map(e=>{
+      const allDay=!e.start.dateTime,t=allDay?'All day':new Date(e.start.dateTime).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true});
+      return'- '+t+': '+(e.summary||'Untitled');
+    }).join('\n');
+  }
+  if(weekEventsData.length){
+    const today=new Date().toISOString().substring(0,10);
+    const upcoming=weekEventsData.filter(e=>(e.start.dateTime||e.start.date).substring(0,10)>today);
+    if(upcoming.length){
+      ctx+='\n\nUpcoming this week:\n'+upcoming.map(e=>{
+        const d=(e.start.dateTime||e.start.date).substring(0,10);
+        const allDay=!e.start.dateTime,t=allDay?'All day':new Date(e.start.dateTime).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true});
+        return'- '+d+' '+t+': '+(e.summary||'Untitled');
+      }).join('\n');
+    }
+  }
+  return ctx;
+}
 // ── MEMORY SYSTEM ──────────────────────────────────────
 let chatHistory = [];
 let memoryLoaded = false;
