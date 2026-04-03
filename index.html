@@ -1,728 +1,2589 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Mike's Dashboard</title>
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
-<style>
-  :root {
-    --bg: #0c0c0f; --surface: #13131a; --border: #1e1e2e;
-    --accent: #e8ff47; --accent2: #47c8ff; --accent3: #47ff9b;
-    --text: #e0e0e0; --muted: #555570; --danger: #ff4757;
-    --high: #ff4757; --medium: #ffaa00; --low: #47c8ff;
-  }
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; padding: 24px; display: flex; flex-direction: column; gap: 16px; }
-  header { display: flex; justify-content: space-between; align-items: flex-end; border-bottom: 1px solid var(--border); padding-bottom: 16px; }
-  .greeting { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2rem, 5vw, 3.5rem); letter-spacing: 2px; line-height: 1; }
-  .greeting span { color: var(--accent); }
-  .live-time { font-family: 'DM Mono', monospace; font-size: 0.85rem; color: var(--muted); text-align: right; line-height: 1.7; }
-  .live-time #clock { font-size: 1.4rem; color: var(--accent2); display: block; }
-  .row { display: grid; gap: 16px; }
-  .row-top { grid-template-columns: 1fr 1fr 1fr; }
-  .row-middle { grid-template-columns: 1fr 1fr; }
-  .row-tasks { grid-template-columns: 1fr; }
-  .row-fitness { grid-template-columns: 1fr 1fr; }
-  .row-bottom { grid-template-columns: 1fr 1fr; }
-  .card { background: var(--surface); border: 1px solid var(--border); border-radius: 8px; padding: 20px; display: flex; flex-direction: column; gap: 14px; animation: fadeUp 0.4s ease both; }
-  @keyframes fadeUp { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
-  .card-label { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-  .card-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Mike's Dashboard</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      :root {
+        --bg: #0c0c0f;
+        --surface: #13131a;
+        --border: #1e1e2e;
+        --accent: #e8ff47;
+        --accent2: #47c8ff;
+        --accent3: #47ff9b;
+        --text: #e0e0e0;
+        --muted: #555570;
+        --danger: #ff4757;
+        --high: #ff4757;
+        --medium: #ffaa00;
+        --low: #47c8ff;
+      }
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      body {
+        background: var(--bg);
+        color: var(--text);
+        font-family: "DM Sans", sans-serif;
+        min-height: 100vh;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+      header {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-end;
+        border-bottom: 1px solid var(--border);
+        padding-bottom: 16px;
+      }
+      .greeting {
+        font-family: "Bebas Neue", sans-serif;
+        font-size: clamp(2rem, 5vw, 3.5rem);
+        letter-spacing: 2px;
+        line-height: 1;
+      }
+      .greeting span {
+        color: var(--accent);
+      }
+      .live-time {
+        font-family: "DM Mono", monospace;
+        font-size: 0.85rem;
+        color: var(--muted);
+        text-align: right;
+        line-height: 1.7;
+      }
+      .live-time #clock {
+        font-size: 1.4rem;
+        color: var(--accent2);
+        display: block;
+      }
+      .row {
+        display: grid;
+        gap: 16px;
+      }
+      .row-top {
+        grid-template-columns: 1fr 1fr 1fr;
+      }
+      .row-middle {
+        grid-template-columns: 1fr 1fr;
+      }
+      .row-tasks {
+        grid-template-columns: 1fr;
+      }
+      .row-fitness {
+        grid-template-columns: 1fr 1fr;
+      }
+      .row-bottom {
+        grid-template-columns: 1fr 1fr;
+      }
+      .card {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 8px;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        animation: fadeUp 0.4s ease both;
+      }
+      @keyframes fadeUp {
+        from {
+          opacity: 0;
+          transform: translateY(12px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+      .card-label {
+        font-family: "DM Mono", monospace;
+        font-size: 0.65rem;
+        letter-spacing: 3px;
+        text-transform: uppercase;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        flex-shrink: 0;
+      }
+      .card-label::after {
+        content: "";
+        flex: 1;
+        height: 1px;
+        background: var(--border);
+      }
 
-  /* QUICK TASKS */
-  .task-input-row { display: flex; gap: 8px; }
-  .task-input-row input { flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 8px 12px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.85rem; outline: none; }
-  .task-input-row input::placeholder { color: var(--muted); }
-  .task-input-row input:focus { border-color: var(--accent2); }
-  .task-input-row button { background: var(--accent); border: none; border-radius: 4px; color: #000; font-weight: 600; font-size: 1.1rem; width: 34px; cursor: pointer; }
-  .task-list { display: flex; flex-direction: column; gap: 6px; max-height: 200px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
-  .task-item { display: flex; align-items: center; gap: 10px; padding: 8px 10px; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; font-size: 0.85rem; cursor: pointer; flex-shrink: 0; }
-  .task-item:hover { border-color: var(--muted); }
-  .task-check { width: 16px; height: 16px; border: 1.5px solid var(--muted); border-radius: 3px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
-  .task-item.done .task-check { background: var(--accent); border-color: var(--accent); }
-  .task-item.done .task-check::after { content: '✓'; font-size: 10px; color: #000; font-weight: 700; }
-  .task-item.done .task-text { text-decoration: line-through; color: var(--muted); }
-  .task-delete { margin-left: auto; color: var(--muted); font-size: 0.7rem; opacity: 0; }
-  .task-item:hover .task-delete { opacity: 1; color: var(--danger); }
-  .progress-row { display: flex; align-items: center; gap: 10px; font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--muted); }
-  .progress-bar { flex: 1; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
-  .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.4s ease; }
+      /* QUICK TASKS */
+      .task-input-row {
+        display: flex;
+        gap: 8px;
+      }
+      .task-input-row input {
+        flex: 1;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 8px 12px;
+        color: var(--text);
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.85rem;
+        outline: none;
+      }
+      .task-input-row input::placeholder {
+        color: var(--muted);
+      }
+      .task-input-row input:focus {
+        border-color: var(--accent2);
+      }
+      .task-input-row button {
+        background: var(--accent);
+        border: none;
+        border-radius: 4px;
+        color: #000;
+        font-weight: 600;
+        font-size: 1.1rem;
+        width: 34px;
+        cursor: pointer;
+      }
+      .task-list {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        max-height: 200px;
+        overflow-y: auto;
+        scrollbar-width: thin;
+        scrollbar-color: var(--border) transparent;
+      }
+      .task-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 8px 10px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        font-size: 0.85rem;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+      .task-item:hover {
+        border-color: var(--muted);
+      }
+      .task-check {
+        width: 16px;
+        height: 16px;
+        border: 1.5px solid var(--muted);
+        border-radius: 3px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .task-item.done .task-check {
+        background: var(--accent);
+        border-color: var(--accent);
+      }
+      .task-item.done .task-check::after {
+        content: "✓";
+        font-size: 10px;
+        color: #000;
+        font-weight: 700;
+      }
+      .task-item.done .task-text {
+        text-decoration: line-through;
+        color: var(--muted);
+      }
+      .task-delete {
+        margin-left: auto;
+        color: var(--muted);
+        font-size: 0.7rem;
+        opacity: 0;
+      }
+      .task-item:hover .task-delete {
+        opacity: 1;
+        color: var(--danger);
+      }
+      .progress-row {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-family: "DM Mono", monospace;
+        font-size: 0.7rem;
+        color: var(--muted);
+      }
+      .progress-bar {
+        flex: 1;
+        height: 3px;
+        background: var(--border);
+        border-radius: 2px;
+        overflow: hidden;
+      }
+      .progress-fill {
+        height: 100%;
+        background: var(--accent);
+        border-radius: 2px;
+        transition: width 0.4s ease;
+      }
 
-  /* APPS FILES */
-  .items-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
-  .app-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 14px 8px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; text-decoration: none; color: var(--text); font-size: 0.7rem; transition: all 0.15s; cursor: pointer; text-align: center; }
-  .app-btn:hover { border-color: var(--accent); transform: translateY(-2px); }
-  .app-btn .app-icon { font-size: 1.4rem; }
-  .app-wrapper { position: relative; }
-  .app-controls { display: none; position: absolute; top: 4px; right: 4px; gap: 3px; z-index: 2; }
-  .app-wrapper:hover .app-controls { display: flex; }
-  .app-ctrl-btn { background: var(--surface); border: 1px solid var(--border); border-radius: 3px; color: var(--muted); font-size: 0.6rem; width: 18px; height: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-  .app-ctrl-btn:hover { color: var(--text); border-color: var(--muted); }
-  .app-ctrl-btn.del:hover { color: var(--danger); border-color: var(--danger); }
-  .add-link { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 2px; color: var(--muted); cursor: pointer; text-transform: uppercase; }
-  .add-link:hover { color: var(--accent); }
+      /* APPS FILES */
+      .items-grid {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 8px;
+      }
+      .app-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 6px;
+        padding: 14px 8px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        text-decoration: none;
+        color: var(--text);
+        font-size: 0.7rem;
+        transition: all 0.15s;
+        cursor: pointer;
+        text-align: center;
+      }
+      .app-btn:hover {
+        border-color: var(--accent);
+        transform: translateY(-2px);
+      }
+      .app-btn .app-icon {
+        font-size: 1.4rem;
+      }
+      .app-wrapper {
+        position: relative;
+      }
+      .app-controls {
+        display: none;
+        position: absolute;
+        top: 4px;
+        right: 4px;
+        gap: 3px;
+        z-index: 2;
+      }
+      .app-wrapper:hover .app-controls {
+        display: flex;
+      }
+      .app-ctrl-btn {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 3px;
+        color: var(--muted);
+        font-size: 0.6rem;
+        width: 18px;
+        height: 18px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .app-ctrl-btn:hover {
+        color: var(--text);
+        border-color: var(--muted);
+      }
+      .app-ctrl-btn.del:hover {
+        color: var(--danger);
+        border-color: var(--danger);
+      }
+      .add-link {
+        font-family: "DM Mono", monospace;
+        font-size: 0.65rem;
+        letter-spacing: 2px;
+        color: var(--muted);
+        cursor: pointer;
+        text-transform: uppercase;
+      }
+      .add-link:hover {
+        color: var(--accent);
+      }
 
-  /* MODALS */
-  .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; align-items: center; justify-content: center; }
-  .modal-backdrop.open { display: flex; }
-  .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 28px; width: 440px; display: flex; flex-direction: column; gap: 14px; max-height: 90vh; overflow-y: auto; }
-  .modal h3 { font-family: 'DM Mono', monospace; font-size: 0.8rem; letter-spacing: 2px; text-transform: uppercase; color: var(--accent); }
-  .modal input, .modal select, .modal textarea { background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 8px 12px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.85rem; outline: none; width: 100%; }
-  .modal input:focus, .modal select:focus, .modal textarea:focus { border-color: var(--accent2); }
-  .modal select option { background: var(--surface); color: var(--text); }
-  .modal textarea { resize: vertical; min-height: 70px; }
-  .modal-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
-  .modal-row-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-  .modal-field { display: flex; flex-direction: column; gap: 6px; }
-  .modal-field label { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; }
-  .modal-actions { display: flex; gap: 8px; justify-content: flex-end; margin-top: 4px; }
-  .modal-actions button { padding: 7px 18px; border-radius: 4px; border: none; font-size: 0.8rem; cursor: pointer; font-family: 'DM Sans', sans-serif; }
-  .btn-cancel { background: var(--border); color: var(--muted); }
-  .btn-save { background: var(--accent); color: #000; font-weight: 600; }
-  .btn-save-green { background: var(--accent3); color: #000; font-weight: 600; }
+      /* MODALS */
+      .modal-backdrop {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.7);
+        z-index: 100;
+        align-items: center;
+        justify-content: center;
+      }
+      .modal-backdrop.open {
+        display: flex;
+      }
+      .modal {
+        background: var(--surface);
+        border: 1px solid var(--border);
+        border-radius: 10px;
+        padding: 28px;
+        width: 440px;
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+        max-height: 90vh;
+        overflow-y: auto;
+      }
+      .modal h3 {
+        font-family: "DM Mono", monospace;
+        font-size: 0.8rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--accent);
+      }
+      .modal input,
+      .modal select,
+      .modal textarea {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 8px 12px;
+        color: var(--text);
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.85rem;
+        outline: none;
+        width: 100%;
+      }
+      .modal input:focus,
+      .modal select:focus,
+      .modal textarea:focus {
+        border-color: var(--accent2);
+      }
+      .modal select option {
+        background: var(--surface);
+        color: var(--text);
+      }
+      .modal textarea {
+        resize: vertical;
+        min-height: 70px;
+      }
+      .modal-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+      }
+      .modal-row-3 {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 10px;
+      }
+      .modal-field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+      }
+      .modal-field label {
+        font-family: "DM Mono", monospace;
+        font-size: 0.6rem;
+        letter-spacing: 2px;
+        color: var(--muted);
+        text-transform: uppercase;
+      }
+      .modal-actions {
+        display: flex;
+        gap: 8px;
+        justify-content: flex-end;
+        margin-top: 4px;
+      }
+      .modal-actions button {
+        padding: 7px 18px;
+        border-radius: 4px;
+        border: none;
+        font-size: 0.8rem;
+        cursor: pointer;
+        font-family: "DM Sans", sans-serif;
+      }
+      .btn-cancel {
+        background: var(--border);
+        color: var(--muted);
+      }
+      .btn-save {
+        background: var(--accent);
+        color: #000;
+        font-weight: 600;
+      }
+      .btn-save-green {
+        background: var(--accent3);
+        color: #000;
+        font-weight: 600;
+      }
 
-  /* AI SHARED */
-  .key-status { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted); display: flex; align-items: center; gap: 5px; }
-  .key-status .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
-  .key-status.active { color: var(--accent); }
-  .key-status.active .dot { background: var(--accent); }
-  .clear-key { margin-left: 6px; cursor: pointer; color: var(--muted); font-size: 0.65rem; font-family: 'DM Mono', monospace; }
-  .clear-key:hover { color: var(--danger); }
-  .mem-status { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted); display: flex; align-items: center; gap: 4px; }
-  .mem-status .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
-  .mem-status.loaded { color: var(--accent2); }
-  .mem-status.loaded .dot { background: var(--accent2); }
-  .api-key-row { display: flex; gap: 8px; }
-  .api-key-row input { flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 8px 12px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 0.75rem; outline: none; }
-  .api-key-row input::placeholder { color: var(--muted); }
-  .api-key-row button { background: var(--accent); border: none; border-radius: 4px; color: #000; font-weight: 600; font-size: 0.75rem; padding: 0 14px; cursor: pointer; white-space: nowrap; font-family: 'DM Sans', sans-serif; }
-  .chat-messages { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; min-height: 160px; max-height: 220px; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
-  .chat-msg { display: flex; flex-direction: column; max-width: 92%; }
-  .chat-msg.user { align-self: flex-end; align-items: flex-end; }
-  .chat-msg.assistant { align-self: flex-start; align-items: flex-start; }
-  .chat-bubble { padding: 8px 12px; border-radius: 8px; font-size: 0.82rem; line-height: 1.5; }
-  .chat-msg.user .chat-bubble { background: var(--accent); color: #000; border-radius: 8px 8px 2px 8px; }
-  .chat-msg.assistant .chat-bubble { background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 8px 8px 8px 2px; }
-  .chat-msg.assistant.fitness .chat-bubble { border-color: rgba(71,255,155,0.3); }
-  .chat-msg.memory .chat-bubble { background: rgba(71,200,255,0.05); border: 1px solid rgba(71,200,255,0.2); color: var(--muted); font-style: italic; font-size: 0.78rem; border-radius: 8px; }
-  .chat-input-row { display: flex; gap: 8px; }
-  .chat-input-row input { flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 8px 12px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.85rem; outline: none; }
-  .chat-input-row input::placeholder { color: var(--muted); }
-  .chat-input-row input:disabled { opacity: 0.4; }
-  .chat-send { background: var(--accent); border: none; border-radius: 4px; color: #000; font-weight: 700; font-size: 1rem; width: 34px; cursor: pointer; flex-shrink: 0; }
-  .chat-send.green { background: var(--accent3); }
-  .chat-send:disabled { opacity: 0.3; cursor: default; }
-  .typing-indicator { display: flex; gap: 4px; align-items: center; padding: 8px 12px; }
-  .typing-indicator span { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); animation: bounce 1.2s infinite; }
-  .typing-indicator span:nth-child(2) { animation-delay: 0.2s; }
-  .typing-indicator span:nth-child(3) { animation-delay: 0.4s; }
-  @keyframes bounce { 0%, 60%, 100% { transform: translateY(0); } 30% { transform: translateY(-5px); } }
+      /* AI SHARED */
+      .key-status {
+        font-family: "DM Mono", monospace;
+        font-size: 0.65rem;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .key-status .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--muted);
+        flex-shrink: 0;
+      }
+      .key-status.active {
+        color: var(--accent);
+      }
+      .key-status.active .dot {
+        background: var(--accent);
+      }
+      .clear-key {
+        margin-left: 6px;
+        cursor: pointer;
+        color: var(--muted);
+        font-size: 0.65rem;
+        font-family: "DM Mono", monospace;
+      }
+      .clear-key:hover {
+        color: var(--danger);
+      }
+      .mem-status {
+        font-family: "DM Mono", monospace;
+        font-size: 0.6rem;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        gap: 4px;
+      }
+      .mem-status .dot {
+        width: 5px;
+        height: 5px;
+        border-radius: 50%;
+        background: var(--muted);
+        flex-shrink: 0;
+      }
+      .mem-status.loaded {
+        color: var(--accent2);
+      }
+      .mem-status.loaded .dot {
+        background: var(--accent2);
+      }
+      .api-key-row {
+        display: flex;
+        gap: 8px;
+      }
+      .api-key-row input {
+        flex: 1;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 8px 12px;
+        color: var(--text);
+        font-family: "DM Mono", monospace;
+        font-size: 0.75rem;
+        outline: none;
+      }
+      .api-key-row input::placeholder {
+        color: var(--muted);
+      }
+      .api-key-row button {
+        background: var(--accent);
+        border: none;
+        border-radius: 4px;
+        color: #000;
+        font-weight: 600;
+        font-size: 0.75rem;
+        padding: 0 14px;
+        cursor: pointer;
+        white-space: nowrap;
+        font-family: "DM Sans", sans-serif;
+      }
+      .chat-messages {
+        flex: 1;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        min-height: 160px;
+        max-height: 220px;
+        scrollbar-width: thin;
+        scrollbar-color: var(--border) transparent;
+      }
+      .chat-msg {
+        display: flex;
+        flex-direction: column;
+        max-width: 92%;
+      }
+      .chat-msg.user {
+        align-self: flex-end;
+        align-items: flex-end;
+      }
+      .chat-msg.assistant {
+        align-self: flex-start;
+        align-items: flex-start;
+      }
+      .chat-bubble {
+        padding: 8px 12px;
+        border-radius: 8px;
+        font-size: 0.82rem;
+        line-height: 1.5;
+      }
+      .chat-msg.user .chat-bubble {
+        background: var(--accent);
+        color: #000;
+        border-radius: 8px 8px 2px 8px;
+      }
+      .chat-msg.assistant .chat-bubble {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        color: var(--text);
+        border-radius: 8px 8px 8px 2px;
+      }
+      .chat-msg.assistant.fitness .chat-bubble {
+        border-color: rgba(71, 255, 155, 0.3);
+      }
+      .chat-msg.memory .chat-bubble {
+        background: rgba(71, 200, 255, 0.05);
+        border: 1px solid rgba(71, 200, 255, 0.2);
+        color: var(--muted);
+        font-style: italic;
+        font-size: 0.78rem;
+        border-radius: 8px;
+      }
+      .chat-input-row {
+        display: flex;
+        gap: 8px;
+      }
+      .chat-input-row input {
+        flex: 1;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 4px;
+        padding: 8px 12px;
+        color: var(--text);
+        font-family: "DM Sans", sans-serif;
+        font-size: 0.85rem;
+        outline: none;
+      }
+      .chat-input-row input::placeholder {
+        color: var(--muted);
+      }
+      .chat-input-row input:disabled {
+        opacity: 0.4;
+      }
+      .chat-send {
+        background: var(--accent);
+        border: none;
+        border-radius: 4px;
+        color: #000;
+        font-weight: 700;
+        font-size: 1rem;
+        width: 34px;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+      .chat-send.green {
+        background: var(--accent3);
+      }
+      .chat-send:disabled {
+        opacity: 0.3;
+        cursor: default;
+      }
+      .typing-indicator {
+        display: flex;
+        gap: 4px;
+        align-items: center;
+        padding: 8px 12px;
+      }
+      .typing-indicator span {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--muted);
+        animation: bounce 1.2s infinite;
+      }
+      .typing-indicator span:nth-child(2) {
+        animation-delay: 0.2s;
+      }
+      .typing-indicator span:nth-child(3) {
+        animation-delay: 0.4s;
+      }
+      @keyframes bounce {
+        0%,
+        60%,
+        100% {
+          transform: translateY(0);
+        }
+        30% {
+          transform: translateY(-5px);
+        }
+      }
 
-  /* CALENDAR */
-  .cal-connect-btn { background: var(--bg); border: 1px solid var(--border); border-radius: 6px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 0.75rem; padding: 10px 14px; cursor: pointer; display: flex; align-items: center; gap: 8px; align-self: flex-start; }
-  .cal-connect-btn:hover { border-color: var(--accent2); color: var(--accent2); }
-  .cal-status { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted); display: flex; align-items: center; gap: 5px; }
-  .cal-status .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
-  .cal-status.active { color: var(--accent2); }
-  .cal-status.active .dot { background: var(--accent2); }
-  .cal-action { margin-left: 4px; cursor: pointer; color: var(--muted); font-size: 0.65rem; font-family: 'DM Mono', monospace; }
-  .cal-action:hover { color: var(--accent2); }
-  .cal-action.danger:hover { color: var(--danger); }
-  .cal-events { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 8px; }
-  .cal-event { display: flex; gap: 10px; padding: 8px 12px; background: var(--bg); border: 1px solid var(--border); border-left: 3px solid var(--accent2); border-radius: 4px; font-size: 0.8rem; line-height: 1.4; align-items: flex-start; }
-  .cal-event-time { font-family: 'DM Mono', monospace; font-size: 0.7rem; color: var(--accent2); white-space: nowrap; flex-shrink: 0; padding-top: 1px; }
-  .cal-event-title { color: var(--text); }
-  .cal-empty { font-family: 'DM Mono', monospace; font-size: 0.75rem; color: var(--muted); }
+      /* CALENDAR */
+      .cal-connect-btn {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 6px;
+        color: var(--text);
+        font-family: "DM Mono", monospace;
+        font-size: 0.75rem;
+        padding: 10px 14px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        align-self: flex-start;
+      }
+      .cal-connect-btn:hover {
+        border-color: var(--accent2);
+        color: var(--accent2);
+      }
+      .cal-status {
+        font-family: "DM Mono", monospace;
+        font-size: 0.65rem;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .cal-status .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--muted);
+        flex-shrink: 0;
+      }
+      .cal-status.active {
+        color: var(--accent2);
+      }
+      .cal-status.active .dot {
+        background: var(--accent2);
+      }
+      .cal-action {
+        margin-left: 4px;
+        cursor: pointer;
+        color: var(--muted);
+        font-size: 0.65rem;
+        font-family: "DM Mono", monospace;
+      }
+      .cal-action:hover {
+        color: var(--accent2);
+      }
+      .cal-action.danger:hover {
+        color: var(--danger);
+      }
+      .cal-events {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 8px;
+      }
+      .cal-event {
+        display: flex;
+        gap: 10px;
+        padding: 8px 12px;
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-left: 3px solid var(--accent2);
+        border-radius: 4px;
+        font-size: 0.8rem;
+        line-height: 1.4;
+        align-items: flex-start;
+      }
+      .cal-event-time {
+        font-family: "DM Mono", monospace;
+        font-size: 0.7rem;
+        color: var(--accent2);
+        white-space: nowrap;
+        flex-shrink: 0;
+        padding-top: 1px;
+      }
+      .cal-event-title {
+        color: var(--text);
+      }
+      .cal-empty {
+        font-family: "DM Mono", monospace;
+        font-size: 0.75rem;
+        color: var(--muted);
+      }
 
-  /* TASK TABLE */
-  .task-toolbar { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; }
-  .task-toolbar button { background: var(--accent); border: none; border-radius: 4px; color: #000; font-weight: 600; font-size: 0.75rem; padding: 7px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
-  .task-toolbar .btn-secondary { background: var(--bg); border: 1px solid var(--border); color: var(--muted); font-weight: 400; }
-  .task-toolbar .btn-secondary:hover { border-color: var(--accent2); color: var(--accent2); }
-  .filter-tabs { display: flex; gap: 6px; margin-left: auto; }
-  .filter-tab { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 1px; color: var(--muted); cursor: pointer; padding: 4px 10px; border: 1px solid var(--border); border-radius: 20px; }
-  .filter-tab.active { border-color: var(--accent); color: var(--accent); }
-  .filter-tab:hover { color: var(--text); border-color: var(--muted); }
-  .table-wrap { overflow-x: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
-  .task-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
-  .task-table th { font-family: 'DM Mono', monospace; font-size: 0.6rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); text-align: left; padding: 8px 12px; border-bottom: 1px solid var(--border); white-space: nowrap; }
-  .task-table td { padding: 10px 12px; border-bottom: 1px solid var(--border); vertical-align: middle; }
-  .task-table tr:last-child td { border-bottom: none; }
-  .task-table tr:hover td { background: rgba(255,255,255,0.02); }
-  .t-name { color: var(--text); font-weight: 500; }
-  .t-name.done { text-decoration: line-through; color: var(--muted); }
-  .badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; }
-  .pri-high { background: rgba(255,71,87,0.15); color: var(--high); border: 1px solid rgba(255,71,87,0.3); }
-  .pri-medium { background: rgba(255,170,0,0.15); color: var(--medium); border: 1px solid rgba(255,170,0,0.3); }
-  .pri-low { background: rgba(71,200,255,0.15); color: var(--low); border: 1px solid rgba(71,200,255,0.3); }
-  .prog-not-started { background: rgba(85,85,112,0.2); color: var(--muted); border: 1px solid var(--border); }
-  .prog-in-progress { background: rgba(232,255,71,0.1); color: var(--accent); border: 1px solid rgba(232,255,71,0.3); }
-  .prog-completed { background: rgba(71,200,255,0.1); color: var(--accent2); border: 1px solid rgba(71,200,255,0.2); }
-  .t-mono { font-family: 'DM Mono', monospace; font-size: 0.75rem; color: var(--muted); white-space: nowrap; }
-  .t-overdue { color: var(--danger); }
-  .row-acts { display: flex; gap: 6px; opacity: 0; }
-  .task-table tr:hover .row-acts { opacity: 1; }
-  .row-act { background: none; border: 1px solid var(--border); border-radius: 3px; color: var(--muted); font-size: 0.65rem; padding: 2px 7px; cursor: pointer; font-family: 'DM Mono', monospace; }
-  .row-act:hover { color: var(--text); border-color: var(--muted); }
-  .row-act.del:hover { color: var(--danger); border-color: var(--danger); }
-  .db-status { font-family: 'DM Mono', monospace; font-size: 0.65rem; color: var(--muted); display: flex; align-items: center; gap: 5px; }
-  .db-status .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
-  .db-ok { color: var(--accent); }
-  .db-ok .dot { background: var(--accent); }
-  .db-err { color: var(--danger); }
-  .db-err .dot { background: var(--danger); }
-  .t-empty { font-family: 'DM Mono', monospace; font-size: 0.75rem; color: var(--muted); text-align: center; padding: 24px; }
+      /* TASK TABLE */
+      .task-toolbar {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+      }
+      .task-toolbar button {
+        background: var(--accent);
+        border: none;
+        border-radius: 4px;
+        color: #000;
+        font-weight: 600;
+        font-size: 0.75rem;
+        padding: 7px 14px;
+        cursor: pointer;
+        font-family: "DM Sans", sans-serif;
+      }
+      .task-toolbar .btn-secondary {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        color: var(--muted);
+        font-weight: 400;
+      }
+      .task-toolbar .btn-secondary:hover {
+        border-color: var(--accent2);
+        color: var(--accent2);
+      }
+      .filter-tabs {
+        display: flex;
+        gap: 6px;
+        margin-left: auto;
+      }
+      .filter-tab {
+        font-family: "DM Mono", monospace;
+        font-size: 0.65rem;
+        letter-spacing: 1px;
+        color: var(--muted);
+        cursor: pointer;
+        padding: 4px 10px;
+        border: 1px solid var(--border);
+        border-radius: 20px;
+      }
+      .filter-tab.active {
+        border-color: var(--accent);
+        color: var(--accent);
+      }
+      .filter-tab:hover {
+        color: var(--text);
+        border-color: var(--muted);
+      }
+      .table-wrap {
+        overflow-x: auto;
+        overflow-y: auto;
+        max-height: 280px;
+        scrollbar-width: thin;
+        scrollbar-color: var(--border) transparent;
+      }
+      .task-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.82rem;
+      }
+      .task-table th {
+        font-family: "DM Mono", monospace;
+        font-size: 0.6rem;
+        letter-spacing: 2px;
+        text-transform: uppercase;
+        color: var(--muted);
+        text-align: left;
+        padding: 8px 12px;
+        border-bottom: 1px solid var(--border);
+        white-space: nowrap;
+        position: sticky;
+        top: 0;
+        background: var(--surface);
+        z-index: 1;
+      }
+      .task-table td {
+        padding: 10px 12px;
+        border-bottom: 1px solid var(--border);
+        vertical-align: middle;
+      }
+      .task-table tr:last-child td {
+        border-bottom: none;
+      }
+      .task-table tr:hover td {
+        background: rgba(255, 255, 255, 0.02);
+      }
+      .t-name {
+        color: var(--text);
+        font-weight: 500;
+      }
+      .t-name.done {
+        text-decoration: line-through;
+        color: var(--muted);
+      }
+      .badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 20px;
+        font-family: "DM Mono", monospace;
+        font-size: 0.65rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+      .pri-high {
+        background: rgba(255, 71, 87, 0.15);
+        color: var(--high);
+        border: 1px solid rgba(255, 71, 87, 0.3);
+      }
+      .pri-medium {
+        background: rgba(255, 170, 0, 0.15);
+        color: var(--medium);
+        border: 1px solid rgba(255, 170, 0, 0.3);
+      }
+      .pri-low {
+        background: rgba(71, 200, 255, 0.15);
+        color: var(--low);
+        border: 1px solid rgba(71, 200, 255, 0.3);
+      }
+      .prog-not-started {
+        background: rgba(85, 85, 112, 0.2);
+        color: var(--muted);
+        border: 1px solid var(--border);
+      }
+      .prog-in-progress {
+        background: rgba(232, 255, 71, 0.1);
+        color: var(--accent);
+        border: 1px solid rgba(232, 255, 71, 0.3);
+      }
+      .prog-completed {
+        background: rgba(71, 200, 255, 0.1);
+        color: var(--accent2);
+        border: 1px solid rgba(71, 200, 255, 0.2);
+      }
+      .t-mono {
+        font-family: "DM Mono", monospace;
+        font-size: 0.75rem;
+        color: var(--muted);
+        white-space: nowrap;
+      }
+      .t-overdue {
+        color: var(--danger);
+      }
+      .row-acts {
+        display: flex;
+        gap: 6px;
+        opacity: 0;
+      }
+      .task-table tr:hover .row-acts {
+        opacity: 1;
+      }
+      .row-act {
+        background: none;
+        border: 1px solid var(--border);
+        border-radius: 3px;
+        color: var(--muted);
+        font-size: 0.65rem;
+        padding: 2px 7px;
+        cursor: pointer;
+        font-family: "DM Mono", monospace;
+      }
+      .row-act:hover {
+        color: var(--text);
+        border-color: var(--muted);
+      }
+      .row-act.del:hover {
+        color: var(--danger);
+        border-color: var(--danger);
+      }
+      .db-status {
+        font-family: "DM Mono", monospace;
+        font-size: 0.65rem;
+        color: var(--muted);
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .db-status .dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 50%;
+        background: var(--muted);
+        flex-shrink: 0;
+      }
+      .db-ok {
+        color: var(--accent);
+      }
+      .db-ok .dot {
+        background: var(--accent);
+      }
+      .db-err {
+        color: var(--danger);
+      }
+      .db-err .dot {
+        background: var(--danger);
+      }
+      .t-empty {
+        font-family: "DM Mono", monospace;
+        font-size: 0.75rem;
+        color: var(--muted);
+        text-align: center;
+        padding: 24px;
+      }
 
-  /* WORKOUT TABLE */
-  .workout-toolbar { display: flex; gap: 8px; align-items: center; }
-  .workout-toolbar button { background: var(--accent3); border: none; border-radius: 4px; color: #000; font-weight: 600; font-size: 0.75rem; padding: 7px 14px; cursor: pointer; font-family: 'DM Sans', sans-serif; }
-  .workout-toolbar .btn-secondary { background: var(--bg); border: 1px solid var(--border); color: var(--muted); font-weight: 400; }
-  .workout-toolbar .btn-secondary:hover { border-color: var(--accent3); color: var(--accent3); }
-  .workout-type-badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 1px; text-transform: uppercase; font-weight: 600; background: rgba(71,255,155,0.1); color: var(--accent3); border: 1px solid rgba(71,255,155,0.3); }
-</style>
-</head>
-<body>
+      /* WORKOUT TABLE */
+      .workout-toolbar {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+      }
+      .workout-toolbar button {
+        background: var(--accent3);
+        border: none;
+        border-radius: 4px;
+        color: #000;
+        font-weight: 600;
+        font-size: 0.75rem;
+        padding: 7px 14px;
+        cursor: pointer;
+        font-family: "DM Sans", sans-serif;
+      }
+      .workout-toolbar .btn-secondary {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        color: var(--muted);
+        font-weight: 400;
+      }
+      .workout-toolbar .btn-secondary:hover {
+        border-color: var(--accent3);
+        color: var(--accent3);
+      }
+      .workout-type-badge {
+        display: inline-block;
+        padding: 2px 8px;
+        border-radius: 20px;
+        font-family: "DM Mono", monospace;
+        font-size: 0.65rem;
+        letter-spacing: 1px;
+        text-transform: uppercase;
+        font-weight: 600;
+        background: rgba(71, 255, 155, 0.1);
+        color: var(--accent3);
+        border: 1px solid rgba(71, 255, 155, 0.3);
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="greeting">
+        Good <span id="timeOfDay">morning</span>, Mike.
+      </div>
+      <div class="live-time">
+        <span id="clock">--:--</span><span id="dateStr">--</span>
+      </div>
+    </header>
 
-<header>
-  <div class="greeting">Good <span id="timeOfDay">morning</span>, Mike.</div>
-  <div class="live-time"><span id="clock">--:--</span><span id="dateStr">--</span></div>
-</header>
+    <!-- TOP ROW: AI | Quick Tasks | Focus Note -->
+    <div class="row row-top">
+      <div class="card">
+        <div class="card-label">
+          AI Assistant
+          <span class="key-status" id="keyStatus"
+            ><span class="dot"></span
+            ><span id="keyStatusText">No key</span></span
+          >
+          <span class="mem-status" id="memStatus" style="display: none"
+            ><span class="dot"></span
+            ><span id="memStatusText">memory</span></span
+          >
+          <span
+            class="clear-key"
+            id="clearKeyBtn"
+            onclick="clearApiKey()"
+            style="display: none"
+            >clear</span
+          >
+        </div>
+        <div id="keySetup">
+          <div class="api-key-row">
+            <input
+              type="password"
+              id="apiKeyInput"
+              placeholder="Paste Anthropic API key..."
+              onkeydown="if (event.key === 'Enter') saveApiKey();"
+            />
+            <button onclick="saveApiKey()">Save</button>
+          </div>
+        </div>
+        <div class="chat-messages" id="chatMessages"></div>
+        <div class="chat-input-row">
+          <input
+            type="text"
+            id="chatInput"
+            placeholder="Ask me anything..."
+            onkeydown="if (event.key === 'Enter') sendMessage();"
+            disabled
+          />
+          <button
+            class="chat-send"
+            id="chatSend"
+            onclick="sendMessage()"
+            disabled
+          >
+            &#8593;
+          </button>
+        </div>
+      </div>
 
-<!-- TOP ROW: AI | Quick Tasks | Focus Note -->
-<div class="row row-top">
-  <div class="card">
-    <div class="card-label">AI Assistant
-      <span class="key-status" id="keyStatus"><span class="dot"></span><span id="keyStatusText">No key</span></span>
-      <span class="mem-status" id="memStatus" style="display:none;"><span class="dot"></span><span id="memStatusText">memory</span></span>
-      <span class="clear-key" id="clearKeyBtn" onclick="clearApiKey()" style="display:none;">clear</span>
-    </div>
-    <div id="keySetup">
-      <div class="api-key-row">
-        <input type="password" id="apiKeyInput" placeholder="Paste Anthropic API key..." onkeydown="if(event.key==='Enter') saveApiKey()">
-        <button onclick="saveApiKey()">Save</button>
+      <div class="card">
+        <div class="card-label">Quick Tasks</div>
+        <div class="task-input-row">
+          <input
+            type="text"
+            id="quickTaskInput"
+            placeholder="Quick add..."
+            onkeydown="if (event.key === 'Enter') quickAddTask();"
+          />
+          <button onclick="quickAddTask()">+</button>
+        </div>
+        <div class="progress-row">
+          <span id="taskProgress">0 / 0</span>
+          <div class="progress-bar">
+            <div
+              class="progress-fill"
+              id="progressFill"
+              style="width: 0%"
+            ></div>
+          </div>
+        </div>
+        <div class="task-list" id="quickTaskList"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Focus Note</div>
+        <textarea
+          id="focusNote"
+          placeholder="What's the ONE thing today?"
+          style="
+            background: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            padding: 10px;
+            color: var(--text);
+            font-family: &quot;DM Sans&quot;, sans-serif;
+            font-size: 0.85rem;
+            resize: none;
+            flex: 1;
+            min-height: 160px;
+            outline: none;
+            line-height: 1.6;
+          "
+          oninput="saveNote()"
+        ></textarea>
       </div>
     </div>
-    <div class="chat-messages" id="chatMessages"></div>
-    <div class="chat-input-row">
-      <input type="text" id="chatInput" placeholder="Ask me anything..." onkeydown="if(event.key==='Enter') sendMessage()" disabled>
-      <button class="chat-send" id="chatSend" onclick="sendMessage()" disabled>&#8593;</button>
-    </div>
-  </div>
 
-  <div class="card">
-    <div class="card-label">Quick Tasks</div>
-    <div class="task-input-row">
-      <input type="text" id="quickTaskInput" placeholder="Quick add..." onkeydown="if(event.key==='Enter') quickAddTask()">
-      <button onclick="quickAddTask()">+</button>
-    </div>
-    <div class="progress-row">
-      <span id="taskProgress">0 / 0</span>
-      <div class="progress-bar"><div class="progress-fill" id="progressFill" style="width:0%"></div></div>
-    </div>
-    <div class="task-list" id="quickTaskList"></div>
-  </div>
-
-  <div class="card">
-    <div class="card-label">Focus Note</div>
-    <textarea id="focusNote" placeholder="What's the ONE thing today?" style="background:var(--bg);border:1px solid var(--border);border-radius:4px;padding:10px;color:var(--text);font-family:'DM Sans',sans-serif;font-size:0.85rem;resize:none;flex:1;min-height:160px;outline:none;line-height:1.6;" oninput="saveNote()"></textarea>
-  </div>
-</div>
-
-<!-- CALENDAR ROW -->
-<div class="row row-middle">
-  <div class="card">
-    <div class="card-label">Today's Schedule
-      <span class="cal-status" id="calStatus"><span class="dot"></span><span id="calStatusText">Not connected</span></span>
-      <span class="cal-action" id="calRefreshBtn" onclick="fetchCalendarEvents()" style="display:none;">&#8635; refresh</span>
-      <span class="cal-action danger" id="calDisconnectBtn" onclick="disconnectCalendar()" style="display:none;">disconnect</span>
-    </div>
-    <div id="calConnectSection"><button class="cal-connect-btn" onclick="connectGoogleCalendar()">&#128197; Connect Google Calendar</button></div>
-    <div class="cal-events" id="calEvents"></div>
-  </div>
-  <div class="card">
-    <div class="card-label">This Week
-      <span class="cal-action" id="weekRefreshBtn" onclick="fetchWeekEvents()" style="display:none;">&#8635; refresh</span>
-    </div>
-    <div id="weekConnectMsg"><span class="cal-empty">Connect Google Calendar to see this week.</span></div>
-    <div class="cal-events" id="weekEvents"></div>
-  </div>
-</div>
-
-<!-- TASK TRACKER -->
-<div class="row row-tasks">
-  <div class="card">
-    <div class="card-label">Task Tracker
-      <span class="db-status" id="dbStatus"><span class="dot"></span><span id="dbStatusText">Connecting...</span></span>
-    </div>
-    <div class="task-toolbar">
-      <button onclick="openNewTask()">+ New Task</button>
-      <button class="btn-secondary" onclick="loadTasks()">&#8635; Refresh</button>
-      <div class="filter-tabs">
-        <span class="filter-tab active" onclick="setFilter('all',this)">All</span>
-        <span class="filter-tab" onclick="setFilter('not started',this)">Not Started</span>
-        <span class="filter-tab" onclick="setFilter('in progress',this)">In Progress</span>
-        <span class="filter-tab" onclick="setFilter('completed',this)">Completed</span>
+    <!-- CALENDAR ROW -->
+    <div class="row row-middle">
+      <div class="card">
+        <div class="card-label">
+          Today's Schedule
+          <span class="cal-status" id="calStatus"
+            ><span class="dot"></span
+            ><span id="calStatusText">Not connected</span></span
+          >
+          <span
+            class="cal-action"
+            id="calRefreshBtn"
+            onclick="fetchCalendarEvents()"
+            style="display: none"
+            >&#8635; refresh</span
+          >
+          <span
+            class="cal-action danger"
+            id="calDisconnectBtn"
+            onclick="disconnectCalendar()"
+            style="display: none"
+            >disconnect</span
+          >
+        </div>
+        <div id="calConnectSection">
+          <button class="cal-connect-btn" onclick="connectGoogleCalendar()">
+            &#128197; Connect Google Calendar
+          </button>
+        </div>
+        <div class="cal-events" id="calEvents"></div>
+      </div>
+      <div class="card">
+        <div class="card-label">
+          This Week
+          <span
+            class="cal-action"
+            id="weekRefreshBtn"
+            onclick="fetchWeekEvents()"
+            style="display: none"
+            >&#8635; refresh</span
+          >
+        </div>
+        <div id="weekConnectMsg">
+          <span class="cal-empty"
+            >Connect Google Calendar to see this week.</span
+          >
+        </div>
+        <div class="cal-events" id="weekEvents"></div>
       </div>
     </div>
-    <div class="table-wrap">
-      <table class="task-table">
-        <thead><tr><th>Task</th><th>Due Date</th><th>Priority</th><th>Allotted (hrs)</th><th>Progress</th><th>Actual (hrs)</th><th></th></tr></thead>
-        <tbody id="taskTbody"><tr><td colspan="7" class="t-empty">Loading...</td></tr></tbody>
-      </table>
-    </div>
-  </div>
-</div>
 
-<!-- FITNESS ROW: Coach | Workout Log -->
-<div class="row row-fitness">
-
-  <!-- FITNESS COACH -->
-  <div class="card">
-    <div class="card-label">Fitness Coach
-      <span class="key-status" id="fitStatus"><span class="dot"></span><span id="fitStatusText">Uses same key</span></span>
-    </div>
-    <div class="chat-messages" id="fitMessages"></div>
-    <div class="chat-input-row">
-      <input type="text" id="fitInput" placeholder="Ask your coach..." onkeydown="if(event.key==='Enter') sendFitMessage()" disabled>
-      <button class="chat-send green" id="fitSend" onclick="sendFitMessage()" disabled>&#8593;</button>
-    </div>
-  </div>
-
-  <!-- WORKOUT LOG -->
-  <div class="card">
-    <div class="card-label">Workout Log
-      <span class="db-status" id="fitDbStatus"><span class="dot"></span><span id="fitDbStatusText">Connecting...</span></span>
-    </div>
-    <div class="workout-toolbar">
-      <button onclick="openNewWorkout()">+ Log Workout</button>
-      <button class="btn-secondary" onclick="loadWorkouts()">&#8635; Refresh</button>
-    </div>
-    <div class="table-wrap">
-      <table class="task-table">
-        <thead><tr><th>Date</th><th>Type</th><th>Miles</th><th>Pace</th><th>BPM</th><th>RPE</th><th>Cadence</th><th></th></tr></thead>
-        <tbody id="workoutTbody"><tr><td colspan="8" class="t-empty">Loading...</td></tr></tbody>
-      </table>
-    </div>
-  </div>
-
-</div>
-
-<!-- BOTTOM ROW -->
-<div class="row row-bottom">
-  <div class="card">
-    <div class="card-label">Apps <span class="add-link" style="margin-left:auto;" onclick="openAddApp()">+ add</span></div>
-    <div class="items-grid" id="appsGrid"></div>
-  </div>
-  <div class="card">
-    <div class="card-label">Files <span class="add-link" style="margin-left:auto;" onclick="openAddFile()">+ add</span></div>
-    <div class="items-grid" id="filesGrid"></div>
-  </div>
-</div>
-
-<!-- APP/FILE MODAL -->
-<div class="modal-backdrop" id="modalBackdrop">
-  <div class="modal">
-    <h3 id="modalTitle">Add App</h3>
-    <input id="itemName" placeholder="Name">
-    <input id="itemUrl" placeholder="URL">
-    <input id="itemEmoji" placeholder="Emoji">
-    <div class="modal-actions"><button class="btn-cancel" onclick="closeModal()">Cancel</button><button class="btn-save" onclick="saveItem()">Save</button></div>
-  </div>
-</div>
-
-<!-- TASK MODAL -->
-<div class="modal-backdrop" id="taskModal">
-  <div class="modal">
-    <h3 id="taskModalTitle">New Task</h3>
-    <div class="modal-field"><label>Task Name</label><input id="tName" placeholder="What needs to be done?"></div>
-    <div class="modal-row">
-      <div class="modal-field"><label>Due Date</label><input type="date" id="tDue"></div>
-      <div class="modal-field"><label>Priority</label>
-        <select id="tPri"><option value="low">Low</option><option value="medium" selected>Medium</option><option value="high">High</option></select>
+    <!-- TASK TRACKER -->
+    <div class="row row-tasks">
+      <div class="card">
+        <div class="card-label">
+          Task Tracker
+          <span class="db-status" id="dbStatus"
+            ><span class="dot"></span
+            ><span id="dbStatusText">Connecting...</span></span
+          >
+        </div>
+        <div class="task-toolbar">
+          <button onclick="openNewTask()">+ New Task</button>
+          <button class="btn-secondary" onclick="loadTasks()">
+            &#8635; Refresh
+          </button>
+          <div class="filter-tabs">
+            <span class="filter-tab active" onclick="setFilter('all', this)"
+              >All</span
+            >
+            <span class="filter-tab" onclick="setFilter('not started', this)"
+              >Not Started</span
+            >
+            <span class="filter-tab" onclick="setFilter('in progress', this)"
+              >In Progress</span
+            >
+            <span class="filter-tab" onclick="setFilter('completed', this)"
+              >Completed</span
+            >
+          </div>
+        </div>
+        <div class="table-wrap">
+          <table class="task-table">
+            <thead>
+              <tr>
+                <th>Task</th>
+                <th>Due Date</th>
+                <th>Priority</th>
+                <th>Allotted (hrs)</th>
+                <th>Progress</th>
+                <th>Actual (hrs)</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="taskTbody">
+              <tr>
+                <td colspan="7" class="t-empty">Loading...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-    <div class="modal-row">
-      <div class="modal-field"><label>Allotted Time (hrs)</label><input type="number" id="tAllotted" placeholder="e.g. 2" min="0" step="0.5"></div>
-      <div class="modal-field"><label>Progress</label>
-        <select id="tProg"><option value="not started" selected>Not Started</option><option value="in progress">In Progress</option><option value="completed">Completed</option></select>
+
+    <!-- FITNESS ROW: Coach | Workout Log -->
+    <div class="row row-fitness">
+      <!-- FITNESS COACH -->
+      <div class="card">
+        <div class="card-label">
+          Fitness Coach
+          <span class="key-status" id="fitStatus"
+            ><span class="dot"></span
+            ><span id="fitStatusText">Uses same key</span></span
+          >
+        </div>
+        <div class="chat-messages" id="fitMessages"></div>
+        <div class="chat-input-row">
+          <input
+            type="text"
+            id="fitInput"
+            placeholder="Ask your coach..."
+            onkeydown="if (event.key === 'Enter') sendFitMessage();"
+            disabled
+          />
+          <button
+            class="chat-send green"
+            id="fitSend"
+            onclick="sendFitMessage()"
+            disabled
+          >
+            &#8593;
+          </button>
+        </div>
+      </div>
+
+      <!-- WORKOUT LOG -->
+      <div class="card">
+        <div class="card-label">
+          Workout Log
+          <span class="db-status" id="fitDbStatus"
+            ><span class="dot"></span
+            ><span id="fitDbStatusText">Connecting...</span></span
+          >
+        </div>
+        <div class="workout-toolbar">
+          <button onclick="openNewWorkout()">+ Log Workout</button>
+          <button class="btn-secondary" onclick="loadWorkouts()">
+            &#8635; Refresh
+          </button>
+        </div>
+        <div class="table-wrap">
+          <table class="task-table">
+            <thead>
+              <tr>
+                <th>Date</th>
+                <th>Type</th>
+                <th>Miles</th>
+                <th>Pace</th>
+                <th>BPM</th>
+                <th>RPE</th>
+                <th>Cadence</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody id="workoutTbody">
+              <tr>
+                <td colspan="8" class="t-empty">Loading...</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
       </div>
     </div>
-    <div class="modal-field"><label>Actual Time Taken (hrs)</label><input type="number" id="tActual" placeholder="Fill in when done" min="0" step="0.5"></div>
-    <div class="modal-actions"><button class="btn-cancel" onclick="closeTaskModal()">Cancel</button><button class="btn-save" onclick="saveTask()">Save</button></div>
-  </div>
-</div>
 
-<!-- WORKOUT MODAL -->
-<div class="modal-backdrop" id="workoutModal">
-  <div class="modal">
-    <h3 id="workoutModalTitle">Log Workout</h3>
-    <div class="modal-row">
-      <div class="modal-field"><label>Date</label><input type="date" id="wDate"></div>
-      <div class="modal-field"><label>Workout Type</label>
-        <select id="wType">
-          <option value="Easy Run">Easy Run</option>
-          <option value="Long Run">Long Run</option>
-          <option value="Tempo Run">Tempo Run</option>
-          <option value="Interval">Interval</option>
-          <option value="Race">Race</option>
-          <option value="Cross Training">Cross Training</option>
-          <option value="Rest">Rest</option>
-          <option value="Strength">Strength</option>
-          <option value="Other">Other</option>
-        </select>
+    <!-- BOTTOM ROW -->
+    <div class="row row-bottom">
+      <div class="card">
+        <div class="card-label">
+          Apps
+          <span
+            class="add-link"
+            style="margin-left: auto"
+            onclick="openAddApp()"
+            >+ add</span
+          >
+        </div>
+        <div class="items-grid" id="appsGrid"></div>
+      </div>
+      <div class="card">
+        <div class="card-label">
+          Files
+          <span
+            class="add-link"
+            style="margin-left: auto"
+            onclick="openAddFile()"
+            >+ add</span
+          >
+        </div>
+        <div class="items-grid" id="filesGrid"></div>
       </div>
     </div>
-    <div class="modal-field"><label>Workout Details</label><textarea id="wDetails" placeholder="Describe the workout — route, sets, splits, notes..."></textarea></div>
-    <div class="modal-row">
-      <div class="modal-field"><label>Mileage</label><input type="number" id="wMileage" placeholder="e.g. 6.2" min="0" step="0.1"></div>
-      <div class="modal-field"><label>Pace (mm:ss)</label><input id="wPace" placeholder="e.g. 8:45"></div>
+
+    <!-- APP/FILE MODAL -->
+    <div class="modal-backdrop" id="modalBackdrop">
+      <div class="modal">
+        <h3 id="modalTitle">Add App</h3>
+        <input id="itemName" placeholder="Name" />
+        <input id="itemUrl" placeholder="URL" />
+        <input id="itemEmoji" placeholder="Emoji" />
+        <div class="modal-actions">
+          <button class="btn-cancel" onclick="closeModal()">Cancel</button
+          ><button class="btn-save" onclick="saveItem()">Save</button>
+        </div>
+      </div>
     </div>
-    <div class="modal-row-3">
-      <div class="modal-field"><label>Avg BPM</label><input type="number" id="wBpm" placeholder="e.g. 148" min="0"></div>
-      <div class="modal-field"><label>RPE (e.g. 3-5)</label><input id="wRpe" placeholder="e.g. 6-7"></div>
-      <div class="modal-field"><label>Cadence (spm)</label><input type="number" id="wCadence" placeholder="e.g. 172" min="0"></div>
+
+    <!-- TASK MODAL -->
+    <div class="modal-backdrop" id="taskModal">
+      <div class="modal">
+        <h3 id="taskModalTitle">New Task</h3>
+        <div class="modal-field">
+          <label>Task Name</label
+          ><input id="tName" placeholder="What needs to be done?" />
+        </div>
+        <div class="modal-row">
+          <div class="modal-field">
+            <label>Due Date</label><input type="date" id="tDue" />
+          </div>
+          <div class="modal-field">
+            <label>Priority</label>
+            <select id="tPri">
+              <option value="low">Low</option>
+              <option value="medium" selected>Medium</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-row">
+          <div class="modal-field">
+            <label>Allotted Time (hrs)</label
+            ><input
+              type="number"
+              id="tAllotted"
+              placeholder="e.g. 2"
+              min="0"
+              step="0.5"
+            />
+          </div>
+          <div class="modal-field">
+            <label>Progress</label>
+            <select id="tProg">
+              <option value="not started" selected>Not Started</option>
+              <option value="in progress">In Progress</option>
+              <option value="completed">Completed</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-field">
+          <label>Actual Time Taken (hrs)</label
+          ><input
+            type="number"
+            id="tActual"
+            placeholder="Fill in when done"
+            min="0"
+            step="0.5"
+          />
+        </div>
+        <div class="modal-actions">
+          <button class="btn-cancel" onclick="closeTaskModal()">Cancel</button
+          ><button class="btn-save" onclick="saveTask()">Save</button>
+        </div>
+      </div>
     </div>
-    <div class="modal-actions"><button class="btn-cancel" onclick="closeWorkoutModal()">Cancel</button><button class="btn-save-green" onclick="saveWorkout()">Save</button></div>
-  </div>
-</div>
 
-<script src="https://accounts.google.com/gsi/client" async defer></script>
-<script>
-const SUPABASE_URL = 'https://ekwvutifbtcphtbjqnpk.supabase.co';
-const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVrd3Z1dGlmYnRjcGh0YmpxbnBrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxNjY2NDEsImV4cCI6MjA5MDc0MjY0MX0.TRR1nxPY5KGay9xxwAFuhJyvFooBWT3UjNEBQrvXQAA';
-const GOOGLE_CLIENT_ID = '267986361399-1ddpsiiebr34kp8abp68grjut5il7ph8.apps.googleusercontent.com';
-const CALENDAR_SCOPE = 'https://www.googleapis.com/auth/calendar.readonly';
-const MEMORY_DAYS = 3653;
+    <!-- WORKOUT MODAL -->
+    <div class="modal-backdrop" id="workoutModal">
+      <div class="modal">
+        <h3 id="workoutModalTitle">Log Workout</h3>
+        <div class="modal-row">
+          <div class="modal-field">
+            <label>Date</label><input type="date" id="wDate" />
+          </div>
+          <div class="modal-field">
+            <label>Workout Type</label>
+            <select id="wType">
+              <option value="Easy Run">Easy Run</option>
+              <option value="Long Run">Long Run</option>
+              <option value="Tempo Run">Tempo Run</option>
+              <option value="Interval">Interval</option>
+              <option value="Race">Race</option>
+              <option value="Cross Training">Cross Training</option>
+              <option value="Rest">Rest</option>
+              <option value="Strength">Strength</option>
+              <option value="Other">Other</option>
+            </select>
+          </div>
+        </div>
+        <div class="modal-field">
+          <label>Workout Details</label
+          ><textarea
+            id="wDetails"
+            placeholder="Describe the workout — route, sets, splits, notes..."
+          ></textarea>
+        </div>
+        <div class="modal-row">
+          <div class="modal-field">
+            <label>Mileage</label
+            ><input
+              type="number"
+              id="wMileage"
+              placeholder="e.g. 6.2"
+              min="0"
+              step="0.1"
+            />
+          </div>
+          <div class="modal-field">
+            <label>Pace (mm:ss)</label
+            ><input id="wPace" placeholder="e.g. 8:45" />
+          </div>
+        </div>
+        <div class="modal-row-3">
+          <div class="modal-field">
+            <label>Avg BPM</label
+            ><input type="number" id="wBpm" placeholder="e.g. 148" min="0" />
+          </div>
+          <div class="modal-field">
+            <label>RPE (e.g. 3-5)</label
+            ><input id="wRpe" placeholder="e.g. 6-7" />
+          </div>
+          <div class="modal-field">
+            <label>Cadence (spm)</label
+            ><input
+              type="number"
+              id="wCadence"
+              placeholder="e.g. 172"
+              min="0"
+            />
+          </div>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-cancel" onclick="closeWorkoutModal()">
+            Cancel</button
+          ><button class="btn-save-green" onclick="saveWorkout()">Save</button>
+        </div>
+      </div>
+    </div>
 
-async function sbFetch(path, opts={}) {
-  const res = await fetch(SUPABASE_URL+'/rest/v1/'+path, {
-    ...opts,
-    headers: { 'apikey': SUPABASE_KEY, 'Authorization': 'Bearer '+SUPABASE_KEY, 'Content-Type': 'application/json', 'Prefer': opts.prefer||'return=representation', ...(opts.headers||{}) }
-  });
-  if (!res.ok) { const e = await res.json(); throw new Error(e.message||'Supabase error'); }
-  const t = await res.text(); return t ? JSON.parse(t) : [];
-}
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <script>
+      const SUPABASE_URL = "https://ekwvutifbtcphtbjqnpk.supabase.co";
+      const SUPABASE_KEY =
+        "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVrd3Z1dGlmYnRjcGh0YmpxbnBrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxNjY2NDEsImV4cCI6MjA5MDc0MjY0MX0.TRR1nxPY5KGay9xxwAFuhJyvFooBWT3UjNEBQrvXQAA";
+      const GOOGLE_CLIENT_ID =
+        "267986361399-1ddpsiiebr34kp8abp68grjut5il7ph8.apps.googleusercontent.com";
+      const CALENDAR_SCOPE =
+        "https://www.googleapis.com/auth/calendar.readonly";
+      const MEMORY_DAYS = 3653;
 
-// CLOCK
-function updateClock() {
-  const now = new Date(), h = now.getHours(), m = now.getMinutes();
-  document.getElementById('clock').textContent = String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
-  document.getElementById('dateStr').textContent = now.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'});
-  document.getElementById('timeOfDay').textContent = h<12?'morning':h<17?'afternoon':'evening';
-}
-updateClock(); setInterval(updateClock,10000);
+      async function sbFetch(path, opts = {}) {
+        const res = await fetch(SUPABASE_URL + "/rest/v1/" + path, {
+          ...opts,
+          headers: {
+            apikey: SUPABASE_KEY,
+            Authorization: "Bearer " + SUPABASE_KEY,
+            "Content-Type": "application/json",
+            Prefer: opts.prefer || "return=representation",
+            ...(opts.headers || {}),
+          },
+        });
+        if (!res.ok) {
+          const e = await res.json();
+          throw new Error(e.message || "Supabase error");
+        }
+        const t = await res.text();
+        return t ? JSON.parse(t) : [];
+      }
 
-// QUICK TASKS
-let tasks = JSON.parse(localStorage.getItem('dash_tasks')||'[]');
-function saveTasks() { localStorage.setItem('dash_tasks',JSON.stringify(tasks)); }
-function renderQuickTasks() {
-  const list = document.getElementById('quickTaskList'); list.innerHTML='';
-  const done = tasks.filter(t=>t.done).length, pct = tasks.length?Math.round(done/tasks.length*100):0;
-  document.getElementById('taskProgress').textContent = done+' / '+tasks.length;
-  document.getElementById('progressFill').style.width = pct+'%';
-  tasks.forEach((t,i) => {
-    const el = document.createElement('div'); el.className='task-item'+(t.done?' done':'');
-    el.innerHTML='<div class="task-check"></div><span class="task-text">'+t.text+'</span><span class="task-delete" onclick="delQuick('+i+',event)">&#10005;</span>';
-    el.addEventListener('click',()=>togQuick(i)); list.appendChild(el);
-  });
-}
-function quickAddTask() { const inp=document.getElementById('quickTaskInput'),text=inp.value.trim(); if(!text)return; tasks.unshift({text,done:false}); inp.value=''; saveTasks(); renderQuickTasks(); }
-function togQuick(i) { tasks[i].done=!tasks[i].done; saveTasks(); renderQuickTasks(); }
-function delQuick(i,e) { e.stopPropagation(); tasks.splice(i,1); saveTasks(); renderQuickTasks(); }
-renderQuickTasks();
+      // CLOCK
+      function updateClock() {
+        const now = new Date(),
+          h = now.getHours(),
+          m = now.getMinutes();
+        document.getElementById("clock").textContent =
+          String(h).padStart(2, "0") + ":" + String(m).padStart(2, "0");
+        document.getElementById("dateStr").textContent = now.toLocaleDateString(
+          "en-US",
+          { weekday: "long", month: "long", day: "numeric" },
+        );
+        document.getElementById("timeOfDay").textContent =
+          h < 12 ? "morning" : h < 17 ? "afternoon" : "evening";
+      }
+      updateClock();
+      setInterval(updateClock, 10000);
 
-// FOCUS NOTE
-const noteEl = document.getElementById('focusNote');
-noteEl.value = localStorage.getItem('dash_note')||'';
-function saveNote() { localStorage.setItem('dash_note',noteEl.value); }
+      // QUICK TASKS
+      let tasks = JSON.parse(localStorage.getItem("dash_tasks") || "[]");
+      function saveTasks() {
+        localStorage.setItem("dash_tasks", JSON.stringify(tasks));
+      }
+      function renderQuickTasks() {
+        const list = document.getElementById("quickTaskList");
+        list.innerHTML = "";
+        const done = tasks.filter((t) => t.done).length,
+          pct = tasks.length ? Math.round((done / tasks.length) * 100) : 0;
+        document.getElementById("taskProgress").textContent =
+          done + " / " + tasks.length;
+        document.getElementById("progressFill").style.width = pct + "%";
+        tasks.forEach((t, i) => {
+          const el = document.createElement("div");
+          el.className = "task-item" + (t.done ? " done" : "");
+          el.innerHTML =
+            '<div class="task-check"></div><span class="task-text">' +
+            t.text +
+            '</span><span class="task-delete" onclick="delQuick(' +
+            i +
+            ',event)">&#10005;</span>';
+          el.addEventListener("click", () => togQuick(i));
+          list.appendChild(el);
+        });
+      }
+      function quickAddTask() {
+        const inp = document.getElementById("quickTaskInput"),
+          text = inp.value.trim();
+        if (!text) return;
+        tasks.unshift({ text, done: false });
+        inp.value = "";
+        saveTasks();
+        renderQuickTasks();
+      }
+      function togQuick(i) {
+        tasks[i].done = !tasks[i].done;
+        saveTasks();
+        renderQuickTasks();
+      }
+      function delQuick(i, e) {
+        e.stopPropagation();
+        tasks.splice(i, 1);
+        saveTasks();
+        renderQuickTasks();
+      }
+      renderQuickTasks();
 
-// MODAL
-let modalMode='app', editingIndex=-1;
-function openModal(mode,title) { modalMode=mode; document.getElementById('modalTitle').textContent=title; document.getElementById('modalBackdrop').classList.add('open'); }
-function closeModal() { document.getElementById('modalBackdrop').classList.remove('open'); ['itemName','itemUrl','itemEmoji'].forEach(id=>document.getElementById(id).value=''); editingIndex=-1; }
-document.getElementById('modalBackdrop').addEventListener('click',function(e){if(e.target===this)closeModal();});
+      // FOCUS NOTE
+      const noteEl = document.getElementById("focusNote");
+      noteEl.value = localStorage.getItem("dash_note") || "";
+      function saveNote() {
+        localStorage.setItem("dash_note", noteEl.value);
+      }
 
-// APPS
-const defaultApps=[{name:'Notion',url:'https://notion.so',icon:'📝'},{name:'Drive',url:'https://drive.google.com',icon:'📁'},{name:'Calendar',url:'https://calendar.google.com',icon:'📅'},{name:'ChatGPT',url:'https://chat.openai.com',icon:'🤖'},{name:'GitHub',url:'https://github.com',icon:'🐙'},{name:'Outlook',url:'https://outlook.live.com',icon:'📨'}];
-let apps=JSON.parse(localStorage.getItem('dash_apps')||JSON.stringify(defaultApps));
-function saveApps(){localStorage.setItem('dash_apps',JSON.stringify(apps));}
-function openAddApp(){editingIndex=-1;openModal('app','Add App');}
-function openEditApp(i,e){e.preventDefault();e.stopPropagation();editingIndex=i;document.getElementById('itemName').value=apps[i].name;document.getElementById('itemUrl').value=apps[i].url;document.getElementById('itemEmoji').value=apps[i].icon;openModal('app','Edit App');}
-function deleteApp(i,e){e.preventDefault();e.stopPropagation();apps.splice(i,1);saveApps();renderApps();}
-let files=JSON.parse(localStorage.getItem('dash_files')||'[]');
-function saveFiles(){localStorage.setItem('dash_files',JSON.stringify(files));}
-function openAddFile(){editingIndex=-1;openModal('file','Add File');}
-function openEditFile(i,e){e.preventDefault();e.stopPropagation();editingIndex=i;document.getElementById('itemName').value=files[i].name;document.getElementById('itemUrl').value=files[i].url;document.getElementById('itemEmoji').value=files[i].icon;openModal('file','Edit File');}
-function deleteFile(i,e){e.preventDefault();e.stopPropagation();files.splice(i,1);saveFiles();renderFiles();}
-function renderItemGrid(gridId,items,mode){const grid=document.getElementById(gridId);grid.innerHTML='';const ef=mode==='app'?'openEditApp':'openEditFile',df=mode==='app'?'deleteApp':'deleteFile';items.forEach((item,i)=>{const w=document.createElement('div');w.className='app-wrapper';const a=document.createElement('a');a.className='app-btn';a.href=item.url;a.target='_blank';a.innerHTML='<span class="app-icon">'+item.icon+'</span>'+item.name;const c=document.createElement('div');c.className='app-controls';c.innerHTML='<button class="app-ctrl-btn" onclick="'+ef+'('+i+',event)">&#9998;</button><button class="app-ctrl-btn del" onclick="'+df+'('+i+',event)">&#10005;</button>';w.appendChild(a);w.appendChild(c);grid.appendChild(w);});}
-function renderApps(){renderItemGrid('appsGrid',apps,'app');}
-function renderFiles(){renderItemGrid('filesGrid',files,'file');}
-renderApps(); renderFiles();
-function saveItem(){const name=document.getElementById('itemName').value.trim(),url=document.getElementById('itemUrl').value.trim(),icon=document.getElementById('itemEmoji').value.trim()||'🔗';if(!name||!url)return;const item={name,url,icon};if(modalMode==='file'){if(editingIndex>=0)files[editingIndex]=item;else files.push(item);saveFiles();renderFiles();}else{if(editingIndex>=0)apps[editingIndex]=item;else apps.push(item);saveApps();renderApps();}closeModal();}
+      // MODAL
+      let modalMode = "app",
+        editingIndex = -1;
+      function openModal(mode, title) {
+        modalMode = mode;
+        document.getElementById("modalTitle").textContent = title;
+        document.getElementById("modalBackdrop").classList.add("open");
+      }
+      function closeModal() {
+        document.getElementById("modalBackdrop").classList.remove("open");
+        ["itemName", "itemUrl", "itemEmoji"].forEach(
+          (id) => (document.getElementById(id).value = ""),
+        );
+        editingIndex = -1;
+      }
+      document
+        .getElementById("modalBackdrop")
+        .addEventListener("click", function (e) {
+          if (e.target === this) closeModal();
+        });
 
-// TASK TABLE
-let allRows=[], currentFilter='all', editingTaskId=null;
-function setDbStatus(cls,txt){const el=document.getElementById('dbStatus');el.className='db-status '+cls;document.getElementById('dbStatusText').textContent=txt;}
-async function loadTasks(){try{allRows=await sbFetch('tasks?order=created_at.desc&select=*');setDbStatus('db-ok','Synced');renderTable();}catch(err){setDbStatus('db-err','Error');document.getElementById('taskTbody').innerHTML='<tr><td colspan="7" class="t-empty">Failed to connect.</td></tr>';}}
-function renderTable(){const tbody=document.getElementById('taskTbody');const rows=currentFilter==='all'?allRows:allRows.filter(r=>r.progress===currentFilter);if(!rows.length){tbody.innerHTML='<tr><td colspan="7" class="t-empty">No tasks. Click "+ New Task" to add one.</td></tr>';return;}const today=new Date().toISOString().substring(0,10);tbody.innerHTML='';rows.forEach(r=>{const overdue=r.due_date&&r.due_date<today&&r.progress!=='completed';const pri=(r.priority||'low').toLowerCase(),prog=r.progress||'not started',progCls=prog.replace(/ /g,'-');const tr=document.createElement('tr');tr.innerHTML='<td><span class="t-name'+(prog==='completed'?' done':'')+'">'+escHtml(r.task||'')+'</span></td><td><span class="t-mono'+(overdue?' t-overdue':'')+'">'+( r.due_date||'—')+'</span></td><td><span class="badge pri-'+pri+'">'+pri+'</span></td><td><span class="t-mono">'+(r.allotted_time!=null?r.allotted_time+'h':'—')+'</span></td><td><span class="badge prog-'+progCls+'">'+prog+'</span></td><td><span class="t-mono">'+(r.actual_time!=null?r.actual_time+'h':'—')+'</span></td><td><div class="row-acts"><button class="row-act" onclick="openEditTask(\''+r.id+'\')">Edit</button><button class="row-act del" onclick="deleteTask(\''+r.id+'\')">Delete</button></div></td>';tbody.appendChild(tr);});}
-function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-function setFilter(f,el){currentFilter=f;document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');renderTable();}
-function openNewTask(){editingTaskId=null;document.getElementById('taskModalTitle').textContent='New Task';['tName','tDue','tAllotted','tActual'].forEach(id=>document.getElementById(id).value='');document.getElementById('tPri').value='medium';document.getElementById('tProg').value='not started';document.getElementById('taskModal').classList.add('open');}
-function openEditTask(id){const r=allRows.find(x=>x.id==id);if(!r)return;editingTaskId=id;document.getElementById('taskModalTitle').textContent='Edit Task';document.getElementById('tName').value=r.task||'';document.getElementById('tDue').value=r.due_date||'';document.getElementById('tPri').value=r.priority||'medium';document.getElementById('tAllotted').value=r.allotted_time!=null?r.allotted_time:'';document.getElementById('tProg').value=r.progress||'not started';document.getElementById('tActual').value=r.actual_time!=null?r.actual_time:'';document.getElementById('taskModal').classList.add('open');}
-function closeTaskModal(){document.getElementById('taskModal').classList.remove('open');editingTaskId=null;}
-document.getElementById('taskModal').addEventListener('click',function(e){if(e.target===this)closeTaskModal();});
-async function saveTask(){const name=document.getElementById('tName').value.trim();if(!name)return;const payload={task:name,due_date:document.getElementById('tDue').value||null,priority:document.getElementById('tPri').value,allotted_time:document.getElementById('tAllotted').value!==''?parseFloat(document.getElementById('tAllotted').value):null,progress:document.getElementById('tProg').value,actual_time:document.getElementById('tActual').value!==''?parseFloat(document.getElementById('tActual').value):null};try{if(editingTaskId)await sbFetch('tasks?id=eq.'+editingTaskId,{method:'PATCH',body:JSON.stringify(payload),prefer:'return=minimal'});else await sbFetch('tasks',{method:'POST',body:JSON.stringify(payload)});closeTaskModal();await loadTasks();}catch(err){alert('Save failed: '+err.message);}}
-async function deleteTask(id){if(!confirm('Delete this task?'))return;try{await sbFetch('tasks?id=eq.'+id,{method:'DELETE',prefer:'return=minimal'});await loadTasks();}catch(err){alert('Delete failed: '+err.message);}}
-loadTasks();
+      // APPS
+      const defaultApps = [
+        { name: "Notion", url: "https://notion.so", icon: "📝" },
+        { name: "Drive", url: "https://drive.google.com", icon: "📁" },
+        { name: "Calendar", url: "https://calendar.google.com", icon: "📅" },
+        { name: "ChatGPT", url: "https://chat.openai.com", icon: "🤖" },
+        { name: "GitHub", url: "https://github.com", icon: "🐙" },
+        { name: "Outlook", url: "https://outlook.live.com", icon: "📨" },
+      ];
+      let apps = JSON.parse(
+        localStorage.getItem("dash_apps") || JSON.stringify(defaultApps),
+      );
+      function saveApps() {
+        localStorage.setItem("dash_apps", JSON.stringify(apps));
+      }
+      function openAddApp() {
+        editingIndex = -1;
+        openModal("app", "Add App");
+      }
+      function openEditApp(i, e) {
+        e.preventDefault();
+        e.stopPropagation();
+        editingIndex = i;
+        document.getElementById("itemName").value = apps[i].name;
+        document.getElementById("itemUrl").value = apps[i].url;
+        document.getElementById("itemEmoji").value = apps[i].icon;
+        openModal("app", "Edit App");
+      }
+      function deleteApp(i, e) {
+        e.preventDefault();
+        e.stopPropagation();
+        apps.splice(i, 1);
+        saveApps();
+        renderApps();
+      }
+      let files = JSON.parse(localStorage.getItem("dash_files") || "[]");
+      function saveFiles() {
+        localStorage.setItem("dash_files", JSON.stringify(files));
+      }
+      function openAddFile() {
+        editingIndex = -1;
+        openModal("file", "Add File");
+      }
+      function openEditFile(i, e) {
+        e.preventDefault();
+        e.stopPropagation();
+        editingIndex = i;
+        document.getElementById("itemName").value = files[i].name;
+        document.getElementById("itemUrl").value = files[i].url;
+        document.getElementById("itemEmoji").value = files[i].icon;
+        openModal("file", "Edit File");
+      }
+      function deleteFile(i, e) {
+        e.preventDefault();
+        e.stopPropagation();
+        files.splice(i, 1);
+        saveFiles();
+        renderFiles();
+      }
+      function renderItemGrid(gridId, items, mode) {
+        const grid = document.getElementById(gridId);
+        grid.innerHTML = "";
+        const ef = mode === "app" ? "openEditApp" : "openEditFile",
+          df = mode === "app" ? "deleteApp" : "deleteFile";
+        items.forEach((item, i) => {
+          const w = document.createElement("div");
+          w.className = "app-wrapper";
+          const a = document.createElement("a");
+          a.className = "app-btn";
+          a.href = item.url;
+          a.target = "_blank";
+          a.innerHTML =
+            '<span class="app-icon">' + item.icon + "</span>" + item.name;
+          const c = document.createElement("div");
+          c.className = "app-controls";
+          c.innerHTML =
+            '<button class="app-ctrl-btn" onclick="' +
+            ef +
+            "(" +
+            i +
+            ',event)">&#9998;</button><button class="app-ctrl-btn del" onclick="' +
+            df +
+            "(" +
+            i +
+            ',event)">&#10005;</button>';
+          w.appendChild(a);
+          w.appendChild(c);
+          grid.appendChild(w);
+        });
+      }
+      function renderApps() {
+        renderItemGrid("appsGrid", apps, "app");
+      }
+      function renderFiles() {
+        renderItemGrid("filesGrid", files, "file");
+      }
+      renderApps();
+      renderFiles();
+      function saveItem() {
+        const name = document.getElementById("itemName").value.trim(),
+          url = document.getElementById("itemUrl").value.trim(),
+          icon = document.getElementById("itemEmoji").value.trim() || "🔗";
+        if (!name || !url) return;
+        const item = { name, url, icon };
+        if (modalMode === "file") {
+          if (editingIndex >= 0) files[editingIndex] = item;
+          else files.push(item);
+          saveFiles();
+          renderFiles();
+        } else {
+          if (editingIndex >= 0) apps[editingIndex] = item;
+          else apps.push(item);
+          saveApps();
+          renderApps();
+        }
+        closeModal();
+      }
 
-// WORKOUT LOG
-let allWorkouts=[], editingWorkoutId=null;
-function setFitDbStatus(cls,txt){const el=document.getElementById('fitDbStatus');el.className='db-status '+cls;document.getElementById('fitDbStatusText').textContent=txt;}
+      // TASK TABLE
+      let allRows = [],
+        currentFilter = "all",
+        editingTaskId = null;
+      function setDbStatus(cls, txt) {
+        const el = document.getElementById("dbStatus");
+        el.className = "db-status " + cls;
+        document.getElementById("dbStatusText").textContent = txt;
+      }
+      async function loadTasks() {
+        try {
+          allRows = await sbFetch("tasks?order=created_at.desc&select=*");
+          setDbStatus("db-ok", "Synced");
+          renderTable();
+        } catch (err) {
+          setDbStatus("db-err", "Error");
+          document.getElementById("taskTbody").innerHTML =
+            '<tr><td colspan="7" class="t-empty">Failed to connect.</td></tr>';
+        }
+      }
+      function renderTable() {
+        const tbody = document.getElementById("taskTbody");
+        const rows =
+          currentFilter === "all"
+            ? allRows
+            : allRows.filter((r) => r.progress === currentFilter);
+        if (!rows.length) {
+          tbody.innerHTML =
+            '<tr><td colspan="7" class="t-empty">No tasks. Click "+ New Task" to add one.</td></tr>';
+          return;
+        }
+        const today = new Date().toISOString().substring(0, 10);
+        tbody.innerHTML = "";
+        rows.forEach((r) => {
+          const overdue =
+            r.due_date && r.due_date < today && r.progress !== "completed";
+          const pri = (r.priority || "low").toLowerCase(),
+            prog = r.progress || "not started",
+            progCls = prog.replace(/ /g, "-");
+          const tr = document.createElement("tr");
+          tr.innerHTML =
+            '<td><span class="t-name' +
+            (prog === "completed" ? " done" : "") +
+            '">' +
+            escHtml(r.task || "") +
+            '</span></td><td><span class="t-mono' +
+            (overdue ? " t-overdue" : "") +
+            '">' +
+            (r.due_date || "—") +
+            '</span></td><td><span class="badge pri-' +
+            pri +
+            '">' +
+            pri +
+            '</span></td><td><span class="t-mono">' +
+            (r.allotted_time != null ? r.allotted_time + "h" : "—") +
+            '</span></td><td><span class="badge prog-' +
+            progCls +
+            '">' +
+            prog +
+            '</span></td><td><span class="t-mono">' +
+            (r.actual_time != null ? r.actual_time + "h" : "—") +
+            '</span></td><td><div class="row-acts"><button class="row-act" onclick="openEditTask(\'' +
+            r.id +
+            '\')">Edit</button><button class="row-act del" onclick="deleteTask(\'' +
+            r.id +
+            "')\">Delete</button></div></td>";
+          tbody.appendChild(tr);
+        });
+      }
+      function escHtml(s) {
+        return s
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;");
+      }
+      function setFilter(f, el) {
+        currentFilter = f;
+        document
+          .querySelectorAll(".filter-tab")
+          .forEach((t) => t.classList.remove("active"));
+        el.classList.add("active");
+        renderTable();
+      }
+      function openNewTask() {
+        editingTaskId = null;
+        document.getElementById("taskModalTitle").textContent = "New Task";
+        ["tName", "tDue", "tAllotted", "tActual"].forEach(
+          (id) => (document.getElementById(id).value = ""),
+        );
+        document.getElementById("tPri").value = "medium";
+        document.getElementById("tProg").value = "not started";
+        document.getElementById("taskModal").classList.add("open");
+      }
+      function openEditTask(id) {
+        const r = allRows.find((x) => x.id == id);
+        if (!r) return;
+        editingTaskId = id;
+        document.getElementById("taskModalTitle").textContent = "Edit Task";
+        document.getElementById("tName").value = r.task || "";
+        document.getElementById("tDue").value = r.due_date || "";
+        document.getElementById("tPri").value = r.priority || "medium";
+        document.getElementById("tAllotted").value =
+          r.allotted_time != null ? r.allotted_time : "";
+        document.getElementById("tProg").value = r.progress || "not started";
+        document.getElementById("tActual").value =
+          r.actual_time != null ? r.actual_time : "";
+        document.getElementById("taskModal").classList.add("open");
+      }
+      function closeTaskModal() {
+        document.getElementById("taskModal").classList.remove("open");
+        editingTaskId = null;
+      }
+      document
+        .getElementById("taskModal")
+        .addEventListener("click", function (e) {
+          if (e.target === this) closeTaskModal();
+        });
+      async function saveTask() {
+        const name = document.getElementById("tName").value.trim();
+        if (!name) return;
+        const payload = {
+          task: name,
+          due_date: document.getElementById("tDue").value || null,
+          priority: document.getElementById("tPri").value,
+          allotted_time:
+            document.getElementById("tAllotted").value !== ""
+              ? parseFloat(document.getElementById("tAllotted").value)
+              : null,
+          progress: document.getElementById("tProg").value,
+          actual_time:
+            document.getElementById("tActual").value !== ""
+              ? parseFloat(document.getElementById("tActual").value)
+              : null,
+        };
+        try {
+          if (editingTaskId)
+            await sbFetch("tasks?id=eq." + editingTaskId, {
+              method: "PATCH",
+              body: JSON.stringify(payload),
+              prefer: "return=minimal",
+            });
+          else
+            await sbFetch("tasks", {
+              method: "POST",
+              body: JSON.stringify(payload),
+            });
+          closeTaskModal();
+          await loadTasks();
+        } catch (err) {
+          alert("Save failed: " + err.message);
+        }
+      }
+      async function deleteTask(id) {
+        if (!confirm("Delete this task?")) return;
+        try {
+          await sbFetch("tasks?id=eq." + id, {
+            method: "DELETE",
+            prefer: "return=minimal",
+          });
+          await loadTasks();
+        } catch (err) {
+          alert("Delete failed: " + err.message);
+        }
+      }
+      loadTasks();
 
-async function loadWorkouts(){
-  try {
-    allWorkouts=await sbFetch('workouts?order=date.desc&select=*&limit=20');
-    setFitDbStatus('db-ok','Synced'); renderWorkouts();
-  } catch(err){ setFitDbStatus('db-err','Error'); document.getElementById('workoutTbody').innerHTML='<tr><td colspan="8" class="t-empty">Failed to connect.</td></tr>'; }
-}
+      // WORKOUT LOG
+      let allWorkouts = [],
+        editingWorkoutId = null;
+      function setFitDbStatus(cls, txt) {
+        const el = document.getElementById("fitDbStatus");
+        el.className = "db-status " + cls;
+        document.getElementById("fitDbStatusText").textContent = txt;
+      }
 
-function renderWorkouts(){
-  const tbody=document.getElementById('workoutTbody');
-  if(!allWorkouts.length){tbody.innerHTML='<tr><td colspan="8" class="t-empty">No workouts logged yet.</td></tr>';return;}
-  tbody.innerHTML='';
-  allWorkouts.forEach(w=>{
-    const tr=document.createElement('tr');
-    tr.innerHTML=
-      '<td><span class="t-mono">'+( w.date||'—')+'</span></td>'+
-      '<td><span class="workout-type-badge">'+escHtml(w.workout_type||'—')+'</span></td>'+
-      '<td><span class="t-mono">'+(w.mileage!=null?w.mileage+'mi':'—')+'</span></td>'+
-      '<td><span class="t-mono">'+(w.pace||'—')+'</span></td>'+
-      '<td><span class="t-mono">'+(w.average_bpm!=null?w.average_bpm:'—')+'</span></td>'+
-      '<td><span class="t-mono">'+(w.rpe||'—')+'</span></td>'+
-      '<td><span class="t-mono">'+(w.cadence!=null?w.cadence:'—')+'</span></td>'+
-      '<td><div class="row-acts"><button class="row-act" onclick="openEditWorkout(\''+w.id+'\')">Edit</button><button class="row-act del" onclick="deleteWorkout(\''+w.id+'\')">Delete</button></div></td>';
-    tbody.appendChild(tr);
-  });
-}
+      async function loadWorkouts() {
+        try {
+          allWorkouts = await sbFetch(
+            "workouts?order=date.desc&select=*&limit=20",
+          );
+          setFitDbStatus("db-ok", "Synced");
+          renderWorkouts();
+        } catch (err) {
+          setFitDbStatus("db-err", "Error");
+          document.getElementById("workoutTbody").innerHTML =
+            '<tr><td colspan="8" class="t-empty">Failed to connect.</td></tr>';
+        }
+      }
 
-function openNewWorkout(){
-  editingWorkoutId=null;
-  document.getElementById('workoutModalTitle').textContent='Log Workout';
-  ['wMileage','wPace','wBpm','wRpe','wCadence','wDetails'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('wDate').value=new Date().toISOString().substring(0,10);
-  document.getElementById('wType').value='Easy Run';
-  document.getElementById('workoutModal').classList.add('open');
-}
+      function renderWorkouts() {
+        const tbody = document.getElementById("workoutTbody");
+        if (!allWorkouts.length) {
+          tbody.innerHTML =
+            '<tr><td colspan="8" class="t-empty">No workouts logged yet.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = "";
+        allWorkouts.forEach((w) => {
+          const tr = document.createElement("tr");
+          tr.innerHTML =
+            '<td><span class="t-mono">' +
+            (w.date || "—") +
+            "</span></td>" +
+            '<td><span class="workout-type-badge">' +
+            escHtml(w.workout_type || "—") +
+            "</span></td>" +
+            '<td><span class="t-mono">' +
+            (w.mileage != null ? w.mileage + "mi" : "—") +
+            "</span></td>" +
+            '<td><span class="t-mono">' +
+            (w.pace || "—") +
+            "</span></td>" +
+            '<td><span class="t-mono">' +
+            (w.average_bpm != null ? w.average_bpm : "—") +
+            "</span></td>" +
+            '<td><span class="t-mono">' +
+            (w.rpe || "—") +
+            "</span></td>" +
+            '<td><span class="t-mono">' +
+            (w.cadence != null ? w.cadence : "—") +
+            "</span></td>" +
+            '<td><div class="row-acts"><button class="row-act" onclick="openEditWorkout(\'' +
+            w.id +
+            '\')">Edit</button><button class="row-act del" onclick="deleteWorkout(\'' +
+            w.id +
+            "')\">Delete</button></div></td>";
+          tbody.appendChild(tr);
+        });
+      }
 
-function openEditWorkout(id){
-  const w=allWorkouts.find(x=>x.id==id); if(!w)return;
-  editingWorkoutId=id;
-  document.getElementById('workoutModalTitle').textContent='Edit Workout';
-  document.getElementById('wDate').value=w.date||'';
-  document.getElementById('wType').value=w.workout_type||'Easy Run';
-  document.getElementById('wDetails').value=w.workout_details||'';
-  document.getElementById('wMileage').value=w.mileage!=null?w.mileage:'';
-  document.getElementById('wPace').value=w.pace||'';
-  document.getElementById('wBpm').value=w.average_bpm!=null?w.average_bpm:'';
-  document.getElementById('wRpe').value=w.rpe||'';
-  document.getElementById('wCadence').value=w.cadence!=null?w.cadence:'';
-  document.getElementById('workoutModal').classList.add('open');
-}
+      function openNewWorkout() {
+        editingWorkoutId = null;
+        document.getElementById("workoutModalTitle").textContent =
+          "Log Workout";
+        ["wMileage", "wPace", "wBpm", "wRpe", "wCadence", "wDetails"].forEach(
+          (id) => (document.getElementById(id).value = ""),
+        );
+        document.getElementById("wDate").value = new Date()
+          .toISOString()
+          .substring(0, 10);
+        document.getElementById("wType").value = "Easy Run";
+        document.getElementById("workoutModal").classList.add("open");
+      }
 
-function closeWorkoutModal(){document.getElementById('workoutModal').classList.remove('open');editingWorkoutId=null;}
-document.getElementById('workoutModal').addEventListener('click',function(e){if(e.target===this)closeWorkoutModal();});
+      function openEditWorkout(id) {
+        const w = allWorkouts.find((x) => x.id == id);
+        if (!w) return;
+        editingWorkoutId = id;
+        document.getElementById("workoutModalTitle").textContent =
+          "Edit Workout";
+        document.getElementById("wDate").value = w.date || "";
+        document.getElementById("wType").value = w.workout_type || "Easy Run";
+        document.getElementById("wDetails").value = w.workout_details || "";
+        document.getElementById("wMileage").value =
+          w.mileage != null ? w.mileage : "";
+        document.getElementById("wPace").value = w.pace || "";
+        document.getElementById("wBpm").value =
+          w.average_bpm != null ? w.average_bpm : "";
+        document.getElementById("wRpe").value = w.rpe || "";
+        document.getElementById("wCadence").value =
+          w.cadence != null ? w.cadence : "";
+        document.getElementById("workoutModal").classList.add("open");
+      }
 
-async function saveWorkout(){
-  const payload={
-    date:document.getElementById('wDate').value||null,
-    workout_type:document.getElementById('wType').value,
-    workout_details:document.getElementById('wDetails').value||null,
-    mileage:document.getElementById('wMileage').value!==''?parseFloat(document.getElementById('wMileage').value):null,
-    pace:document.getElementById('wPace').value||null,
-    average_bpm:document.getElementById('wBpm').value!==''?parseFloat(document.getElementById('wBpm').value):null,
-    rpe:document.getElementById('wRpe').value||null,
-    cadence:document.getElementById('wCadence').value!==''?parseFloat(document.getElementById('wCadence').value):null
-  };
-  try{
-    if(editingWorkoutId)await sbFetch('workouts?id=eq.'+editingWorkoutId,{method:'PATCH',body:JSON.stringify(payload),prefer:'return=minimal'});
-    else await sbFetch('workouts',{method:'POST',body:JSON.stringify(payload)});
-    closeWorkoutModal(); await loadWorkouts();
-  }catch(err){alert('Save failed: '+err.message);}
-}
+      function closeWorkoutModal() {
+        document.getElementById("workoutModal").classList.remove("open");
+        editingWorkoutId = null;
+      }
+      document
+        .getElementById("workoutModal")
+        .addEventListener("click", function (e) {
+          if (e.target === this) closeWorkoutModal();
+        });
 
-async function deleteWorkout(id){if(!confirm('Delete this workout?'))return;try{await sbFetch('workouts?id=eq.'+id,{method:'DELETE',prefer:'return=minimal'});await loadWorkouts();}catch(err){alert('Delete failed: '+err.message);}}
-loadWorkouts();
+      async function saveWorkout() {
+        const payload = {
+          date: document.getElementById("wDate").value || null,
+          workout_type: document.getElementById("wType").value,
+          workout_details: document.getElementById("wDetails").value || null,
+          mileage:
+            document.getElementById("wMileage").value !== ""
+              ? parseFloat(document.getElementById("wMileage").value)
+              : null,
+          pace: document.getElementById("wPace").value || null,
+          average_bpm:
+            document.getElementById("wBpm").value !== ""
+              ? parseFloat(document.getElementById("wBpm").value)
+              : null,
+          rpe: document.getElementById("wRpe").value || null,
+          cadence:
+            document.getElementById("wCadence").value !== ""
+              ? parseFloat(document.getElementById("wCadence").value)
+              : null,
+        };
+        try {
+          if (editingWorkoutId)
+            await sbFetch("workouts?id=eq." + editingWorkoutId, {
+              method: "PATCH",
+              body: JSON.stringify(payload),
+              prefer: "return=minimal",
+            });
+          else
+            await sbFetch("workouts", {
+              method: "POST",
+              body: JSON.stringify(payload),
+            });
+          closeWorkoutModal();
+          await loadWorkouts();
+        } catch (err) {
+          alert("Save failed: " + err.message);
+        }
+      }
 
-function getWorkoutContext(){
-  if(!allWorkouts.length)return'';
-  const recent=allWorkouts.slice(0,7);
-  const lines=recent.map(w=>{
-    let s='- '+( w.date||'?')+' ['+( w.workout_type||'?')+']';
-    if(w.mileage!=null)s+=' '+w.mileage+'mi';
-    if(w.pace)s+=' @ '+w.pace+'/mi';
-    if(w.average_bpm!=null)s+=' '+w.average_bpm+'bpm';
-    if(w.rpe)s+=' RPE '+w.rpe;
-    if(w.workout_details)s+=' — '+w.workout_details.substring(0,60);
-    return s;
-  });
-  return'\n\nRecent workouts (last 7):\n'+lines.join('\n');
-}
+      async function deleteWorkout(id) {
+        if (!confirm("Delete this workout?")) return;
+        try {
+          await sbFetch("workouts?id=eq." + id, {
+            method: "DELETE",
+            prefer: "return=minimal",
+          });
+          await loadWorkouts();
+        } catch (err) {
+          alert("Delete failed: " + err.message);
+        }
+      }
+      loadWorkouts();
 
-// GOOGLE CALENDAR
-let calAccessToken=localStorage.getItem('dash_cal_token')||'';
-let calTokenExpiry=parseInt(localStorage.getItem('dash_cal_expiry')||'0');
-let calEventsData=[], weekEventsData=[];
+      function getWorkoutContext() {
+        if (!allWorkouts.length) return "";
+        const recent = allWorkouts.slice(0, 7);
+        const lines = recent.map((w) => {
+          let s = "- " + (w.date || "?") + " [" + (w.workout_type || "?") + "]";
+          if (w.mileage != null) s += " " + w.mileage + "mi";
+          if (w.pace) s += " @ " + w.pace + "/mi";
+          if (w.average_bpm != null) s += " " + w.average_bpm + "bpm";
+          if (w.rpe) s += " RPE " + w.rpe;
+          if (w.workout_details)
+            s += " — " + w.workout_details.substring(0, 60);
+          return s;
+        });
+        return "\n\nRecent workouts (last 7):\n" + lines.join("\n");
+      }
 
-function connectGoogleCalendar(){const client=google.accounts.oauth2.initTokenClient({client_id:GOOGLE_CLIENT_ID,scope:CALENDAR_SCOPE,callback:(r)=>{if(r.error){alert('Connection failed: '+r.error);return;}calAccessToken=r.access_token;calTokenExpiry=Date.now()+(r.expires_in*1000);localStorage.setItem('dash_cal_token',calAccessToken);localStorage.setItem('dash_cal_expiry',calTokenExpiry.toString());activateCal();fetchCalendarEvents();fetchWeekEvents();}});client.requestAccessToken();}
-function activateCal(){document.getElementById('calConnectSection').style.display='none';document.getElementById('weekConnectMsg').style.display='none';document.getElementById('weekRefreshBtn').style.display='inline';document.getElementById('calStatus').classList.add('active');document.getElementById('calStatusText').textContent='Connected';document.getElementById('calRefreshBtn').style.display='inline';document.getElementById('calDisconnectBtn').style.display='inline';}
-function disconnectCalendar(){calAccessToken='';calTokenExpiry=0;calEventsData=[];weekEventsData=[];localStorage.removeItem('dash_cal_token');localStorage.removeItem('dash_cal_expiry');document.getElementById('calConnectSection').style.display='block';document.getElementById('calStatus').classList.remove('active');document.getElementById('calStatusText').textContent='Not connected';document.getElementById('calRefreshBtn').style.display='none';document.getElementById('calDisconnectBtn').style.display='none';document.getElementById('calEvents').innerHTML='';document.getElementById('weekEvents').innerHTML='';document.getElementById('weekConnectMsg').style.display='block';document.getElementById('weekRefreshBtn').style.display='none';}
+      // GOOGLE CALENDAR
+      let calAccessToken = localStorage.getItem("dash_cal_token") || "";
+      let calTokenExpiry = parseInt(
+        localStorage.getItem("dash_cal_expiry") || "0",
+      );
+      let calEventsData = [],
+        weekEventsData = [];
 
-async function fetchCalendarEvents(){if(!calAccessToken||Date.now()>calTokenExpiry){disconnectCalendar();return;}const el=document.getElementById('calEvents');el.innerHTML='<span class="cal-empty">Loading...</span>';const now=new Date(),s=new Date(now.getFullYear(),now.getMonth(),now.getDate()).toISOString(),e=new Date(now.getFullYear(),now.getMonth(),now.getDate(),23,59,59).toISOString();try{const res=await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin='+s+'&timeMax='+e+'&singleEvents=true&orderBy=startTime&maxResults=20',{headers:{Authorization:'Bearer '+calAccessToken}});const data=await res.json();if(data.error){el.innerHTML='<span class="cal-empty">Error: '+data.error.message+'</span>';return;}calEventsData=data.items||[];renderCalEvents();}catch(err){el.innerHTML='<span class="cal-empty">Failed to load.</span>';}}
-function renderCalEvents(){const el=document.getElementById('calEvents');el.innerHTML='';if(!calEventsData.length){el.innerHTML='<span class="cal-empty">No events today.</span>';return;}calEventsData.forEach(ev=>{const allDay=!ev.start.dateTime,t=allDay?'All day':new Date(ev.start.dateTime).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true});const d=document.createElement('div');d.className='cal-event';d.innerHTML='<span class="cal-event-time">'+t+'</span><span class="cal-event-title">'+(ev.summary||'Untitled')+'</span>';el.appendChild(d);});}
-async function fetchWeekEvents(){if(!calAccessToken||Date.now()>calTokenExpiry)return;const el=document.getElementById('weekEvents');el.innerHTML='<span class="cal-empty">Loading...</span>';const now=new Date(),s=new Date(now.getFullYear(),now.getMonth(),now.getDate()).toISOString(),e=new Date(now.getFullYear(),now.getMonth(),now.getDate()+7,23,59,59).toISOString();try{const res=await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin='+s+'&timeMax='+e+'&singleEvents=true&orderBy=startTime&maxResults=50',{headers:{Authorization:'Bearer '+calAccessToken}});const data=await res.json();if(data.error){el.innerHTML='<span class="cal-empty">Error: '+data.error.message+'</span>';return;}weekEventsData=data.items||[];renderWeekEvents();}catch(err){el.innerHTML='<span class="cal-empty">Failed to load.</span>';}}
-function renderWeekEvents(){const el=document.getElementById('weekEvents');el.innerHTML='';if(!weekEventsData.length){el.innerHTML='<span class="cal-empty">No events this week.</span>';return;}const days={};weekEventsData.forEach(ev=>{const k=(ev.start.dateTime||ev.start.date).substring(0,10);if(!days[k])days[k]=[];days[k].push(ev);});Object.keys(days).sort().forEach(k=>{const lbl=document.createElement('div');lbl.style.cssText='font-family:"DM Mono",monospace;font-size:0.65rem;letter-spacing:2px;color:var(--accent);text-transform:uppercase;padding:4px 0 2px;';lbl.textContent=new Date(k+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});el.appendChild(lbl);days[k].forEach(ev=>{const allDay=!ev.start.dateTime,t=allDay?'All day':new Date(ev.start.dateTime).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true});const d=document.createElement('div');d.className='cal-event';d.innerHTML='<span class="cal-event-time">'+t+'</span><span class="cal-event-title">'+(ev.summary||'Untitled')+'</span>';el.appendChild(d);});});}
+      function connectGoogleCalendar() {
+        const client = google.accounts.oauth2.initTokenClient({
+          client_id: GOOGLE_CLIENT_ID,
+          scope: CALENDAR_SCOPE,
+          callback: (r) => {
+            if (r.error) {
+              alert("Connection failed: " + r.error);
+              return;
+            }
+            calAccessToken = r.access_token;
+            calTokenExpiry = Date.now() + r.expires_in * 1000;
+            localStorage.setItem("dash_cal_token", calAccessToken);
+            localStorage.setItem("dash_cal_expiry", calTokenExpiry.toString());
+            activateCal();
+            fetchCalendarEvents();
+            fetchWeekEvents();
+          },
+        });
+        client.requestAccessToken();
+      }
+      function activateCal() {
+        document.getElementById("calConnectSection").style.display = "none";
+        document.getElementById("weekConnectMsg").style.display = "none";
+        document.getElementById("weekRefreshBtn").style.display = "inline";
+        document.getElementById("calStatus").classList.add("active");
+        document.getElementById("calStatusText").textContent = "Connected";
+        document.getElementById("calRefreshBtn").style.display = "inline";
+        document.getElementById("calDisconnectBtn").style.display = "inline";
+      }
+      function disconnectCalendar() {
+        calAccessToken = "";
+        calTokenExpiry = 0;
+        calEventsData = [];
+        weekEventsData = [];
+        localStorage.removeItem("dash_cal_token");
+        localStorage.removeItem("dash_cal_expiry");
+        document.getElementById("calConnectSection").style.display = "block";
+        document.getElementById("calStatus").classList.remove("active");
+        document.getElementById("calStatusText").textContent = "Not connected";
+        document.getElementById("calRefreshBtn").style.display = "none";
+        document.getElementById("calDisconnectBtn").style.display = "none";
+        document.getElementById("calEvents").innerHTML = "";
+        document.getElementById("weekEvents").innerHTML = "";
+        document.getElementById("weekConnectMsg").style.display = "block";
+        document.getElementById("weekRefreshBtn").style.display = "none";
+      }
 
-function getCalContext(){let ctx='';if(calEventsData.length){ctx+='\n\nToday\'s calendar:\n'+calEventsData.map(e=>{const allDay=!e.start.dateTime,t=allDay?'All day':new Date(e.start.dateTime).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true});return'- '+t+': '+(e.summary||'Untitled');}).join('\n');}if(weekEventsData.length){const today=new Date().toISOString().substring(0,10);const upcoming=weekEventsData.filter(e=>(e.start.dateTime||e.start.date).substring(0,10)>today);if(upcoming.length){ctx+='\n\nUpcoming this week:\n'+upcoming.map(e=>{const d=(e.start.dateTime||e.start.date).substring(0,10);const allDay=!e.start.dateTime,t=allDay?'All day':new Date(e.start.dateTime).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true});return'- '+d+' '+t+': '+(e.summary||'Untitled');}).join('\n');}}return ctx;}
-if(calAccessToken&&Date.now()<calTokenExpiry){activateCal();fetchCalendarEvents();fetchWeekEvents();}
+      async function fetchCalendarEvents() {
+        if (!calAccessToken || Date.now() > calTokenExpiry) {
+          disconnectCalendar();
+          return;
+        }
+        const el = document.getElementById("calEvents");
+        el.innerHTML = '<span class="cal-empty">Loading...</span>';
+        const now = new Date(),
+          s = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate(),
+          ).toISOString(),
+          e = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate(),
+            23,
+            59,
+            59,
+          ).toISOString();
+        try {
+          const res = await fetch(
+            "https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=" +
+              s +
+              "&timeMax=" +
+              e +
+              "&singleEvents=true&orderBy=startTime&maxResults=20",
+            { headers: { Authorization: "Bearer " + calAccessToken } },
+          );
+          const data = await res.json();
+          if (data.error) {
+            el.innerHTML =
+              '<span class="cal-empty">Error: ' +
+              data.error.message +
+              "</span>";
+            return;
+          }
+          calEventsData = data.items || [];
+          renderCalEvents();
+        } catch (err) {
+          el.innerHTML = '<span class="cal-empty">Failed to load.</span>';
+        }
+      }
+      function renderCalEvents() {
+        const el = document.getElementById("calEvents");
+        el.innerHTML = "";
+        if (!calEventsData.length) {
+          el.innerHTML = '<span class="cal-empty">No events today.</span>';
+          return;
+        }
+        calEventsData.forEach((ev) => {
+          const allDay = !ev.start.dateTime,
+            t = allDay
+              ? "All day"
+              : new Date(ev.start.dateTime).toLocaleTimeString("en-US", {
+                  hour: "numeric",
+                  minute: "2-digit",
+                  hour12: true,
+                });
+          const d = document.createElement("div");
+          d.className = "cal-event";
+          d.innerHTML =
+            '<span class="cal-event-time">' +
+            t +
+            '</span><span class="cal-event-title">' +
+            (ev.summary || "Untitled") +
+            "</span>";
+          el.appendChild(d);
+        });
+      }
+      async function fetchWeekEvents() {
+        if (!calAccessToken || Date.now() > calTokenExpiry) return;
+        const el = document.getElementById("weekEvents");
+        el.innerHTML = '<span class="cal-empty">Loading...</span>';
+        const now = new Date(),
+          s = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate(),
+          ).toISOString(),
+          e = new Date(
+            now.getFullYear(),
+            now.getMonth(),
+            now.getDate() + 7,
+            23,
+            59,
+            59,
+          ).toISOString();
+        try {
+          const res = await fetch(
+            "https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin=" +
+              s +
+              "&timeMax=" +
+              e +
+              "&singleEvents=true&orderBy=startTime&maxResults=50",
+            { headers: { Authorization: "Bearer " + calAccessToken } },
+          );
+          const data = await res.json();
+          if (data.error) {
+            el.innerHTML =
+              '<span class="cal-empty">Error: ' +
+              data.error.message +
+              "</span>";
+            return;
+          }
+          weekEventsData = data.items || [];
+          renderWeekEvents();
+        } catch (err) {
+          el.innerHTML = '<span class="cal-empty">Failed to load.</span>';
+        }
+      }
+      function renderWeekEvents() {
+        const el = document.getElementById("weekEvents");
+        el.innerHTML = "";
+        if (!weekEventsData.length) {
+          el.innerHTML = '<span class="cal-empty">No events this week.</span>';
+          return;
+        }
+        const days = {};
+        weekEventsData.forEach((ev) => {
+          const k = (ev.start.dateTime || ev.start.date).substring(0, 10);
+          if (!days[k]) days[k] = [];
+          days[k].push(ev);
+        });
+        Object.keys(days)
+          .sort()
+          .forEach((k) => {
+            const lbl = document.createElement("div");
+            lbl.style.cssText =
+              'font-family:"DM Mono",monospace;font-size:0.65rem;letter-spacing:2px;color:var(--accent);text-transform:uppercase;padding:4px 0 2px;';
+            lbl.textContent = new Date(k + "T12:00:00").toLocaleDateString(
+              "en-US",
+              { weekday: "short", month: "short", day: "numeric" },
+            );
+            el.appendChild(lbl);
+            days[k].forEach((ev) => {
+              const allDay = !ev.start.dateTime,
+                t = allDay
+                  ? "All day"
+                  : new Date(ev.start.dateTime).toLocaleTimeString("en-US", {
+                      hour: "numeric",
+                      minute: "2-digit",
+                      hour12: true,
+                    });
+              const d = document.createElement("div");
+              d.className = "cal-event";
+              d.innerHTML =
+                '<span class="cal-event-time">' +
+                t +
+                '</span><span class="cal-event-title">' +
+                (ev.summary || "Untitled") +
+                "</span>";
+              el.appendChild(d);
+            });
+          });
+      }
 
-// MEMORY
-let chatHistory=[], fitHistory=[], memoryLoaded=false;
+      function getCalContext() {
+        let ctx = "";
+        if (calEventsData.length) {
+          ctx +=
+            "\n\nToday's calendar:\n" +
+            calEventsData
+              .map((e) => {
+                const allDay = !e.start.dateTime,
+                  t = allDay
+                    ? "All day"
+                    : new Date(e.start.dateTime).toLocaleTimeString("en-US", {
+                        hour: "numeric",
+                        minute: "2-digit",
+                        hour12: true,
+                      });
+                return "- " + t + ": " + (e.summary || "Untitled");
+              })
+              .join("\n");
+        }
+        if (weekEventsData.length) {
+          const today = new Date().toISOString().substring(0, 10);
+          const upcoming = weekEventsData.filter(
+            (e) => (e.start.dateTime || e.start.date).substring(0, 10) > today,
+          );
+          if (upcoming.length) {
+            ctx +=
+              "\n\nUpcoming this week:\n" +
+              upcoming
+                .map((e) => {
+                  const d = (e.start.dateTime || e.start.date).substring(0, 10);
+                  const allDay = !e.start.dateTime,
+                    t = allDay
+                      ? "All day"
+                      : new Date(e.start.dateTime).toLocaleTimeString("en-US", {
+                          hour: "numeric",
+                          minute: "2-digit",
+                          hour12: true,
+                        });
+                  return "- " + d + " " + t + ": " + (e.summary || "Untitled");
+                })
+                .join("\n");
+          }
+        }
+        return ctx;
+      }
+      if (calAccessToken && Date.now() < calTokenExpiry) {
+        activateCal();
+        fetchCalendarEvents();
+        fetchWeekEvents();
+      }
 
-async function loadMemory(){
-  try{
-    const cutoff=new Date(Date.now()-MEMORY_DAYS*24*60*60*1000).toISOString();
-    const rows=await sbFetch('conversations?created_at=gte.'+cutoff+'&order=created_at.asc&select=role,content&limit=60');
-    if(rows.length>0){
-      chatHistory=rows.map(r=>({role:r.role,content:r.content}));
-      memoryLoaded=true;
-      document.getElementById('memStatus').style.display='flex';
-      document.getElementById('memStatus').classList.add('loaded');
-      document.getElementById('memStatusText').textContent=rows.length+' msgs remembered';
-      const msgs=document.getElementById('chatMessages');
-      const el=document.createElement('div'); el.className='chat-msg memory';
-      el.innerHTML='<div class="chat-bubble">&#128256; Memory loaded — I remember our last '+rows.length+' messages.</div>';
-      msgs.appendChild(el);
-    }
-  }catch(err){console.warn('Memory load failed:',err.message);}
-}
+      // MEMORY
+      let chatHistory = [],
+        fitHistory = [],
+        memoryLoaded = false;
 
-async function persistMessage(role,content){try{await sbFetch('conversations',{method:'POST',body:JSON.stringify({role,content})});}catch(err){console.warn('Persist failed:',err.message);}}
-async function pruneOldMemory(){try{const cutoff=new Date(Date.now()-MEMORY_DAYS*24*60*60*1000).toISOString();await sbFetch('conversations?created_at=lt.'+cutoff,{method:'DELETE',prefer:'return=minimal'});}catch(err){console.warn('Prune failed:',err.message);}}
+      async function loadMemory() {
+        try {
+          const cutoff = new Date(
+            Date.now() - MEMORY_DAYS * 24 * 60 * 60 * 1000,
+          ).toISOString();
+          const rows = await sbFetch(
+            "conversations?created_at=gte." +
+              cutoff +
+              "&order=created_at.asc&select=role,content&limit=60",
+          );
+          if (rows.length > 0) {
+            chatHistory = rows.map((r) => ({
+              role: r.role,
+              content: r.content,
+            }));
+            memoryLoaded = true;
+            document.getElementById("memStatus").style.display = "flex";
+            document.getElementById("memStatus").classList.add("loaded");
+            document.getElementById("memStatusText").textContent =
+              rows.length + " msgs remembered";
+            const msgs = document.getElementById("chatMessages");
+            const el = document.createElement("div");
+            el.className = "chat-msg memory";
+            el.innerHTML =
+              '<div class="chat-bubble">&#128256; Memory loaded — I remember our last ' +
+              rows.length +
+              " messages.</div>";
+            msgs.appendChild(el);
+          }
+        } catch (err) {
+          console.warn("Memory load failed:", err.message);
+        }
+      }
 
-// AI ASSISTANT
-let apiKey=localStorage.getItem('dash_apikey')||'';
+      async function persistMessage(role, content) {
+        try {
+          await sbFetch("conversations", {
+            method: "POST",
+            body: JSON.stringify({ role, content }),
+          });
+        } catch (err) {
+          console.warn("Persist failed:", err.message);
+        }
+      }
+      async function pruneOldMemory() {
+        try {
+          const cutoff = new Date(
+            Date.now() - MEMORY_DAYS * 24 * 60 * 60 * 1000,
+          ).toISOString();
+          await sbFetch("conversations?created_at=lt." + cutoff, {
+            method: "DELETE",
+            prefer: "return=minimal",
+          });
+        } catch (err) {
+          console.warn("Prune failed:", err.message);
+        }
+      }
 
-function saveApiKey(){
-  const val=document.getElementById('apiKeyInput').value.trim();
-  if(!val.startsWith('sk-')){alert("Doesn't look like a valid Anthropic key");return;}
-  apiKey=val; localStorage.setItem('dash_apikey',apiKey);
-  document.getElementById('apiKeyInput').value='';
-  activateChat();
-}
+      // AI ASSISTANT
+      let apiKey = localStorage.getItem("dash_apikey") || "";
 
-function clearApiKey(){apiKey='';localStorage.removeItem('dash_apikey');chatHistory=[];fitHistory=[];document.getElementById('chatMessages').innerHTML='';deactivateChat();}
+      function saveApiKey() {
+        const val = document.getElementById("apiKeyInput").value.trim();
+        if (!val.startsWith("sk-")) {
+          alert("Doesn't look like a valid Anthropic key");
+          return;
+        }
+        apiKey = val;
+        localStorage.setItem("dash_apikey", apiKey);
+        document.getElementById("apiKeyInput").value = "";
+        activateChat();
+      }
 
-function activateChat(){
-  document.getElementById('keySetup').style.display='none';
-  document.getElementById('chatInput').disabled=false; document.getElementById('chatSend').disabled=false;
-  document.getElementById('keyStatus').classList.add('active');
-  document.getElementById('keyStatusText').textContent='Active';
-  document.getElementById('clearKeyBtn').style.display='inline';
-  // Also activate fitness coach
-  document.getElementById('fitInput').disabled=false; document.getElementById('fitSend').disabled=false;
-  document.getElementById('fitStatus').classList.add('active');
-  document.getElementById('fitStatusText').textContent='Active';
-  loadMemory().then(()=>{
-    const greeting=memoryLoaded?'Welcome back. I remember where we left off — what are we working on?':'Hey Mike — ready. I can see your task tracker, calendar, and focus note. What are we working on?';
-    addMsg('assistant',greeting,'chatMessages');
-    addMsg('assistant','Hey Coach — I can see your recent workouts and training data. Ask me anything about your training, or I can suggest today\'s workout.','fitMessages','fitness');
-    document.getElementById('chatInput').focus();
-  });
-  pruneOldMemory();
-}
+      function clearApiKey() {
+        apiKey = "";
+        localStorage.removeItem("dash_apikey");
+        chatHistory = [];
+        fitHistory = [];
+        document.getElementById("chatMessages").innerHTML = "";
+        deactivateChat();
+      }
 
-function deactivateChat(){
-  document.getElementById('keySetup').style.display='block';
-  document.getElementById('chatInput').disabled=true; document.getElementById('chatSend').disabled=true;
-  document.getElementById('keyStatus').classList.remove('active');
-  document.getElementById('keyStatusText').textContent='No key';
-  document.getElementById('clearKeyBtn').style.display='none';
-  document.getElementById('memStatus').style.display='none';
-  document.getElementById('fitInput').disabled=true; document.getElementById('fitSend').disabled=true;
-  document.getElementById('fitStatus').classList.remove('active');
-  document.getElementById('fitStatusText').textContent='Uses same key';
-}
+      function activateChat() {
+        document.getElementById("keySetup").style.display = "none";
+        document.getElementById("chatInput").disabled = false;
+        document.getElementById("chatSend").disabled = false;
+        document.getElementById("keyStatus").classList.add("active");
+        document.getElementById("keyStatusText").textContent = "Active";
+        document.getElementById("clearKeyBtn").style.display = "inline";
+        // Also activate fitness coach
+        document.getElementById("fitInput").disabled = false;
+        document.getElementById("fitSend").disabled = false;
+        document.getElementById("fitStatus").classList.add("active");
+        document.getElementById("fitStatusText").textContent = "Active";
+        loadMemory().then(() => {
+          const greeting = memoryLoaded
+            ? "Welcome back. I remember where we left off — what are we working on?"
+            : "Hey Mike — ready. I can see your task tracker, calendar, and focus note. What are we working on?";
+          addMsg("assistant", greeting, "chatMessages");
+          addMsg(
+            "assistant",
+            "Hey Coach — I can see your recent workouts and training data. Ask me anything about your training, or I can suggest today's workout.",
+            "fitMessages",
+            "fitness",
+          );
+          document.getElementById("chatInput").focus();
+        });
+        pruneOldMemory();
+      }
 
-function getContext(){
-  const qOpen=tasks.filter(t=>!t.done).map(t=>'- '+t.text).join('\n');
-  const tracker=allRows.filter(r=>r.progress!=='completed').map(r=>'- ['+(r.priority||'low').toUpperCase()+'] '+r.task+(r.due_date?' (due '+r.due_date+')':'')+' — '+(r.progress||'not started')).join('\n');
-  const note=noteEl.value.trim();
-  const now=new Date();
-  let ctx='Today is '+now.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})+', '+now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true})+'.';
-  if(qOpen)ctx+='\n\nQuick tasks:\n'+qOpen;
-  if(tracker)ctx+='\n\nTask tracker (open):\n'+tracker;
-  if(note)ctx+='\n\nFocus note: '+note;
-  ctx+=getCalContext();
-  return ctx;
-}
+      function deactivateChat() {
+        document.getElementById("keySetup").style.display = "block";
+        document.getElementById("chatInput").disabled = true;
+        document.getElementById("chatSend").disabled = true;
+        document.getElementById("keyStatus").classList.remove("active");
+        document.getElementById("keyStatusText").textContent = "No key";
+        document.getElementById("clearKeyBtn").style.display = "none";
+        document.getElementById("memStatus").style.display = "none";
+        document.getElementById("fitInput").disabled = true;
+        document.getElementById("fitSend").disabled = true;
+        document.getElementById("fitStatus").classList.remove("active");
+        document.getElementById("fitStatusText").textContent = "Uses same key";
+      }
 
-function addMsg(role,text,containerId,extraClass){
-  const msgs=document.getElementById(containerId||'chatMessages');
-  const typing=document.getElementById('typingIndicator_'+(containerId||'chatMessages')); if(typing)typing.remove();
-  const el=document.createElement('div');
-  el.className='chat-msg '+role+(extraClass?' '+extraClass:'');
-  el.innerHTML='<div class="chat-bubble">'+text.replace(/\n/g,'<br>')+'</div>';
-  msgs.appendChild(el); msgs.scrollTop=msgs.scrollHeight;
-}
+      function getContext() {
+        const qOpen = tasks
+          .filter((t) => !t.done)
+          .map((t) => "- " + t.text)
+          .join("\n");
+        const tracker = allRows
+          .filter((r) => r.progress !== "completed")
+          .map(
+            (r) =>
+              "- [" +
+              (r.priority || "low").toUpperCase() +
+              "] " +
+              r.task +
+              (r.due_date ? " (due " + r.due_date + ")" : "") +
+              " — " +
+              (r.progress || "not started"),
+          )
+          .join("\n");
+        const note = noteEl.value.trim();
+        const now = new Date();
+        let ctx =
+          "Today is " +
+          now.toLocaleDateString("en-US", {
+            weekday: "long",
+            month: "long",
+            day: "numeric",
+          }) +
+          ", " +
+          now.toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+          }) +
+          ".";
+        if (qOpen) ctx += "\n\nQuick tasks:\n" + qOpen;
+        if (tracker) ctx += "\n\nTask tracker (open):\n" + tracker;
+        if (note) ctx += "\n\nFocus note: " + note;
+        ctx += getCalContext();
+        return ctx;
+      }
 
-function showTyping(containerId){
-  const msgs=document.getElementById(containerId);
-  const el=document.createElement('div'); el.className='chat-msg assistant'; el.id='typingIndicator_'+containerId;
-  el.innerHTML='<div class="chat-bubble typing-indicator"><span></span><span></span><span></span></div>';
-  msgs.appendChild(el); msgs.scrollTop=msgs.scrollHeight;
-}
+      function addMsg(role, text, containerId, extraClass) {
+        const msgs = document.getElementById(containerId || "chatMessages");
+        const typing = document.getElementById(
+          "typingIndicator_" + (containerId || "chatMessages"),
+        );
+        if (typing) typing.remove();
+        const el = document.createElement("div");
+        el.className =
+          "chat-msg " + role + (extraClass ? " " + extraClass : "");
+        el.innerHTML =
+          '<div class="chat-bubble">' + text.replace(/\n/g, "<br>") + "</div>";
+        msgs.appendChild(el);
+        msgs.scrollTop = msgs.scrollHeight;
+      }
 
-async function sendMessage(){
-  const input=document.getElementById('chatInput'), text=input.value.trim();
-  if(!text||!apiKey)return;
-  input.value=''; input.disabled=true; document.getElementById('chatSend').disabled=true;
-  addMsg('user',text,'chatMessages');
-  chatHistory.push({role:'user',content:text});
-  persistMessage('user',text);
-  showTyping('chatMessages');
-  const sys='You are Mike\'s personal productivity assistant embedded in his dashboard.\n\nAbout Mike:\n- Currently between roles, actively job searching in finance and P&C insurance\n- Building skills in AI tools and systems — this dashboard is part of that project\n- Training for a marathon in September\n\nYour job:\n- Help Mike prioritize his day and stay on task\n- Keep him accountable to his job search, AI learning, and training\n- Be direct and concise — no padding, no filler\n- Call it out if he\'s wasting time or going off track\n- Reference past conversations when relevant\n- Treat his time as finite and valuable\n\nCurrent context:\n'+getContext()+'\n\nAlways respond in 1-4 sentences unless a longer answer is clearly necessary.';
-  const recentHistory=chatHistory.slice(-20);
-  try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:1000,system:sys,messages:recentHistory})});
-    const data=await res.json();
-    if(data.error){addMsg('assistant','Error: '+data.error.message,'chatMessages');chatHistory.pop();}
-    else{const reply=data.content[0].text;chatHistory.push({role:'assistant',content:reply});persistMessage('assistant',reply);addMsg('assistant',reply,'chatMessages');}
-  }catch(err){addMsg('assistant','Connection error.','chatMessages');chatHistory.pop();}
-  input.disabled=false; document.getElementById('chatSend').disabled=false; input.focus();
-}
+      function showTyping(containerId) {
+        const msgs = document.getElementById(containerId);
+        const el = document.createElement("div");
+        el.className = "chat-msg assistant";
+        el.id = "typingIndicator_" + containerId;
+        el.innerHTML =
+          '<div class="chat-bubble typing-indicator"><span></span><span></span><span></span></div>';
+        msgs.appendChild(el);
+        msgs.scrollTop = msgs.scrollHeight;
+      }
 
-// FITNESS COACH
-async function sendFitMessage(){
-  const input=document.getElementById('fitInput'), text=input.value.trim();
-  if(!text||!apiKey)return;
-  input.value=''; input.disabled=true; document.getElementById('fitSend').disabled=true;
-  addMsg('user',text,'fitMessages');
-  fitHistory.push({role:'user',content:text});
-  showTyping('fitMessages');
-  const now=new Date();
-  const fitSys='You are Mike\'s marathon training coach. You have access to his recent workout data and training history.\n\nAbout Mike:\n- Training for a marathon in September '+now.getFullYear()+'\n- Background: recreational runner building toward marathon distance\n- Needs evidence-based, practical coaching advice\n\nYour job:\n- Analyze his training data and give specific, actionable recommendations\n- Suggest workouts based on his recent load, pace, and heart rate trends\n- Monitor for overtraining, poor recovery, or training imbalances\n- Be direct and specific — no generic advice\n- Reference his actual workout data when relevant\n\nCurrent date: '+now.toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric'})+', '+now.toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true})+'.'+getWorkoutContext()+'\n\nRespond in 2-5 sentences unless a detailed plan is requested.';
-  const recentFit=fitHistory.slice(-20);
-  try{
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:1000,system:fitSys,messages:recentFit})});
-    const data=await res.json();
-    if(data.error){addMsg('assistant','Error: '+data.error.message,'fitMessages');fitHistory.pop();}
-    else{const reply=data.content[0].text;fitHistory.push({role:'assistant',content:reply});addMsg('assistant',reply,'fitMessages','fitness');}
-  }catch(err){addMsg('assistant','Connection error.','fitMessages');fitHistory.pop();}
-  input.disabled=false; document.getElementById('fitSend').disabled=false; input.focus();
-}
+      async function sendMessage() {
+        const input = document.getElementById("chatInput"),
+          text = input.value.trim();
+        if (!text || !apiKey) return;
+        input.value = "";
+        input.disabled = true;
+        document.getElementById("chatSend").disabled = true;
+        addMsg("user", text, "chatMessages");
+        chatHistory.push({ role: "user", content: text });
+        persistMessage("user", text);
+        showTyping("chatMessages");
+        const sys =
+          "You are Mike's personal productivity assistant embedded in his dashboard.\n\nAbout Mike:\n- Currently between roles, actively job searching in finance and P&C insurance\n- Building skills in AI tools and systems — this dashboard is part of that project\n- Training for a marathon in September\n\nYour job:\n- Help Mike prioritize his day and stay on task\n- Keep him accountable to his job search, AI learning, and training\n- Be direct and concise — no padding, no filler\n- Call it out if he's wasting time or going off track\n- Reference past conversations when relevant\n- Treat his time as finite and valuable\n\nCurrent context:\n" +
+          getContext() +
+          "\n\nAlways respond in 1-4 sentences unless a longer answer is clearly necessary.";
+        const recentHistory = chatHistory.slice(-20);
+        try {
+          const res = await fetch("https://api.anthropic.com/v1/messages", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-api-key": apiKey,
+              "anthropic-version": "2023-06-01",
+              "anthropic-dangerous-direct-browser-access": "true",
+            },
+            body: JSON.stringify({
+              model: "claude-haiku-4-5-20251001",
+              max_tokens: 1000,
+              system: sys,
+              messages: recentHistory,
+            }),
+          });
+          const data = await res.json();
+          if (data.error) {
+            addMsg("assistant", "Error: " + data.error.message, "chatMessages");
+            chatHistory.pop();
+          } else {
+            const reply = data.content[0].text;
+            chatHistory.push({ role: "assistant", content: reply });
+            persistMessage("assistant", reply);
+            addMsg("assistant", reply, "chatMessages");
+          }
+        } catch (err) {
+          addMsg("assistant", "Connection error.", "chatMessages");
+          chatHistory.pop();
+        }
+        input.disabled = false;
+        document.getElementById("chatSend").disabled = false;
+        input.focus();
+      }
 
-if(apiKey){activateChat();}else{deactivateChat();}
-</script>
-</body>
+      // FITNESS COACH
+      async function sendFitMessage() {
+        const input = document.getElementById("fitInput"),
+          text = input.value.trim();
+        if (!text || !apiKey) return;
+        input.value = "";
+        input.disabled = true;
+        document.getElementById("fitSend").disabled = true;
+        addMsg("user", text, "fitMessages");
+        fitHistory.push({ role: "user", content: text });
+        showTyping("fitMessages");
+        const now = new Date();
+        const fitSys =
+          "You are Mike's marathon training coach. You have access to his recent workout data and training history.\n\nAbout Mike:\n- Training for a marathon in September " +
+          now.getFullYear() +
+          "\n- Background: recreational runner building toward marathon distance\n- Needs evidence-based, practical coaching advice\n\nYour job:\n- Analyze his training data and give specific, actionable recommendations\n- Suggest workouts based on his recent load, pace, and heart rate trends\n- Monitor for overtraining, poor recovery, or training imbalances\n- Be direct and specific — no generic advice\n- Reference his actual workout data when relevant\n\nCurrent date: " +
+          now.toLocaleDateString("en-US", {
+            weekday: "long",
+            month: "long",
+            day: "numeric",
+          }) +
+          ", " +
+          now.toLocaleTimeString("en-US", {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+          }) +
+          "." +
+          getWorkoutContext() +
+          "\n\nRespond in 2-5 sentences unless a detailed plan is requested.";
+        const recentFit = fitHistory.slice(-20);
+        try {
+          const res = await fetch("https://api.anthropic.com/v1/messages", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "x-api-key": apiKey,
+              "anthropic-version": "2023-06-01",
+              "anthropic-dangerous-direct-browser-access": "true",
+            },
+            body: JSON.stringify({
+              model: "claude-haiku-4-5-20251001",
+              max_tokens: 1000,
+              system: fitSys,
+              messages: recentFit,
+            }),
+          });
+          const data = await res.json();
+          if (data.error) {
+            addMsg("assistant", "Error: " + data.error.message, "fitMessages");
+            fitHistory.pop();
+          } else {
+            const reply = data.content[0].text;
+            fitHistory.push({ role: "assistant", content: reply });
+            addMsg("assistant", reply, "fitMessages", "fitness");
+          }
+        } catch (err) {
+          addMsg("assistant", "Connection error.", "fitMessages");
+          fitHistory.pop();
+        }
+        input.disabled = false;
+        document.getElementById("fitSend").disabled = false;
+        input.focus();
+      }
+
+      if (apiKey) {
+        activateChat();
+      } else {
+        deactivateChat();
+      }
+    </script>
+  </body>
 </html>
