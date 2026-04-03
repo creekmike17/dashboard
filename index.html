@@ -29,7 +29,6 @@
   .card-label { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 3px; text-transform: uppercase; color: var(--muted); display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
   .card-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-  /* QUICK TASKS */
   .task-input-row { display: flex; gap: 8px; }
   .task-input-row input { flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 8px 12px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.85rem; outline: none; }
   .task-input-row input::placeholder { color: var(--muted); }
@@ -48,7 +47,6 @@
   .progress-bar { flex: 1; height: 3px; background: var(--border); border-radius: 2px; overflow: hidden; }
   .progress-fill { height: 100%; background: var(--accent); border-radius: 2px; transition: width 0.4s ease; }
 
-  /* APPS FILES */
   .items-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
   .app-btn { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; padding: 14px 8px; background: var(--bg); border: 1px solid var(--border); border-radius: 6px; text-decoration: none; color: var(--text); font-size: 0.7rem; transition: all 0.15s; cursor: pointer; text-align: center; }
   .app-btn:hover { border-color: var(--accent); transform: translateY(-2px); }
@@ -62,7 +60,6 @@
   .add-link { font-family: 'DM Mono', monospace; font-size: 0.65rem; letter-spacing: 2px; color: var(--muted); cursor: pointer; text-transform: uppercase; }
   .add-link:hover { color: var(--accent); }
 
-  /* MODALS */
   .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; align-items: center; justify-content: center; }
   .modal-backdrop.open { display: flex; }
   .modal { background: var(--surface); border: 1px solid var(--border); border-radius: 10px; padding: 28px; width: 440px; display: flex; flex-direction: column; gap: 14px; }
@@ -85,6 +82,10 @@
   .key-status.active .dot { background: var(--accent); }
   .clear-key { margin-left: 6px; cursor: pointer; color: var(--muted); font-size: 0.65rem; font-family: 'DM Mono', monospace; }
   .clear-key:hover { color: var(--danger); }
+  .mem-status { font-family: 'DM Mono', monospace; font-size: 0.6rem; color: var(--muted); display: flex; align-items: center; gap: 4px; }
+  .mem-status .dot { width: 5px; height: 5px; border-radius: 50%; background: var(--muted); flex-shrink: 0; }
+  .mem-status.loaded { color: var(--accent2); }
+  .mem-status.loaded .dot { background: var(--accent2); }
   .api-key-row { display: flex; gap: 8px; }
   .api-key-row input { flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 8px 12px; color: var(--text); font-family: 'DM Mono', monospace; font-size: 0.75rem; outline: none; }
   .api-key-row input::placeholder { color: var(--muted); }
@@ -96,6 +97,7 @@
   .chat-bubble { padding: 8px 12px; border-radius: 8px; font-size: 0.82rem; line-height: 1.5; }
   .chat-msg.user .chat-bubble { background: var(--accent); color: #000; border-radius: 8px 8px 2px 8px; }
   .chat-msg.assistant .chat-bubble { background: var(--bg); border: 1px solid var(--border); color: var(--text); border-radius: 8px 8px 8px 2px; }
+  .chat-msg.memory .chat-bubble { background: rgba(71,200,255,0.05); border: 1px solid rgba(71,200,255,0.2); color: var(--muted); font-style: italic; font-size: 0.78rem; border-radius: 8px; }
   .chat-input-row { display: flex; gap: 8px; }
   .chat-input-row input { flex: 1; background: var(--bg); border: 1px solid var(--border); border-radius: 4px; padding: 8px 12px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.85rem; outline: none; }
   .chat-input-row input::placeholder { color: var(--muted); }
@@ -175,6 +177,7 @@
   <div class="card">
     <div class="card-label">AI Assistant
       <span class="key-status" id="keyStatus"><span class="dot"></span><span id="keyStatusText">No key</span></span>
+      <span class="mem-status" id="memStatus" style="display:none;"><span class="dot"></span><span id="memStatusText">memory</span></span>
       <span class="clear-key" id="clearKeyBtn" onclick="clearApiKey()" style="display:none;">clear</span>
     </div>
     <div id="keySetup">
@@ -300,6 +303,7 @@ const SUPABASE_URL = 'https://ekwvutifbtcphtbjqnpk.supabase.co';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImVrd3Z1dGlmYnRjcGh0YmpxbnBrIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUxNjY2NDEsImV4cCI6MjA5MDc0MjY0MX0.TRR1nxPY5KGay9xxwAFuhJyvFooBWT3UjNEBQrvXQAA';
 const GOOGLE_CLIENT_ID = '267986361399-1ddpsiiebr34kp8abp68grjut5il7ph8.apps.googleusercontent.com';
 const CALENDAR_SCOPE = 'https://www.googleapis.com/auth/calendar.readonly';
+const MEMORY_DAYS = 3653;
 
 async function sbFetch(path, opts={}) {
   const res = await fetch(SUPABASE_URL+'/rest/v1/'+path, {
@@ -310,6 +314,7 @@ async function sbFetch(path, opts={}) {
   const t = await res.text(); return t ? JSON.parse(t) : [];
 }
 
+// CLOCK
 function updateClock() {
   const now = new Date(), h = now.getHours(), m = now.getMinutes();
   document.getElementById('clock').textContent = String(h).padStart(2,'0')+':'+String(m).padStart(2,'0');
@@ -318,6 +323,7 @@ function updateClock() {
 }
 updateClock(); setInterval(updateClock,10000);
 
+// QUICK TASKS
 let tasks = JSON.parse(localStorage.getItem('dash_tasks')||'[]');
 function saveTasks() { localStorage.setItem('dash_tasks',JSON.stringify(tasks)); }
 function renderQuickTasks() {
@@ -336,15 +342,18 @@ function togQuick(i) { tasks[i].done=!tasks[i].done; saveTasks(); renderQuickTas
 function delQuick(i,e) { e.stopPropagation(); tasks.splice(i,1); saveTasks(); renderQuickTasks(); }
 renderQuickTasks();
 
+// FOCUS NOTE
 const noteEl = document.getElementById('focusNote');
 noteEl.value = localStorage.getItem('dash_note')||'';
 function saveNote() { localStorage.setItem('dash_note',noteEl.value); }
 
+// MODAL
 let modalMode='app', editingIndex=-1;
 function openModal(mode,title) { modalMode=mode; document.getElementById('modalTitle').textContent=title; document.getElementById('modalBackdrop').classList.add('open'); }
 function closeModal() { document.getElementById('modalBackdrop').classList.remove('open'); ['itemName','itemUrl','itemEmoji'].forEach(id=>document.getElementById(id).value=''); editingIndex=-1; }
 document.getElementById('modalBackdrop').addEventListener('click',function(e){if(e.target===this)closeModal();});
 
+// APPS
 const defaultApps=[{name:'Notion',url:'https://notion.so',icon:'📝'},{name:'Drive',url:'https://drive.google.com',icon:'📁'},{name:'Calendar',url:'https://calendar.google.com',icon:'📅'},{name:'ChatGPT',url:'https://chat.openai.com',icon:'🤖'},{name:'GitHub',url:'https://github.com',icon:'🐙'},{name:'Outlook',url:'https://outlook.live.com',icon:'📨'}];
 let apps=JSON.parse(localStorage.getItem('dash_apps')||JSON.stringify(defaultApps));
 function saveApps(){localStorage.setItem('dash_apps',JSON.stringify(apps));}
@@ -352,6 +361,7 @@ function openAddApp(){editingIndex=-1;openModal('app','Add App');}
 function openEditApp(i,e){e.preventDefault();e.stopPropagation();editingIndex=i;document.getElementById('itemName').value=apps[i].name;document.getElementById('itemUrl').value=apps[i].url;document.getElementById('itemEmoji').value=apps[i].icon;openModal('app','Edit App');}
 function deleteApp(i,e){e.preventDefault();e.stopPropagation();apps.splice(i,1);saveApps();renderApps();}
 
+// FILES
 let files=JSON.parse(localStorage.getItem('dash_files')||'[]');
 function saveFiles(){localStorage.setItem('dash_files',JSON.stringify(files));}
 function openAddFile(){editingIndex=-1;openModal('file','Add File');}
@@ -384,99 +394,43 @@ function saveItem() {
 
 // TASK TABLE
 let allRows=[], currentFilter='all', editingTaskId=null;
-
-function setDbStatus(cls,txt) {
-  const el=document.getElementById('dbStatus'); el.className='db-status '+cls;
-  document.getElementById('dbStatusText').textContent=txt;
-}
-
+function setDbStatus(cls,txt){const el=document.getElementById('dbStatus');el.className='db-status '+cls;document.getElementById('dbStatusText').textContent=txt;}
 async function loadTasks() {
-  try {
-    allRows = await sbFetch('tasks?order=created_at.desc&select=*');
-    setDbStatus('db-ok','Synced'); renderTable();
-  } catch(err) {
-    setDbStatus('db-err','Error'); document.getElementById('taskTbody').innerHTML='<tr><td colspan="7" class="t-empty">Failed to connect to database.</td></tr>';
-  }
+  try { allRows=await sbFetch('tasks?order=created_at.desc&select=*'); setDbStatus('db-ok','Synced'); renderTable(); }
+  catch(err){ setDbStatus('db-err','Error'); document.getElementById('taskTbody').innerHTML='<tr><td colspan="7" class="t-empty">Failed to connect.</td></tr>'; }
 }
-
 function renderTable() {
   const tbody=document.getElementById('taskTbody');
-  const rows = currentFilter==='all' ? allRows : allRows.filter(r=>r.progress===currentFilter);
-  if(rows.length===0){tbody.innerHTML='<tr><td colspan="7" class="t-empty">No tasks. Click "+ New Task" to add one.</td></tr>';return;}
-  const today=new Date().toISOString().substring(0,10);
-  tbody.innerHTML='';
+  const rows=currentFilter==='all'?allRows:allRows.filter(r=>r.progress===currentFilter);
+  if(!rows.length){tbody.innerHTML='<tr><td colspan="7" class="t-empty">No tasks. Click "+ New Task" to add one.</td></tr>';return;}
+  const today=new Date().toISOString().substring(0,10); tbody.innerHTML='';
   rows.forEach(r=>{
     const overdue=r.due_date&&r.due_date<today&&r.progress!=='completed';
-    const pri=(r.priority||'low').toLowerCase();
-    const prog=(r.progress||'not started');
-    const progCls=prog.replace(/ /g,'-');
+    const pri=(r.priority||'low').toLowerCase(), prog=r.progress||'not started', progCls=prog.replace(/ /g,'-');
     const tr=document.createElement('tr');
-    tr.innerHTML=
-      '<td><span class="t-name'+(prog==='completed'?' done':'')+'">'+escHtml(r.task||'')+'</span></td>'+
+    tr.innerHTML='<td><span class="t-name'+(prog==='completed'?' done':'')+'">'+escHtml(r.task||'')+'</span></td>'+
       '<td><span class="t-mono'+(overdue?' t-overdue':'')+'">'+( r.due_date||'—')+'</span></td>'+
       '<td><span class="badge pri-'+pri+'">'+pri+'</span></td>'+
       '<td><span class="t-mono">'+(r.allotted_time!=null?r.allotted_time+'h':'—')+'</span></td>'+
       '<td><span class="badge prog-'+progCls+'">'+prog+'</span></td>'+
       '<td><span class="t-mono">'+(r.actual_time!=null?r.actual_time+'h':'—')+'</span></td>'+
-      '<td><div class="row-acts">'+
-        '<button class="row-act" onclick="openEditTask(\''+r.id+'\')">Edit</button>'+
-        '<button class="row-act del" onclick="deleteTask(\''+r.id+'\')">Delete</button>'+
-      '</div></td>';
+      '<td><div class="row-acts"><button class="row-act" onclick="openEditTask(\''+r.id+'\')">Edit</button><button class="row-act del" onclick="deleteTask(\''+r.id+'\')">Delete</button></div></td>';
     tbody.appendChild(tr);
   });
 }
-
 function escHtml(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
-
 function setFilter(f,el){currentFilter=f;document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));el.classList.add('active');renderTable();}
-
-function openNewTask(){
-  editingTaskId=null;
-  document.getElementById('taskModalTitle').textContent='New Task';
-  ['tName','tDue','tAllotted','tActual'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('tPri').value='medium';
-  document.getElementById('tProg').value='not started';
-  document.getElementById('taskModal').classList.add('open');
-}
-
-function openEditTask(id){
-  const r=allRows.find(x=>x.id==id); if(!r)return;
-  editingTaskId=id;
-  document.getElementById('taskModalTitle').textContent='Edit Task';
-  document.getElementById('tName').value=r.task||'';
-  document.getElementById('tDue').value=r.due_date||'';
-  document.getElementById('tPri').value=r.priority||'medium';
-  document.getElementById('tAllotted').value=r.allotted_time!=null?r.allotted_time:'';
-  document.getElementById('tProg').value=r.progress||'not started';
-  document.getElementById('tActual').value=r.actual_time!=null?r.actual_time:'';
-  document.getElementById('taskModal').classList.add('open');
-}
-
+function openNewTask(){editingTaskId=null;document.getElementById('taskModalTitle').textContent='New Task';['tName','tDue','tAllotted','tActual'].forEach(id=>document.getElementById(id).value='');document.getElementById('tPri').value='medium';document.getElementById('tProg').value='not started';document.getElementById('taskModal').classList.add('open');}
+function openEditTask(id){const r=allRows.find(x=>x.id==id);if(!r)return;editingTaskId=id;document.getElementById('taskModalTitle').textContent='Edit Task';document.getElementById('tName').value=r.task||'';document.getElementById('tDue').value=r.due_date||'';document.getElementById('tPri').value=r.priority||'medium';document.getElementById('tAllotted').value=r.allotted_time!=null?r.allotted_time:'';document.getElementById('tProg').value=r.progress||'not started';document.getElementById('tActual').value=r.actual_time!=null?r.actual_time:'';document.getElementById('taskModal').classList.add('open');}
 function closeTaskModal(){document.getElementById('taskModal').classList.remove('open');editingTaskId=null;}
 document.getElementById('taskModal').addEventListener('click',function(e){if(e.target===this)closeTaskModal();});
-
 async function saveTask(){
   const name=document.getElementById('tName').value.trim(); if(!name)return;
-  const payload={
-    task:name, due_date:document.getElementById('tDue').value||null,
-    priority:document.getElementById('tPri').value,
-    allotted_time:document.getElementById('tAllotted').value!==''?parseFloat(document.getElementById('tAllotted').value):null,
-    progress:document.getElementById('tProg').value,
-    actual_time:document.getElementById('tActual').value!==''?parseFloat(document.getElementById('tActual').value):null
-  };
-  try {
-    if(editingTaskId) await sbFetch('tasks?id=eq.'+editingTaskId,{method:'PATCH',body:JSON.stringify(payload),prefer:'return=minimal'});
-    else await sbFetch('tasks',{method:'POST',body:JSON.stringify(payload)});
-    closeTaskModal(); await loadTasks();
-  } catch(err){alert('Save failed: '+err.message);}
+  const payload={task:name,due_date:document.getElementById('tDue').value||null,priority:document.getElementById('tPri').value,allotted_time:document.getElementById('tAllotted').value!==''?parseFloat(document.getElementById('tAllotted').value):null,progress:document.getElementById('tProg').value,actual_time:document.getElementById('tActual').value!==''?parseFloat(document.getElementById('tActual').value):null};
+  try{if(editingTaskId)await sbFetch('tasks?id=eq.'+editingTaskId,{method:'PATCH',body:JSON.stringify(payload),prefer:'return=minimal'});else await sbFetch('tasks',{method:'POST',body:JSON.stringify(payload)});closeTaskModal();await loadTasks();}
+  catch(err){alert('Save failed: '+err.message);}
 }
-
-async function deleteTask(id){
-  if(!confirm('Delete this task?'))return;
-  try { await sbFetch('tasks?id=eq.'+id,{method:'DELETE',prefer:'return=minimal'}); await loadTasks(); }
-  catch(err){alert('Delete failed: '+err.message);}
-}
-
+async function deleteTask(id){if(!confirm('Delete this task?'))return;try{await sbFetch('tasks?id=eq.'+id,{method:'DELETE',prefer:'return=minimal'});await loadTasks();}catch(err){alert('Delete failed: '+err.message);}}
 loadTasks();
 
 // GOOGLE CALENDAR
@@ -493,105 +447,82 @@ function connectGoogleCalendar(){
   }});
   client.requestAccessToken();
 }
-
-function activateCal(){
-  document.getElementById('calConnectSection').style.display='none';
-  document.getElementById('weekConnectMsg').style.display='none';
-  document.getElementById('weekRefreshBtn').style.display='inline';
-  document.getElementById('calStatus').classList.add('active');
-  document.getElementById('calStatusText').textContent='Connected';
-  document.getElementById('calRefreshBtn').style.display='inline';
-  document.getElementById('calDisconnectBtn').style.display='inline';
-}
-
-function disconnectCalendar(){
-  calAccessToken=''; calTokenExpiry=0; calEventsData=[]; weekEventsData=[];
-  localStorage.removeItem('dash_cal_token'); localStorage.removeItem('dash_cal_expiry');
-  document.getElementById('calConnectSection').style.display='block';
-  document.getElementById('calStatus').classList.remove('active');
-  document.getElementById('calStatusText').textContent='Not connected';
-  document.getElementById('calRefreshBtn').style.display='none';
-  document.getElementById('calDisconnectBtn').style.display='none';
-  document.getElementById('calEvents').innerHTML='';
-  document.getElementById('weekEvents').innerHTML='';
-  document.getElementById('weekConnectMsg').style.display='block';
-  document.getElementById('weekRefreshBtn').style.display='none';
-}
+function activateCal(){document.getElementById('calConnectSection').style.display='none';document.getElementById('weekConnectMsg').style.display='none';document.getElementById('weekRefreshBtn').style.display='inline';document.getElementById('calStatus').classList.add('active');document.getElementById('calStatusText').textContent='Connected';document.getElementById('calRefreshBtn').style.display='inline';document.getElementById('calDisconnectBtn').style.display='inline';}
+function disconnectCalendar(){calAccessToken='';calTokenExpiry=0;calEventsData=[];weekEventsData=[];localStorage.removeItem('dash_cal_token');localStorage.removeItem('dash_cal_expiry');document.getElementById('calConnectSection').style.display='block';document.getElementById('calStatus').classList.remove('active');document.getElementById('calStatusText').textContent='Not connected';document.getElementById('calRefreshBtn').style.display='none';document.getElementById('calDisconnectBtn').style.display='none';document.getElementById('calEvents').innerHTML='';document.getElementById('weekEvents').innerHTML='';document.getElementById('weekConnectMsg').style.display='block';document.getElementById('weekRefreshBtn').style.display='none';}
 
 async function fetchCalendarEvents(){
   if(!calAccessToken||Date.now()>calTokenExpiry){disconnectCalendar();return;}
   const el=document.getElementById('calEvents'); el.innerHTML='<span class="cal-empty">Loading...</span>';
-  const now=new Date();
-  const s=new Date(now.getFullYear(),now.getMonth(),now.getDate()).toISOString();
-  const e=new Date(now.getFullYear(),now.getMonth(),now.getDate(),23,59,59).toISOString();
-  try {
-    const res=await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin='+s+'&timeMax='+e+'&singleEvents=true&orderBy=startTime&maxResults=20',{headers:{Authorization:'Bearer '+calAccessToken}});
-    const data=await res.json();
-    if(data.error){el.innerHTML='<span class="cal-empty">Error: '+data.error.message+'</span>';return;}
-    calEventsData=data.items||[]; renderCalEvents();
-  } catch(err){el.innerHTML='<span class="cal-empty">Failed to load.</span>';}
+  const now=new Date(),s=new Date(now.getFullYear(),now.getMonth(),now.getDate()).toISOString(),e=new Date(now.getFullYear(),now.getMonth(),now.getDate(),23,59,59).toISOString();
+  try{const res=await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin='+s+'&timeMax='+e+'&singleEvents=true&orderBy=startTime&maxResults=20',{headers:{Authorization:'Bearer '+calAccessToken}});const data=await res.json();if(data.error){el.innerHTML='<span class="cal-empty">Error: '+data.error.message+'</span>';return;}calEventsData=data.items||[];renderCalEvents();}
+  catch(err){el.innerHTML='<span class="cal-empty">Failed to load.</span>';}
 }
-
-function renderCalEvents(){
-  const el=document.getElementById('calEvents'); el.innerHTML='';
-  if(!calEventsData.length){el.innerHTML='<span class="cal-empty">No events today.</span>';return;}
-  calEventsData.forEach(ev=>{
-    const allDay=!ev.start.dateTime, t=allDay?'All day':new Date(ev.start.dateTime).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true});
-    const d=document.createElement('div'); d.className='cal-event';
-    d.innerHTML='<span class="cal-event-time">'+t+'</span><span class="cal-event-title">'+(ev.summary||'Untitled')+'</span>';
-    el.appendChild(d);
-  });
-}
+function renderCalEvents(){const el=document.getElementById('calEvents');el.innerHTML='';if(!calEventsData.length){el.innerHTML='<span class="cal-empty">No events today.</span>';return;}calEventsData.forEach(ev=>{const allDay=!ev.start.dateTime,t=allDay?'All day':new Date(ev.start.dateTime).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true});const d=document.createElement('div');d.className='cal-event';d.innerHTML='<span class="cal-event-time">'+t+'</span><span class="cal-event-title">'+(ev.summary||'Untitled')+'</span>';el.appendChild(d);});}
 
 async function fetchWeekEvents(){
   if(!calAccessToken||Date.now()>calTokenExpiry)return;
   const el=document.getElementById('weekEvents'); el.innerHTML='<span class="cal-empty">Loading...</span>';
-  const now=new Date();
-  const s=new Date(now.getFullYear(),now.getMonth(),now.getDate()).toISOString();
-  const e=new Date(now.getFullYear(),now.getMonth(),now.getDate()+7,23,59,59).toISOString();
-  try {
-    const res=await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin='+s+'&timeMax='+e+'&singleEvents=true&orderBy=startTime&maxResults=50',{headers:{Authorization:'Bearer '+calAccessToken}});
-    const data=await res.json();
-    if(data.error){el.innerHTML='<span class="cal-empty">Error: '+data.error.message+'</span>';return;}
-    weekEventsData=data.items||[]; renderWeekEvents();
-  } catch(err){el.innerHTML='<span class="cal-empty">Failed to load.</span>';}
+  const now=new Date(),s=new Date(now.getFullYear(),now.getMonth(),now.getDate()).toISOString(),e=new Date(now.getFullYear(),now.getMonth(),now.getDate()+7,23,59,59).toISOString();
+  try{const res=await fetch('https://www.googleapis.com/calendar/v3/calendars/primary/events?timeMin='+s+'&timeMax='+e+'&singleEvents=true&orderBy=startTime&maxResults=50',{headers:{Authorization:'Bearer '+calAccessToken}});const data=await res.json();if(data.error){el.innerHTML='<span class="cal-empty">Error: '+data.error.message+'</span>';return;}weekEventsData=data.items||[];renderWeekEvents();}
+  catch(err){el.innerHTML='<span class="cal-empty">Failed to load.</span>';}
 }
+function renderWeekEvents(){const el=document.getElementById('weekEvents');el.innerHTML='';if(!weekEventsData.length){el.innerHTML='<span class="cal-empty">No events this week.</span>';return;}const days={};weekEventsData.forEach(ev=>{const k=(ev.start.dateTime||ev.start.date).substring(0,10);if(!days[k])days[k]=[];days[k].push(ev);});Object.keys(days).sort().forEach(k=>{const lbl=document.createElement('div');lbl.style.cssText='font-family:"DM Mono",monospace;font-size:0.65rem;letter-spacing:2px;color:var(--accent);text-transform:uppercase;padding:4px 0 2px;';lbl.textContent=new Date(k+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});el.appendChild(lbl);days[k].forEach(ev=>{const allDay=!ev.start.dateTime,t=allDay?'All day':new Date(ev.start.dateTime).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true});const d=document.createElement('div');d.className='cal-event';d.innerHTML='<span class="cal-event-time">'+t+'</span><span class="cal-event-title">'+(ev.summary||'Untitled')+'</span>';el.appendChild(d);});});}
 
-function renderWeekEvents(){
-  const el=document.getElementById('weekEvents'); el.innerHTML='';
-  if(!weekEventsData.length){el.innerHTML='<span class="cal-empty">No events this week.</span>';return;}
-  const days={};
-  weekEventsData.forEach(ev=>{const k=(ev.start.dateTime||ev.start.date).substring(0,10);if(!days[k])days[k]=[];days[k].push(ev);});
-  Object.keys(days).sort().forEach(k=>{
-    const lbl=document.createElement('div');
-    lbl.style.cssText='font-family:"DM Mono",monospace;font-size:0.65rem;letter-spacing:2px;color:var(--accent);text-transform:uppercase;padding:4px 0 2px;';
-    lbl.textContent=new Date(k+'T12:00:00').toLocaleDateString('en-US',{weekday:'short',month:'short',day:'numeric'});
-    el.appendChild(lbl);
-    days[k].forEach(ev=>{
-      const allDay=!ev.start.dateTime, t=allDay?'All day':new Date(ev.start.dateTime).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true});
-      const d=document.createElement('div'); d.className='cal-event';
-      d.innerHTML='<span class="cal-event-time">'+t+'</span><span class="cal-event-title">'+(ev.summary||'Untitled')+'</span>';
-      el.appendChild(d);
-    });
-  });
-}
-
-function getCalContext(){
-  if(!calEventsData.length)return'';
-  return'\n\nToday\'s calendar:\n'+calEventsData.map(e=>{const allDay=!e.start.dateTime,t=allDay?'All day':new Date(e.start.dateTime).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true});return'- '+t+': '+(e.summary||'Untitled');}).join('\n');
-}
-
+function getCalContext(){if(!calEventsData.length)return'';return'\n\nToday\'s calendar:\n'+calEventsData.map(e=>{const allDay=!e.start.dateTime,t=allDay?'All day':new Date(e.start.dateTime).toLocaleTimeString('en-US',{hour:'numeric',minute:'2-digit',hour12:true});return'- '+t+': '+(e.summary||'Untitled');}).join('\n');}
 if(calAccessToken&&Date.now()<calTokenExpiry){activateCal();fetchCalendarEvents();fetchWeekEvents();}
 
-// AI
-let apiKey=localStorage.getItem('dash_apikey')||'', chatHistory=[];
+// ── MEMORY SYSTEM ──────────────────────────────────────
+let chatHistory = [];
+let memoryLoaded = false;
+
+async function loadMemory() {
+  try {
+    const cutoff = new Date(Date.now() - MEMORY_DAYS * 24 * 60 * 60 * 1000).toISOString();
+    const rows = await sbFetch('conversations?created_at=gte.'+cutoff+'&order=created_at.asc&select=role,content&limit=60');
+    if (rows.length > 0) {
+      chatHistory = rows.map(r => ({ role: r.role, content: r.content }));
+      memoryLoaded = true;
+      document.getElementById('memStatus').style.display = 'flex';
+      document.getElementById('memStatus').classList.add('loaded');
+      document.getElementById('memStatusText').textContent = rows.length + ' msgs remembered';
+      // Show a subtle memory indicator in chat
+      const msgs = document.getElementById('chatMessages');
+      const el = document.createElement('div');
+      el.className = 'chat-msg memory';
+      el.innerHTML = '<div class="chat-bubble">&#128256; Memory loaded — I remember our last '+rows.length+' messages.</div>';
+      msgs.appendChild(el);
+    }
+  } catch(err) {
+    console.warn('Memory load failed:', err.message);
+  }
+}
+
+async function persistMessage(role, content) {
+  try {
+    await sbFetch('conversations', { method: 'POST', body: JSON.stringify({ role, content }) });
+  } catch(err) {
+    console.warn('Failed to persist message:', err.message);
+  }
+}
+
+async function pruneOldMemory() {
+  try {
+    const cutoff = new Date(Date.now() - MEMORY_DAYS * 24 * 60 * 60 * 1000).toISOString();
+    await sbFetch('conversations?created_at=lt.'+cutoff, { method: 'DELETE', prefer: 'return=minimal' });
+  } catch(err) {
+    console.warn('Prune failed:', err.message);
+  }
+}
+
+// AI ASSISTANT
+let apiKey = localStorage.getItem('dash_apikey')||'';
 
 function saveApiKey(){
   const val=document.getElementById('apiKeyInput').value.trim();
   if(!val.startsWith('sk-')){alert("Doesn't look like a valid Anthropic key");return;}
   apiKey=val; localStorage.setItem('dash_apikey',apiKey);
   document.getElementById('apiKeyInput').value='';
-  activateChat(); addMsg('assistant',"Key saved. I can see your task tracker, calendar, and focus note. What are we working on?");
+  activateChat();
 }
 
 function clearApiKey(){apiKey='';localStorage.removeItem('dash_apikey');chatHistory=[];document.getElementById('chatMessages').innerHTML='';deactivateChat();}
@@ -599,10 +530,17 @@ function clearApiKey(){apiKey='';localStorage.removeItem('dash_apikey');chatHist
 function activateChat(){
   document.getElementById('keySetup').style.display='none';
   document.getElementById('chatInput').disabled=false; document.getElementById('chatSend').disabled=false;
-  document.getElementById('chatInput').focus();
   document.getElementById('keyStatus').classList.add('active');
   document.getElementById('keyStatusText').textContent='Active';
   document.getElementById('clearKeyBtn').style.display='inline';
+  loadMemory().then(()=>{
+    const greeting = memoryLoaded
+      ? "Welcome back. I remember where we left off — what are we working on?"
+      : "Hey Mike — ready. I can see your task tracker, calendar, and focus note. What are we working on?";
+    addMsg('assistant', greeting);
+    document.getElementById('chatInput').focus();
+  });
+  pruneOldMemory();
 }
 
 function deactivateChat(){
@@ -611,6 +549,7 @@ function deactivateChat(){
   document.getElementById('keyStatus').classList.remove('active');
   document.getElementById('keyStatusText').textContent='No key';
   document.getElementById('clearKeyBtn').style.display='none';
+  document.getElementById('memStatus').style.display='none';
 }
 
 function getContext(){
@@ -644,18 +583,31 @@ async function sendMessage(){
   const input=document.getElementById('chatInput'), text=input.value.trim();
   if(!text||!apiKey)return;
   input.value=''; input.disabled=true; document.getElementById('chatSend').disabled=true;
-  addMsg('user',text); chatHistory.push({role:'user',content:text}); showTyping();
-  const sys='You are Mike\'s personal productivity assistant embedded in his dashboard. Be direct, concise, and focused on keeping him on task and accountable.\n\nCurrent context:\n'+getContext()+'\n\nKeep responses short and actionable. If he\'s going off track, call it out. Never pad responses.';
-  try {
-    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:1000,system:sys,messages:chatHistory})});
+  addMsg('user',text);
+  chatHistory.push({role:'user',content:text});
+  persistMessage('user',text);
+  showTyping();
+
+  const sys='You are Mike\'s personal productivity assistant embedded in his dashboard. You have persistent memory of past conversations. Be direct, concise, and focused on keeping him on task and accountable.\n\nCurrent context:\n'+getContext()+'\n\nKeep responses short and actionable. If he\'s going off track, call it out. Reference past conversations when relevant. Never pad responses.';
+
+  // Keep last 20 messages for API call to avoid token overflow
+  const recentHistory = chatHistory.slice(-20);
+
+  try{
+    const res=await fetch('https://api.anthropic.com/v1/messages',{method:'POST',headers:{'Content-Type':'application/json','x-api-key':apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:1000,system:sys,messages:recentHistory})});
     const data=await res.json();
     if(data.error){addMsg('assistant','Error: '+data.error.message);chatHistory.pop();}
-    else{const reply=data.content[0].text;chatHistory.push({role:'assistant',content:reply});addMsg('assistant',reply);}
+    else{
+      const reply=data.content[0].text;
+      chatHistory.push({role:'assistant',content:reply});
+      persistMessage('assistant',reply);
+      addMsg('assistant',reply);
+    }
   } catch(err){addMsg('assistant','Connection error.');chatHistory.pop();}
   input.disabled=false; document.getElementById('chatSend').disabled=false; input.focus();
 }
 
-if(apiKey){activateChat();addMsg('assistant',"Hey Mike — ready. I can see your task tracker, calendar, and focus note.");}
+if(apiKey){activateChat();}
 else{deactivateChat();}
 </script>
 </body>
