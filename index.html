@@ -218,7 +218,7 @@
         border: 1px solid var(--border);
         border-radius: 10px;
         padding: 28px;
-        width: 440px;
+        width: 480px;
         display: flex;
         flex-direction: column;
         gap: 14px;
@@ -309,7 +309,7 @@
         font-weight: 600;
       }
 
-      /* AI SHARED */
+      /* AI */
       .key-status {
         font-family: "DM Mono", monospace;
         font-size: 0.65rem;
@@ -654,7 +654,7 @@
       .table-wrap {
         overflow-x: auto;
         overflow-y: auto;
-        max-height: 280px;
+        max-height: 320px;
         scrollbar-width: thin;
         scrollbar-color: var(--border) transparent;
       }
@@ -662,6 +662,7 @@
         width: 100%;
         border-collapse: collapse;
         font-size: 0.82rem;
+        table-layout: fixed;
       }
       .task-table th {
         font-family: "DM Mono", monospace;
@@ -677,11 +678,13 @@
         top: 0;
         background: var(--surface);
         z-index: 1;
+        overflow: hidden;
       }
       .task-table td {
         padding: 10px 12px;
         border-bottom: 1px solid var(--border);
-        vertical-align: middle;
+        vertical-align: top;
+        word-break: break-word;
       }
       .task-table tr:last-child td {
         border-bottom: none;
@@ -689,6 +692,34 @@
       .task-table tr:hover td {
         background: rgba(255, 255, 255, 0.02);
       }
+
+      /* Column widths */
+      .col-task {
+        width: 160px;
+      }
+      .col-due {
+        width: 90px;
+      }
+      .col-pri {
+        width: 80px;
+      }
+      .col-allotted {
+        width: 80px;
+      }
+      .col-progress {
+        width: 130px;
+      }
+      .col-actual {
+        width: 75px;
+      }
+      .col-notes {
+        width: auto;
+        min-width: 180px;
+      }
+      .col-actions {
+        width: 100px;
+      }
+
       .t-name {
         color: var(--text);
         font-weight: 500;
@@ -722,21 +753,6 @@
         color: var(--low);
         border: 1px solid rgba(71, 200, 255, 0.3);
       }
-      .prog-not-started {
-        background: rgba(85, 85, 112, 0.2);
-        color: var(--muted);
-        border: 1px solid var(--border);
-      }
-      .prog-in-progress {
-        background: rgba(232, 255, 71, 0.1);
-        color: var(--accent);
-        border: 1px solid rgba(232, 255, 71, 0.3);
-      }
-      .prog-completed {
-        background: rgba(71, 200, 255, 0.1);
-        color: var(--accent2);
-        border: 1px solid rgba(71, 200, 255, 0.2);
-      }
       .t-mono {
         font-family: "DM Mono", monospace;
         font-size: 0.75rem;
@@ -746,6 +762,52 @@
       .t-overdue {
         color: var(--danger);
       }
+      .t-notes {
+        font-size: 0.78rem;
+        color: var(--muted);
+        line-height: 1.5;
+        white-space: pre-wrap;
+        word-break: break-word;
+      }
+
+      /* Inline progress dropdown */
+      .inline-prog-select {
+        background: var(--bg);
+        border: 1px solid var(--border);
+        border-radius: 20px;
+        color: var(--muted);
+        font-family: "DM Mono", monospace;
+        font-size: 0.65rem;
+        letter-spacing: 1px;
+        padding: 3px 8px;
+        cursor: pointer;
+        outline: none;
+        width: 100%;
+        text-transform: uppercase;
+        font-weight: 600;
+      }
+      .inline-prog-select.prog-not-started {
+        background: rgba(85, 85, 112, 0.2);
+        color: var(--muted);
+        border-color: var(--border);
+      }
+      .inline-prog-select.prog-in-progress {
+        background: rgba(232, 255, 71, 0.1);
+        color: var(--accent);
+        border-color: rgba(232, 255, 71, 0.3);
+      }
+      .inline-prog-select.prog-completed {
+        background: rgba(71, 200, 255, 0.1);
+        color: var(--accent2);
+        border-color: rgba(71, 200, 255, 0.2);
+      }
+      .inline-prog-select option {
+        background: var(--surface);
+        color: var(--text);
+        text-transform: none;
+        font-weight: 400;
+      }
+
       .row-acts {
         display: flex;
         gap: 6px;
@@ -763,6 +825,7 @@
         padding: 2px 7px;
         cursor: pointer;
         font-family: "DM Mono", monospace;
+        white-space: nowrap;
       }
       .row-act:hover {
         color: var(--text);
@@ -859,7 +922,7 @@
       </div>
     </header>
 
-    <!-- CALENDAR ROW: Daily Calendar | Weekly Calendar -->
+    <!-- CALENDAR ROW -->
     <div class="row row-top">
       <div class="card">
         <div class="card-label">
@@ -909,9 +972,9 @@
         <div class="cal-events" id="weekEvents"></div>
       </div>
     </div>
-   
-    <!-- Middle Row: AI Assistant | Focus Note -->
-     <div class="row row-middle">
+
+    <!-- AI + FOCUS NOTE -->
+    <div class="row row-middle">
       <div class="card">
         <div class="card-label">
           AI Assistant
@@ -961,7 +1024,6 @@
           </button>
         </div>
       </div>
-
       <div class="card">
         <div class="card-label">Focus Note</div>
         <textarea
@@ -1018,20 +1080,31 @@
         </div>
         <div class="table-wrap">
           <table class="task-table">
+            <colgroup>
+              <col class="col-task" />
+              <col class="col-due" />
+              <col class="col-pri" />
+              <col class="col-allotted" />
+              <col class="col-progress" />
+              <col class="col-actual" />
+              <col class="col-notes" />
+              <col class="col-actions" />
+            </colgroup>
             <thead>
               <tr>
                 <th>Task</th>
-                <th>Due Date</th>
+                <th>Due</th>
                 <th>Priority</th>
-                <th>Allotted (hrs)</th>
+                <th>Allotted</th>
                 <th>Progress</th>
-                <th>Actual (hrs)</th>
+                <th>Actual</th>
+                <th>Notes</th>
                 <th></th>
               </tr>
             </thead>
             <tbody id="taskTbody">
               <tr>
-                <td colspan="7" class="t-empty">Loading...</td>
+                <td colspan="8" class="t-empty">Loading...</td>
               </tr>
             </tbody>
           </table>
@@ -1039,9 +1112,8 @@
       </div>
     </div>
 
-    <!-- FITNESS ROW: Coach | Workout Log -->
+    <!-- FITNESS ROW -->
     <div class="row row-fitness">
-      <!-- FITNESS COACH -->
       <div class="card">
         <div class="card-label">
           Fitness Coach
@@ -1069,8 +1141,6 @@
           </button>
         </div>
       </div>
-
-      <!-- WORKOUT LOG -->
       <div class="card">
         <div class="card-label">
           Workout Log
@@ -1201,6 +1271,13 @@
             min="0"
             step="0.5"
           />
+        </div>
+        <div class="modal-field">
+          <label>Notes</label
+          ><textarea
+            id="tNotes"
+            placeholder="Additional context, blockers, links, dependencies..."
+          ></textarea>
         </div>
         <div class="modal-actions">
           <button class="btn-cancel" onclick="closeTaskModal()">Cancel</button
@@ -1484,6 +1561,7 @@
         el.className = "db-status " + cls;
         document.getElementById("dbStatusText").textContent = txt;
       }
+
       async function loadTasks() {
         try {
           allRows = await sbFetch("tasks?order=created_at.desc&select=*");
@@ -1492,9 +1570,10 @@
         } catch (err) {
           setDbStatus("db-err", "Error");
           document.getElementById("taskTbody").innerHTML =
-            '<tr><td colspan="7" class="t-empty">Failed to connect.</td></tr>';
+            '<tr><td colspan="8" class="t-empty">Failed to connect.</td></tr>';
         }
       }
+
       function renderTable() {
         const tbody = document.getElementById("taskTbody");
         const rows =
@@ -1503,7 +1582,7 @@
             : allRows.filter((r) => r.progress === currentFilter);
         if (!rows.length) {
           tbody.innerHTML =
-            '<tr><td colspan="7" class="t-empty">No tasks. Click "+ New Task" to add one.</td></tr>';
+            '<tr><td colspan="8" class="t-empty">No tasks. Click "+ New Task" to add one.</td></tr>';
           return;
         }
         const today = new Date().toISOString().substring(0, 10);
@@ -1511,32 +1590,52 @@
         rows.forEach((r) => {
           const overdue =
             r.due_date && r.due_date < today && r.progress !== "completed";
-          const pri = (r.priority || "low").toLowerCase(),
-            prog = r.progress || "not started",
-            progCls = prog.replace(/ /g, "-");
+          const pri = (r.priority || "low").toLowerCase();
+          const prog = r.progress || "not started";
+          const progCls = prog.replace(/ /g, "-");
+          const notes = r.task_notes || "";
           const tr = document.createElement("tr");
           tr.innerHTML =
             '<td><span class="t-name' +
             (prog === "completed" ? " done" : "") +
             '">' +
             escHtml(r.task || "") +
-            '</span></td><td><span class="t-mono' +
+            "</span></td>" +
+            '<td><span class="t-mono' +
             (overdue ? " t-overdue" : "") +
             '">' +
             (r.due_date || "—") +
-            '</span></td><td><span class="badge pri-' +
+            "</span></td>" +
+            '<td><span class="badge pri-' +
             pri +
             '">' +
             pri +
-            '</span></td><td><span class="t-mono">' +
+            "</span></td>" +
+            '<td><span class="t-mono">' +
             (r.allotted_time != null ? r.allotted_time + "h" : "—") +
-            '</span></td><td><span class="badge prog-' +
+            "</span></td>" +
+            '<td><select class="inline-prog-select prog-' +
             progCls +
-            '">' +
-            prog +
-            '</span></td><td><span class="t-mono">' +
+            '" onchange="updateProgress(\'' +
+            r.id +
+            "',this)\">" +
+            '<option value="not started"' +
+            (prog === "not started" ? " selected" : "") +
+            ">Not Started</option>" +
+            '<option value="in progress"' +
+            (prog === "in progress" ? " selected" : "") +
+            ">In Progress</option>" +
+            '<option value="completed"' +
+            (prog === "completed" ? " selected" : "") +
+            ">Completed</option>" +
+            "</select></td>" +
+            '<td><span class="t-mono">' +
             (r.actual_time != null ? r.actual_time + "h" : "—") +
-            '</span></td><td><div class="row-acts"><button class="row-act" onclick="openEditTask(\'' +
+            "</span></td>" +
+            '<td><span class="t-notes">' +
+            escHtml(notes) +
+            "</span></td>" +
+            '<td><div class="row-acts"><button class="row-act" onclick="openEditTask(\'' +
             r.id +
             '\')">Edit</button><button class="row-act del" onclick="deleteTask(\'' +
             r.id +
@@ -1544,6 +1643,7 @@
           tbody.appendChild(tr);
         });
       }
+
       function escHtml(s) {
         return s
           .replace(/&/g, "&amp;")
@@ -1559,16 +1659,35 @@
         el.classList.add("active");
         renderTable();
       }
+
+      async function updateProgress(id, sel) {
+        const prog = sel.value;
+        sel.className = "inline-prog-select prog-" + prog.replace(/ /g, "-");
+        try {
+          await sbFetch("tasks?id=eq." + id, {
+            method: "PATCH",
+            body: JSON.stringify({ progress: prog }),
+            prefer: "return=minimal",
+          });
+        } catch (err) {
+          alert("Update failed: " + err.message);
+        }
+        // update local cache without full reload for speed
+        const r = allRows.find((x) => x.id == id);
+        if (r) r.progress = prog;
+      }
+
       function openNewTask() {
         editingTaskId = null;
         document.getElementById("taskModalTitle").textContent = "New Task";
-        ["tName", "tDue", "tAllotted", "tActual"].forEach(
+        ["tName", "tDue", "tAllotted", "tActual", "tNotes"].forEach(
           (id) => (document.getElementById(id).value = ""),
         );
         document.getElementById("tPri").value = "medium";
         document.getElementById("tProg").value = "not started";
         document.getElementById("taskModal").classList.add("open");
       }
+
       function openEditTask(id) {
         const r = allRows.find((x) => x.id == id);
         if (!r) return;
@@ -1582,8 +1701,10 @@
         document.getElementById("tProg").value = r.progress || "not started";
         document.getElementById("tActual").value =
           r.actual_time != null ? r.actual_time : "";
+        document.getElementById("tNotes").value = r.task_notes || "";
         document.getElementById("taskModal").classList.add("open");
       }
+
       function closeTaskModal() {
         document.getElementById("taskModal").classList.remove("open");
         editingTaskId = null;
@@ -1593,6 +1714,7 @@
         .addEventListener("click", function (e) {
           if (e.target === this) closeTaskModal();
         });
+
       async function saveTask() {
         const name = document.getElementById("tName").value.trim();
         if (!name) return;
@@ -1609,6 +1731,7 @@
             document.getElementById("tActual").value !== ""
               ? parseFloat(document.getElementById("tActual").value)
               : null,
+          task_notes: document.getElementById("tNotes").value || null,
         };
         try {
           if (editingTaskId)
@@ -1628,6 +1751,7 @@
           alert("Save failed: " + err.message);
         }
       }
+
       async function deleteTask(id) {
         if (!confirm("Delete this task?")) return;
         try {
@@ -1719,7 +1843,6 @@
         document.getElementById("wType").value = "Easy Run";
         document.getElementById("workoutModal").classList.add("open");
       }
-
       function openEditWorkout(id) {
         const w = allWorkouts.find((x) => x.id == id);
         if (!w) return;
@@ -1739,7 +1862,6 @@
           w.cadence != null ? w.cadence : "";
         document.getElementById("workoutModal").classList.add("open");
       }
-
       function closeWorkoutModal() {
         document.getElementById("workoutModal").classList.remove("open");
         editingWorkoutId = null;
@@ -1805,8 +1927,7 @@
 
       function getWorkoutContext() {
         if (!allWorkouts.length) return "";
-        const recent = allWorkouts.slice(0, 7);
-        const lines = recent.map((w) => {
+        const lines = allWorkouts.slice(0, 7).map((w) => {
           let s = "- " + (w.date || "?") + " [" + (w.workout_type || "?") + "]";
           if (w.mileage != null) s += " " + w.mileage + "mi";
           if (w.pace) s += " @ " + w.pace + "/mi";
@@ -1945,6 +2066,7 @@
           el.appendChild(d);
         });
       }
+
       async function fetchWeekEvents() {
         if (!calAccessToken || Date.now() > calTokenExpiry) return;
         const el = document.getElementById("weekEvents");
@@ -2160,7 +2282,6 @@
         document.getElementById("apiKeyInput").value = "";
         activateChat();
       }
-
       function clearApiKey() {
         apiKey = "";
         localStorage.removeItem("dash_apikey");
@@ -2177,7 +2298,6 @@
         document.getElementById("keyStatus").classList.add("active");
         document.getElementById("keyStatusText").textContent = "Active";
         document.getElementById("clearKeyBtn").style.display = "inline";
-        // Also activate fitness coach
         document.getElementById("fitInput").disabled = false;
         document.getElementById("fitSend").disabled = false;
         document.getElementById("fitStatus").classList.add("active");
@@ -2215,16 +2335,18 @@
       function getContext() {
         const tracker = allRows
           .filter((r) => r.progress !== "completed")
-          .map(
-            (r) =>
+          .map((r) => {
+            let s =
               "- [" +
               (r.priority || "low").toUpperCase() +
               "] " +
               r.task +
               (r.due_date ? " (due " + r.due_date + ")" : "") +
               " — " +
-              (r.progress || "not started"),
-          )
+              (r.progress || "not started");
+            if (r.task_notes) s += " | Notes: " + r.task_notes.substring(0, 80);
+            return s;
+          })
           .join("\n");
         const note = noteEl.value.trim();
         const now = new Date();
@@ -2262,7 +2384,6 @@
         msgs.appendChild(el);
         msgs.scrollTop = msgs.scrollHeight;
       }
-
       function showTyping(containerId) {
         const msgs = document.getElementById(containerId);
         const el = document.createElement("div");
@@ -2325,7 +2446,6 @@
         input.focus();
       }
 
-      // FITNESS COACH
       async function sendFitMessage() {
         const input = document.getElementById("fitInput"),
           text = input.value.trim();
