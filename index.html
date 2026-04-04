@@ -1329,54 +1329,6 @@
       updateClock();
       setInterval(updateClock, 10000);
 
-      // QUICK TASKS
-      let tasks = JSON.parse(localStorage.getItem("dash_tasks") || "[]");
-      function saveTasks() {
-        localStorage.setItem("dash_tasks", JSON.stringify(tasks));
-      }
-      function renderQuickTasks() {
-        const list = document.getElementById("quickTaskList");
-        list.innerHTML = "";
-        const done = tasks.filter((t) => t.done).length,
-          pct = tasks.length ? Math.round((done / tasks.length) * 100) : 0;
-        document.getElementById("taskProgress").textContent =
-          done + " / " + tasks.length;
-        document.getElementById("progressFill").style.width = pct + "%";
-        tasks.forEach((t, i) => {
-          const el = document.createElement("div");
-          el.className = "task-item" + (t.done ? " done" : "");
-          el.innerHTML =
-            '<div class="task-check"></div><span class="task-text">' +
-            t.text +
-            '</span><span class="task-delete" onclick="delQuick(' +
-            i +
-            ',event)">&#10005;</span>';
-          el.addEventListener("click", () => togQuick(i));
-          list.appendChild(el);
-        });
-      }
-      function quickAddTask() {
-        const inp = document.getElementById("quickTaskInput"),
-          text = inp.value.trim();
-        if (!text) return;
-        tasks.unshift({ text, done: false });
-        inp.value = "";
-        saveTasks();
-        renderQuickTasks();
-      }
-      function togQuick(i) {
-        tasks[i].done = !tasks[i].done;
-        saveTasks();
-        renderQuickTasks();
-      }
-      function delQuick(i, e) {
-        e.stopPropagation();
-        tasks.splice(i, 1);
-        saveTasks();
-        renderQuickTasks();
-      }
-      renderQuickTasks();
-
       // FOCUS NOTE
       const noteEl = document.getElementById("focusNote");
       noteEl.value = localStorage.getItem("dash_note") || "";
@@ -2261,10 +2213,6 @@
       }
 
       function getContext() {
-        const qOpen = tasks
-          .filter((t) => !t.done)
-          .map((t) => "- " + t.text)
-          .join("\n");
         const tracker = allRows
           .filter((r) => r.progress !== "completed")
           .map(
@@ -2294,7 +2242,6 @@
             hour12: true,
           }) +
           ".";
-        if (qOpen) ctx += "\n\nQuick tasks:\n" + qOpen;
         if (tracker) ctx += "\n\nTask tracker (open):\n" + tracker;
         if (note) ctx += "\n\nFocus note: " + note;
         ctx += getCalContext();
